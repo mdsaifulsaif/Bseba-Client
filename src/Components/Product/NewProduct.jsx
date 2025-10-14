@@ -35,7 +35,7 @@ const NewProduct = () => {
       details: "",
       qty: "",
       decimal: "",
-      manageStock: "",
+      manageStock: 1,
       unitCost: "",
       mrp: "",
       dp: "",
@@ -170,7 +170,7 @@ const NewProduct = () => {
       ...formData.Product,
       qty: Number(formData.Product.qty) || 0,
       decimal: Number(formData.Product.decimal) || 0,
-      manageStock: Number(formData.Product.manageStock) || 0,
+      manageStock: Number(formData.Product.manageStock) || 1,
       unitCost: Number(formData.Product.unitCost) || 0,
       mrp: Number(formData.Product.mrp) || 0,
       dp: Number(formData.Product.dp) || 0,
@@ -181,7 +181,7 @@ const NewProduct = () => {
       const res = await axios.post(`${BaseURL}/CreateProduct`, payload, {
         headers: { token: getToken() },
       });
-      console.log(res.data.data);
+      console.log("my created product", res.data.data);
       if (res.data.status === "Success") {
         SuccessToast("Product created successfully!");
         resetForm();
@@ -265,7 +265,6 @@ const NewProduct = () => {
                 />
               </div>
               <button
-                // onClick={() => setCategoryModal(true)}
                 onClick={() => openModal("category")}
                 type="button"
                 className="border border-green-600 text-green-600 px-3 py-1 rounded"
@@ -313,7 +312,7 @@ const NewProduct = () => {
             </div>
 
             {/* Product Details */}
-            <div className="md:col-span-2">
+            {/* <div className="md:col-span-2">
               <label className="block text-sm font-medium mb-1">
                 Product Details
               </label>
@@ -324,7 +323,7 @@ const NewProduct = () => {
                 className="global_input"
                 placeholder="Enter product details"
               />
-            </div>
+            </div> */}
           </div>
 
           {/* Numeric Fields */}
@@ -346,7 +345,7 @@ const NewProduct = () => {
             </div>
 
             {/* Decimal */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium mb-1">Decimal</label>
               <input
                 type="number"
@@ -357,10 +356,30 @@ const NewProduct = () => {
                 placeholder="Decimal"
                 className="global_input"
               />
+            </div> */}
+
+            {/* Decimal */}
+            <div className="flex items-center mt-6">
+              <ToggleSwitch
+                label="Decimal"
+                value={formData.Product.decimal}
+                onChange={(val) => handleProductChange("decimal", val, true)}
+              />
             </div>
 
             {/* Manage Stock */}
-            <div>
+
+            <div className="flex items-center mt-6">
+              <ToggleSwitch
+                label="Manage Stock"
+                value={formData.Product.manageStock}
+                onChange={(val) =>
+                  handleProductChange("manageStock", val, true)
+                }
+              />
+            </div>
+
+            {/* <div>
               <label className="block text-sm font-medium mb-1">
                 Manage Stock
               </label>
@@ -373,7 +392,7 @@ const NewProduct = () => {
                 placeholder="Manage Stock"
                 className="global_input"
               />
-            </div>
+            </div> */}
 
             {/* Unit Cost */}
             <div>
