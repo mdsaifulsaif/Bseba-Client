@@ -60,7 +60,7 @@ const NewProduct = () => {
       const res = await axios.get(`${BaseURL}/GetBrands`, {
         headers: { token: getToken() },
       });
-      const brandData = res.data?.data || [];
+      const brandData = (res.data?.data || []).reverse();
       setBrands(
         brandData.map((u) => ({
           value: u._id,
@@ -83,7 +83,7 @@ const NewProduct = () => {
         headers: { token: getToken() },
       });
       setCategories(
-        (res.data.data || []).map((c) => ({
+        (res.data.data || []).reverse().map((c) => ({
           value: c._id,
           label: c.name,
           category: c,
@@ -104,7 +104,7 @@ const NewProduct = () => {
         headers: { token: getToken() },
       });
       setUnits(
-        (res.data.data || []).map((u) => ({
+        (res.data.data || []).reverse().map((u) => ({
           value: u._id,
           label: u.name,
         }))

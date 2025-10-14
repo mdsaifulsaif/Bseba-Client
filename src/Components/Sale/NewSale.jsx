@@ -13,7 +13,8 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { useNavigate } from "react-router-dom";
 import openCloseStore from "../../Zustand/OpenCloseStore";
-import ToggleSwitch from "../../Helper/UI/ToogleSwitch";
+// import ToggleSwitch from "../../Helper/UI/ToogleSwitch";
+import ToggleSwitch from "../../Helper/UI/ToggleSwitch";
 
 const NewSale = () => {
   const { setGlobalLoader } = loadingStore();
