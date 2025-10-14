@@ -7,21 +7,18 @@ const openCloseStore = create((set) => ({
 
   modalOpen: false,
   modalType: "",
+  modalCallback: null,
 
-  openModal: (type) => set({ modalOpen: true, modalType: type }),
-  closeModal: () => set({ modalOpen: false, modalType: "" }),
+  // openModal now accepts callback
+  openModal: (type, callback = null) =>
+    set({ modalOpen: true, modalType: type, modalCallback: callback }),
 
-  // ================
+  closeModal: () =>
+    set({ modalOpen: false, modalType: "", modalCallback: null }),
 
-  setDealerModal: (val) => {
-    set({ dealerModal: val });
-  },
-  setSupplierModal: (val) => {
-    set({ supplierModal: val });
-  },
-  setCategoryModal: (val) => {
-    set({ categoryModal: val });
-  },
+  setDealerModal: (val) => set({ dealerModal: val }),
+  setSupplierModal: (val) => set({ supplierModal: val }),
+  setCategoryModal: (val) => set({ categoryModal: val }),
 }));
 
 export default openCloseStore;

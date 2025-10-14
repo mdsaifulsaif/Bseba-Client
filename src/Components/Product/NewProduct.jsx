@@ -6,7 +6,6 @@ import { getToken } from "../../Helper/SessionHelper";
 import axios from "axios";
 import Select from "react-select";
 import ToggleSwitch from "../../Helper/UI/ToggleSwitch";
-// import CreateDealerModal from "./../Modals/CreateDealerModal";
 
 import ProductModal from "../Modals/ProductModal";
 import openCloseStore from "../../Zustand/OpenCloseStore";
@@ -237,7 +236,11 @@ const NewProduct = () => {
               </div>
               <button
                 type="button"
-                onClick={() => openModal("brand")}
+                onClick={() =>
+                  openModal("brand", () => {
+                    fetchBrands();
+                  })
+                }
                 className="border border-green-600 text-green-600 px-3 py-1 rounded"
               >
                 + Brand
@@ -265,7 +268,11 @@ const NewProduct = () => {
                 />
               </div>
               <button
-                onClick={() => openModal("category")}
+                onClick={() =>
+                  openModal("category", () => {
+                    fetchCategories();
+                  })
+                }
                 type="button"
                 className="border border-green-600 text-green-600 px-3 py-1 rounded"
               >
@@ -295,7 +302,11 @@ const NewProduct = () => {
               </div>
               <button
                 type="button"
-                onClick={() => openModal("unit")}
+                onClick={() =>
+                  openModal("unit", () => {
+                    fetchUnits();
+                  })
+                }
                 className="border border-green-600 text-green-600 px-3 py-1 rounded"
               >
                 + Unit

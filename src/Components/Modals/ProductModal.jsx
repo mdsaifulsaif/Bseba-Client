@@ -17,7 +17,7 @@ const apiMap = {
 };
 
 const ProductModal = () => {
-  const { modalOpen, modalType, closeModal } = openCloseStore();
+  const { modalOpen, modalType, modalCallback, closeModal } = openCloseStore();
   const { setGlobalLoader } = loadingStore();
   const config = apiMap[modalType];
   const [form, setForm] = useState({ [config?.fieldName]: "" });
@@ -40,8 +40,13 @@ const ProductModal = () => {
       const res = await axios.post(`${BaseURL}/${config.url}`, form, {
         headers: { token: getToken() },
       });
+
       if (res.data.status === "Success") {
         SuccessToast(`${config.title} created successfully`);
+
+        // ✅ trigger callback after success
+        if (modalCallback) modalCallback();
+
         setForm({ [config.fieldName]: "" });
         closeModal();
       } else {
