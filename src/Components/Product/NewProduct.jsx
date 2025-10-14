@@ -329,29 +329,97 @@ const NewProduct = () => {
 
           {/* Numeric Fields */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-            {[
-              { label: "Stock QTY", field: "qty" },
-              { label: "Decimal", field: "decimal" },
-              { label: "Manage Stock", field: "manageStock" },
-              { label: "Unit Cost", field: "unitCost" },
-              { label: "MRP", field: "mrp" },
-              { label: "Dealer Price", field: "dp" },
-            ].map((item) => (
-              <div key={item.field}>
-                <label className="block text-sm font-medium mb-1">
-                  {item.label}
-                </label>
-                <input
-                  type="number"
-                  value={formData.Product[item.field]}
-                  onChange={(e) =>
-                    handleProductChange(item.field, e.target.value, true)
-                  }
-                  placeholder={item.label}
-                  className="global_input"
-                />
-              </div>
-            ))}
+            {/* Stock QTY */}
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Stock QTY
+              </label>
+              <input
+                type="number"
+                value={formData.Product.qty}
+                onChange={(e) =>
+                  handleProductChange("qty", e.target.value, true)
+                }
+                placeholder="Stock QTY"
+                className="global_input"
+              />
+            </div>
+
+            {/* Decimal */}
+            <div>
+              <label className="block text-sm font-medium mb-1">Decimal</label>
+              <input
+                type="number"
+                value={formData.Product.decimal}
+                onChange={(e) =>
+                  handleProductChange("decimal", e.target.value, true)
+                }
+                placeholder="Decimal"
+                className="global_input"
+              />
+            </div>
+
+            {/* Manage Stock */}
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Manage Stock
+              </label>
+              <input
+                type="number"
+                value={formData.Product.manageStock}
+                onChange={(e) =>
+                  handleProductChange("manageStock", e.target.value, true)
+                }
+                placeholder="Manage Stock"
+                className="global_input"
+              />
+            </div>
+
+            {/* Unit Cost */}
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Unit Cost
+              </label>
+              <input
+                type="number"
+                value={formData.Product.unitCost}
+                onChange={(e) =>
+                  handleProductChange("unitCost", e.target.value, true)
+                }
+                placeholder="Unit Cost"
+                className="global_input"
+              />
+            </div>
+
+            {/* MRP */}
+            <div>
+              <label className="block text-sm font-medium mb-1">MRP</label>
+              <input
+                type="number"
+                value={formData.Product.mrp}
+                onChange={(e) =>
+                  handleProductChange("mrp", e.target.value, true)
+                }
+                placeholder="MRP"
+                className="global_input"
+              />
+            </div>
+
+            {/* Dealer Price */}
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Dealer Price
+              </label>
+              <input
+                type="number"
+                value={formData.Product.dp}
+                onChange={(e) =>
+                  handleProductChange("dp", e.target.value, true)
+                }
+                placeholder="Dealer Price"
+                className="global_input"
+              />
+            </div>
           </div>
 
           {/* Submit Button */}
