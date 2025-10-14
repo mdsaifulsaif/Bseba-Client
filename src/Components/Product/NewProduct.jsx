@@ -180,7 +180,7 @@ const NewProduct = () => {
       const res = await axios.post(`${BaseURL}/CreateProduct`, payload, {
         headers: { token: getToken() },
       });
-      console.log("my created product", res.data.data);
+      // console.log("my created product", res.data.data);
       if (res.data.status === "Success") {
         SuccessToast("Product created successfully!");
         resetForm();
@@ -196,8 +196,8 @@ const NewProduct = () => {
   };
 
   return (
-    <>
-      <div className="global_sub_container">
+    <div className="global_container">
+      <div className="global_sub_container ">
         <form onSubmit={handleCreateProduct}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Product Name */}
@@ -281,8 +281,10 @@ const NewProduct = () => {
             </div>
 
             {/* Product Unit with Button */}
-            <div className="flex gap-2 items-end">
-              <div className="flex-1">
+            {/* Product Unit + Decimal + Manage Stock */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+              {/* Product Unit */}
+              <div>
                 <label className="block text-sm font-medium mb-1">
                   Product Unit <span className="text-red-500">*</span>
                 </label>
@@ -300,27 +302,44 @@ const NewProduct = () => {
                   styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                 />
               </div>
-              <button
-                type="button"
-                onClick={() =>
-                  openModal("unit", () => {
-                    fetchUnits();
-                  })
-                }
-                className="border border-green-600 text-green-600 px-3 py-1 rounded"
-              >
-                + Unit
-              </button>
+
+              <div className="flex gap-5">
+                {/* Decimal Toggle */}
+                <div className="flex flex-col items-start md:items-center">
+                  <label className="block text-sm font-medium mb-1">
+                    Decimal
+                  </label>
+                  <ToggleSwitch
+                    value={formData.Product.decimal}
+                    onChange={(val) =>
+                      handleProductChange("decimal", val, true)
+                    }
+                  />
+                </div>
+
+                {/* Manage Stock Toggle */}
+                <div className="flex flex-col items-start md:items-center">
+                  <label className="block text-sm font-medium mb-1">
+                    Manage Stock
+                  </label>
+                  <ToggleSwitch
+                    value={formData.Product.manageStock}
+                    onChange={(val) =>
+                      handleProductChange("manageStock", val, true)
+                    }
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Ecom Toggle */}
-            <div className="flex items-center mt-6">
+            {/* <div className="flex items-center mt-6">
               <ToggleSwitch
                 label="Ecom"
                 value={formData.Product.ecom}
                 onChange={(val) => handleProductChange("ecom", val, true)}
               />
-            </div>
+            </div> */}
 
             {/* Product Details */}
             {/* <div className="md:col-span-2">
@@ -354,56 +373,6 @@ const NewProduct = () => {
                 className="global_input"
               />
             </div>
-
-            {/* Decimal */}
-            {/* <div>
-              <label className="block text-sm font-medium mb-1">Decimal</label>
-              <input
-                type="number"
-                value={formData.Product.decimal}
-                onChange={(e) =>
-                  handleProductChange("decimal", e.target.value, true)
-                }
-                placeholder="Decimal"
-                className="global_input"
-              />
-            </div> */}
-
-            {/* Decimal */}
-            <div className="flex items-center mt-6">
-              <ToggleSwitch
-                label="Decimal"
-                value={formData.Product.decimal}
-                onChange={(val) => handleProductChange("decimal", val, true)}
-              />
-            </div>
-
-            {/* Manage Stock */}
-
-            <div className="flex items-center mt-6">
-              <ToggleSwitch
-                label="Manage Stock"
-                value={formData.Product.manageStock}
-                onChange={(val) =>
-                  handleProductChange("manageStock", val, true)
-                }
-              />
-            </div>
-
-            {/* <div>
-              <label className="block text-sm font-medium mb-1">
-                Manage Stock
-              </label>
-              <input
-                type="number"
-                value={formData.Product.manageStock}
-                onChange={(e) =>
-                  handleProductChange("manageStock", e.target.value, true)
-                }
-                placeholder="Manage Stock"
-                className="global_input"
-              />
-            </div> */}
 
             {/* Unit Cost */}
             <div>
@@ -461,7 +430,7 @@ const NewProduct = () => {
         </form>
       </div>
       <ProductModal />
-    </>
+    </div>
   );
 };
 
