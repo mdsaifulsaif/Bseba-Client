@@ -280,12 +280,11 @@ const NewProduct = () => {
               </button>
             </div>
 
-            {/* Product Unit with Button */}
             {/* Product Unit + Decimal + Manage Stock */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-              {/* Product Unit */}
-              <div>
-                <label className="block text-sm font-medium mb-1">
+            <div className="grid grid-cols-1 md:grid-cols-6 gap-2 items-end">
+              {/* Product Unit - Now 2 columns wide */}
+              <div className="md:col-span-2 w-full">
+                <label className="block text-sm font-medium mb-1 whitespace-nowrap">
                   Product Unit <span className="text-red-500">*</span>
                 </label>
                 <Select
@@ -303,10 +302,21 @@ const NewProduct = () => {
                 />
               </div>
 
-              <div className="flex gap-5">
-                {/* Decimal Toggle */}
-                <div className="flex flex-col items-start md:items-center">
-                  <label className="block text-sm font-medium mb-1">
+              {/* + Unit Button (same size as before) */}
+              <div className="flex flex-col">
+                <button
+                  type="button"
+                  onClick={() => openModal("unit")}
+                  className="border border-green-600 text-green-600  py-1 rounded w-full"
+                >
+                  + Unit
+                </button>
+              </div>
+
+              <div className="flex gap-3 ">
+                {/* Decimal Toggle (unchanged size) */}
+                <div className="flex flex-col">
+                  <label className="block text-sm font-medium mb-1 whitespace-nowrap">
                     Decimal
                   </label>
                   <ToggleSwitch
@@ -317,9 +327,9 @@ const NewProduct = () => {
                   />
                 </div>
 
-                {/* Manage Stock Toggle */}
-                <div className="flex flex-col items-start md:items-center">
-                  <label className="block text-sm font-medium mb-1">
+                {/* Manage Stock Toggle (unchanged size) */}
+                <div className="flex flex-col">
+                  <label className="block text-sm font-medium mb-1 whitespace-nowrap">
                     Manage Stock
                   </label>
                   <ToggleSwitch
