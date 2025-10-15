@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import openCloseStore from "../../Zustand/OpenCloseStore";
 import axios from "axios";
 import { BaseURL } from "../../Helper/Config";
@@ -21,18 +22,20 @@ const ProductModal = () => {
   const { setGlobalLoader } = loadingStore();
   const config = apiMap[modalType];
 
-  const [form, setForm] = useState({ [config?.fieldName]: "" });
+  const [form, setForm] = useState({});
 
-  // Lock body scroll when modal open
+  // Initialize form when modalType changes
   useEffect(() => {
-    if (modalOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
+    if (config) {
+      setForm({ [config.fieldName]: "" });
     }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
+  }, [config]);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (modalOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "auto";
+    return () => (document.body.style.overflow = "auto");
   }, [modalOpen]);
 
   if (!modalOpen || !config) return null;
@@ -47,11 +50,9 @@ const ProductModal = () => {
       const res = await axios.post(`${BaseURL}/${config.url}`, form, {
         headers: { token: getToken() },
       });
-
       if (res.data.status === "Success") {
         SuccessToast(`${config.title} created successfully`);
-        if (modalCallback) modalCallback(); // refresh select options
-        setForm({ [config.fieldName]: "" });
+        if (modalCallback) modalCallback();
         closeModal();
       } else {
         ErrorToast(res.data.message || `Failed to create ${config.title}`);
@@ -63,14 +64,14 @@ const ProductModal = () => {
     }
   };
 
-  return (
+  return createPortal(
     <div
       onClick={closeModal}
-      className="fixed inset-0 z-50 bg-black/60 flex items-start justify-center overflow-y-auto"
+      className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center overflow-y-auto pt-10"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white dark:bg-[#1E2939] p-6 rounded-lg max-w-md w-full mt-10 mb-10 max-h-[90vh] overflow-y-auto shadow-lg"
+        className="bg-white dark:bg-[#1E2939] p-6 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto shadow-lg"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-bold text-lg">{config.title}</h2>
@@ -82,7 +83,7 @@ const ProductModal = () => {
         <form onSubmit={handleSubmit} className="flex gap-3">
           <input
             name={config.fieldName}
-            value={form[config.fieldName]}
+            value={form[config.fieldName] || ""}
             onChange={handleChange}
             placeholder={config.title}
             className="global_input flex-1"
@@ -92,7 +93,8 @@ const ProductModal = () => {
           </button>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
