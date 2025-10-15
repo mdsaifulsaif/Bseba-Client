@@ -10,6 +10,10 @@ import ToggleSwitch from "../../Helper/UI/ToggleSwitch";
 import ProductModal from "../Modals/ProductModal";
 import openCloseStore from "../../Zustand/OpenCloseStore";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import FetchProducts from "./fetchProducts";
+
 const NewProduct = () => {
   const { setGlobalLoader } = loadingStore();
   const { openModal } = openCloseStore();
@@ -154,17 +158,31 @@ const NewProduct = () => {
 
   const validateForm = () => {
     const p = formData.Product;
-    if (!p.name.trim()) return ErrorToast("Product name is required");
-    if (!p.categoryID) return ErrorToast("Please select a category");
-    if (!p.unit) return ErrorToast("Please select a unit");
-    if (!p.brandID) return ErrorToast("Please select a brand");
 
-    // If QTY is entered, Unit Cost must be filled
+    if (!p.name.trim()) {
+      toast.error("Product name is required");
+      return false;
+    }
+    if (!p.categoryID) {
+      toast.error("Please select a category");
+      return false;
+    }
+    if (!p.unit) {
+      toast.error("Please select a unit");
+      return false;
+    }
+    if (!p.brandID) {
+      toast.error("Please select a brand");
+      return false;
+    }
+
     if (p.qty && (!p.unitCost || p.unitCost <= 0)) {
       setUnitCostError(true);
-      return ErrorToast("Unit Cost is required when Stock QTY is entered");
+      toast.error("Unit Cost is required when Stock QTY is entered");
+      return false;
     }
-    return true;
+
+    return true; //  সব ভ্যালিড হলে true রিটার্ন করবে
   };
 
   const resetForm = () => {
@@ -192,6 +210,7 @@ const NewProduct = () => {
 
   const handleCreateProduct = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) return;
 
     const payload = {
@@ -224,223 +243,238 @@ const NewProduct = () => {
   };
 
   return (
-    <div className="global_container">
-      <div className="global_sub_container">
-        <form onSubmit={handleCreateProduct}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Product Name */}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Product Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={formData.Product.name}
-                onChange={(e) => handleProductChange("name", e.target.value)}
-                className="global_input"
-                placeholder="Enter product name"
-              />
-            </div>
-
-            {/* Brand */}
-            <div className="flex gap-2 items-end">
-              <div className="flex-1">
+    <>
+      <div className="global_container">
+        <div className="global_sub_container">
+          <form onSubmit={handleCreateProduct}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Product Name */}
+              <div>
                 <label className="block text-sm font-medium mb-1">
-                  Product Brand <span className="text-red-500">*</span>
+                  Product Name <span className="text-red-500">*</span>
                 </label>
-                <Select
-                  options={brands}
-                  value={selectedBrand}
-                  onChange={(brand) => {
-                    setSelectedBrand(brand);
-                    handleProductChange("brandID", brand?.brand._id || "");
-                  }}
-                  placeholder="Select Brand"
-                  classNamePrefix="react-select"
-                  isClearable
-                  menuPortalTarget={document.body}
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                <input
+                  type="text"
+                  value={formData.Product.name}
+                  onChange={(e) => handleProductChange("name", e.target.value)}
+                  className="global_input"
+                  placeholder="Enter product name"
                 />
               </div>
-              <button
-                type="button"
-                onClick={() =>
-                  openModal("brand", () => {
-                    fetchBrands();
-                  })
-                }
-                className="border border-green-600 text-green-600 px-3 py-1 rounded"
-              >
-                + Brand
-              </button>
-            </div>
 
-            {/* Category */}
-            <div className="flex gap-2 items-end">
-              <div className="flex-1">
-                <label className="block text-sm font-medium mb-1">
-                  Product Category <span className="text-red-500">*</span>
-                </label>
-                <Select
-                  options={categories}
-                  value={selectedCategory}
-                  onChange={(cat) => {
-                    setSelectedCategory(cat);
-                    handleProductChange("categoryID", cat?.category._id || "");
-                  }}
-                  placeholder="Select Category"
-                  classNamePrefix="react-select"
-                  isClearable
-                  menuPortalTarget={document.body}
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                />
-              </div>
-              <button
-                type="button"
-                onClick={() =>
-                  openModal("category", () => {
-                    fetchCategories();
-                  })
-                }
-                className="border border-green-600 text-green-600 px-3 py-1 rounded"
-              >
-                + Category
-              </button>
-            </div>
-
-            {/* Unit, Decimal, Manage Stock */}
-            <div className="grid grid-cols-1 md:grid-cols-6 gap-2 items-end">
-              <div className="md:col-span-2 w-full">
-                <label className="block text-sm font-medium mb-1 whitespace-nowrap">
-                  Product Unit <span className="text-red-500">*</span>
-                </label>
-                <Select
-                  options={units}
-                  value={selectedUnit}
-                  onChange={(unit) => {
-                    setSelectedUnit(unit);
-                    handleProductChange("unit", unit?.value || "");
-                  }}
-                  placeholder="Select Unit"
-                  classNamePrefix="react-select"
-                  isClearable
-                  menuPortalTarget={document.body}
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                />
-              </div>
-              <div className="flex flex-col">
+              {/* Brand */}
+              <div className="flex gap-2 items-end">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium mb-1">
+                    Product Brand <span className="text-red-500">*</span>
+                  </label>
+                  <Select
+                    options={brands}
+                    value={selectedBrand}
+                    onChange={(brand) => {
+                      setSelectedBrand(brand);
+                      handleProductChange("brandID", brand?.brand._id || "");
+                    }}
+                    placeholder="Select Brand"
+                    classNamePrefix="react-select"
+                    isClearable
+                    menuPortalTarget={document.body}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
+                  />
+                </div>
                 <button
                   type="button"
-                  onClick={() => openModal("unit")}
-                  className="border border-green-600 text-green-600 py-1 rounded w-full"
+                  onClick={() =>
+                    openModal("brand", () => {
+                      fetchBrands();
+                    })
+                  }
+                  className="border border-green-600 text-green-600 px-3 py-1 rounded"
                 >
-                  + Unit
+                  + Brand
                 </button>
               </div>
 
-              <div className="flex gap-3">
-                <div className="flex flex-col">
-                  <label className="block text-sm font-medium mb-1 whitespace-nowrap">
-                    Decimal
+              {/* Category */}
+              <div className="flex gap-2 items-end">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium mb-1">
+                    Product Category <span className="text-red-500">*</span>
                   </label>
-                  <ToggleSwitch
-                    value={formData.Product.decimal}
-                    onChange={(val) =>
-                      handleProductChange("decimal", val, true)
-                    }
+                  <Select
+                    options={categories}
+                    value={selectedCategory}
+                    onChange={(cat) => {
+                      setSelectedCategory(cat);
+                      handleProductChange(
+                        "categoryID",
+                        cat?.category._id || ""
+                      );
+                    }}
+                    placeholder="Select Category"
+                    classNamePrefix="react-select"
+                    isClearable
+                    menuPortalTarget={document.body}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    openModal("category", () => {
+                      fetchCategories();
+                    })
+                  }
+                  className="border border-green-600 text-green-600 px-3 py-1 rounded"
+                >
+                  + Category
+                </button>
+              </div>
+
+              {/* Unit, Decimal, Manage Stock */}
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-2 items-end">
+                <div className="md:col-span-2 w-full">
+                  <label className="block text-sm font-medium mb-1 whitespace-nowrap">
+                    Product Unit <span className="text-red-500">*</span>
+                  </label>
+                  <Select
+                    options={units}
+                    value={selectedUnit}
+                    onChange={(unit) => {
+                      setSelectedUnit(unit);
+                      handleProductChange("unit", unit?.value || "");
+                    }}
+                    placeholder="Select Unit"
+                    classNamePrefix="react-select"
+                    isClearable
+                    menuPortalTarget={document.body}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium mb-1 whitespace-nowrap">
-                    Manage Stock
-                  </label>
-                  <ToggleSwitch
-                    value={formData.Product.manageStock}
-                    onChange={(val) =>
-                      handleProductChange("manageStock", val, true)
+                  <button
+                    type="button"
+                    onClick={() =>
+                      openModal("unit", () => {
+                        fetchUnits();
+                      })
                     }
-                  />
+                    className="border border-green-600 text-green-600 py-1 rounded w-full"
+                  >
+                    + Unit
+                  </button>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="flex flex-col">
+                    <label className="block text-sm font-medium mb-1 whitespace-nowrap">
+                      Decimal
+                    </label>
+                    <ToggleSwitch
+                      value={formData.Product.decimal}
+                      onChange={(val) =>
+                        handleProductChange("decimal", val, true)
+                      }
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label className="block text-sm font-medium mb-1 whitespace-nowrap">
+                      Manage Stock
+                    </label>
+                    <ToggleSwitch
+                      value={formData.Product.manageStock}
+                      onChange={(val) =>
+                        handleProductChange("manageStock", val, true)
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Numeric Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Stock QTY
-              </label>
-              <input
-                type="number"
-                value={formData.Product.qty}
-                onChange={(e) =>
-                  handleProductChange("qty", e.target.value, true)
-                }
-                placeholder="Stock QTY"
-                className="global_input"
-              />
+            {/* Numeric Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Stock QTY
+                </label>
+                <input
+                  type="number"
+                  value={formData.Product.qty}
+                  onChange={(e) =>
+                    handleProductChange("qty", e.target.value, true)
+                  }
+                  placeholder="Stock QTY"
+                  className="global_input"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Unit Cost
+                  {unitCostError ? (
+                    <span className="text-red-500"> *</span>
+                  ) : (
+                    ""
+                  )}
+                </label>
+                <input
+                  type="number"
+                  value={formData.Product.unitCost}
+                  onChange={(e) =>
+                    handleProductChange("unitCost", e.target.value, true)
+                  }
+                  placeholder="Unit Cost"
+                  className={`global_input `}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Sell Price
+                </label>
+                <input
+                  type="number"
+                  value={formData.Product.mrp}
+                  onChange={(e) =>
+                    handleProductChange("mrp", e.target.value, true)
+                  }
+                  placeholder="Sell Price"
+                  className="global_input"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Dealer Price
+                </label>
+                <input
+                  type="number"
+                  value={formData.Product.dp}
+                  onChange={(e) =>
+                    handleProductChange("dp", e.target.value, true)
+                  }
+                  placeholder="Dealer Price"
+                  className="global_input"
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Unit Cost
-                {unitCostError ? <span className="text-red-500"> *</span> : ""}
-              </label>
-              <input
-                type="number"
-                value={formData.Product.unitCost}
-                onChange={(e) =>
-                  handleProductChange("unitCost", e.target.value, true)
-                }
-                placeholder="Unit Cost"
-                className={`global_input `}
-              />
-              {/* {unitCostError && (
-                <p className="text-red-500 text-sm mt-1">
-                  Required when QTY entered
-                </p>
-              )} */}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Sell Price
-              </label>
-              <input
-                type="number"
-                value={formData.Product.mrp}
-                onChange={(e) =>
-                  handleProductChange("mrp", e.target.value, true)
-                }
-                placeholder="Sell Price"
-                className="global_input"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Dealer Price
-              </label>
-              <input
-                type="number"
-                value={formData.Product.dp}
-                onChange={(e) =>
-                  handleProductChange("dp", e.target.value, true)
-                }
-                placeholder="Dealer Price"
-                className="global_input"
-              />
-            </div>
-          </div>
 
-          {/* Submit */}
-          <div className="flex justify-end mt-4">
-            <button type="submit" className="global_button w-full md:w-fit">
-              Create Product
-            </button>
-          </div>
-        </form>
+            {/* Submit */}
+            <div className="flex justify-end mt-4">
+              <button type="submit" className="global_button w-full md:w-fit">
+                Create Product
+              </button>
+            </div>
+          </form>
+        </div>
+        <FetchProducts />
+        <ProductModal />
       </div>
-      <ProductModal />
-    </div>
+    </>
   );
 };
 

@@ -20,12 +20,19 @@ const ProductModal = () => {
   const { modalOpen, modalType, modalCallback, closeModal } = openCloseStore();
   const { setGlobalLoader } = loadingStore();
   const config = apiMap[modalType];
+
   const [form, setForm] = useState({ [config?.fieldName]: "" });
 
+  // Lock body scroll when modal open
   useEffect(() => {
-    if (modalOpen) document.body.classList.add("overflow-hidden");
-    else document.body.classList.remove("overflow-hidden");
-    return () => document.body.classList.remove("overflow-hidden");
+    if (modalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, [modalOpen]);
 
   if (!modalOpen || !config) return null;
@@ -43,10 +50,7 @@ const ProductModal = () => {
 
       if (res.data.status === "Success") {
         SuccessToast(`${config.title} created successfully`);
-
-        // ✅ trigger callback after success
-        if (modalCallback) modalCallback();
-
+        if (modalCallback) modalCallback(); // refresh select options
         setForm({ [config.fieldName]: "" });
         closeModal();
       } else {
@@ -62,25 +66,26 @@ const ProductModal = () => {
   return (
     <div
       onClick={closeModal}
-      className="fixed inset-0 z-50 bg-[#0000006c] flex items-center justify-center"
+      className="fixed inset-0 z-50 bg-black/60 flex items-start justify-center overflow-y-auto"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white dark:bg-[#1E2939] p-6 rounded-lg max-w-md w-full"
+        className="bg-white dark:bg-[#1E2939] p-6 rounded-lg max-w-md w-full mt-10 mb-10 max-h-[90vh] overflow-y-auto shadow-lg"
       >
-        <div className="flex justify-between">
-          <h2 className="font-bold">{config.title}</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="font-bold text-lg">{config.title}</h2>
           <button className="global_button_red" onClick={closeModal}>
             Close
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="mt-4 flex gap-3">
+
+        <form onSubmit={handleSubmit} className="flex gap-3">
           <input
             name={config.fieldName}
             value={form[config.fieldName]}
             onChange={handleChange}
             placeholder={config.title}
-            className="global_input"
+            className="global_input flex-1"
           />
           <button className="global_button" type="submit">
             Create
