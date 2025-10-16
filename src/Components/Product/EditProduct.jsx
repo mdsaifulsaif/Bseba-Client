@@ -12,7 +12,6 @@ import loadingStore from "../../Zustand/LoadingStore";
 
 const EditProduct = () => {
   const { id } = useParams();
-  console.log(id);
   const navigate = useNavigate();
   const { setGlobalLoader } = loadingStore();
 
@@ -178,133 +177,141 @@ const EditProduct = () => {
 
   return (
     <div className="global_container">
-      <form onSubmit={handleUpdate}>
-        <h1 className="text-xl font-semibold mb-3">Edit Product</h1>
+      <div className="global_sub_container">
+        <form onSubmit={handleUpdate}>
+          <h1 className="text-xl font-semibold mb-3">Edit Product</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Product Name *
-            </label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              className="global_input"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Product Name *
+              </label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => handleChange("name", e.target.value)}
+                className="global_input"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Brand *</label>
+              <Select
+                options={brands}
+                value={selectedBrand}
+                onChange={(val) => {
+                  setSelectedBrand(val);
+                  handleChange("brandID", val?.value);
+                }}
+                placeholder="Select Brand"
+                isClearable
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Category *
+              </label>
+              <Select
+                options={categories}
+                value={selectedCategory}
+                onChange={(val) => {
+                  setSelectedCategory(val);
+                  handleChange("categoryID", val?.value);
+                }}
+                placeholder="Select Category"
+                isClearable
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Unit *</label>
+              <Select
+                options={units}
+                value={selectedUnit}
+                onChange={(val) => {
+                  setSelectedUnit(val);
+                  handleChange("unit", val?.value);
+                }}
+                placeholder="Select Unit"
+                isClearable
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Brand *</label>
-            <Select
-              options={brands}
-              value={selectedBrand}
-              onChange={(val) => {
-                setSelectedBrand(val);
-                handleChange("brandID", val?.value);
-              }}
-              placeholder="Select Brand"
-              isClearable
-            />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Alert Qty
+              </label>
+              <input
+                type="number"
+                value={formData.alert}
+                onChange={(e) => handleChange("alert", e.target.value, true)}
+                className="global_input"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Unit Cost {unitCostError && "*"}
+              </label>
+              <input
+                type="number"
+                value={formData.unitCost}
+                onChange={(e) => handleChange("unitCost", e.target.value, true)}
+                className="global_input"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Sell Price
+              </label>
+              <input
+                type="number"
+                value={formData.mrp}
+                onChange={(e) => handleChange("mrp", e.target.value, true)}
+                className="global_input"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Dealer Price
+              </label>
+              <input
+                type="number"
+                value={formData.dp}
+                onChange={(e) => handleChange("dp", e.target.value, true)}
+                className="global_input"
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Category *</label>
-            <Select
-              options={categories}
-              value={selectedCategory}
-              onChange={(val) => {
-                setSelectedCategory(val);
-                handleChange("categoryID", val?.value);
-              }}
-              placeholder="Select Category"
-              isClearable
-            />
+          <div className="flex gap-4 mt-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Decimal</label>
+              <ToggleSwitch
+                value={formData.decimal}
+                onChange={(val) => handleChange("decimal", val, true)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Manage Stock
+              </label>
+              <ToggleSwitch
+                value={formData.manageStock}
+                onChange={(val) => handleChange("manageStock", val, true)}
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Unit *</label>
-            <Select
-              options={units}
-              value={selectedUnit}
-              onChange={(val) => {
-                setSelectedUnit(val);
-                handleChange("unit", val?.value);
-              }}
-              placeholder="Select Unit"
-              isClearable
-            />
+          <div className="flex justify-end mt-4">
+            <button type="submit" className="global_button w-full md:w-fit">
+              Edit Product
+            </button>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Alert Qty</label>
-            <input
-              type="number"
-              value={formData.alert}
-              onChange={(e) => handleChange("alert", e.target.value, true)}
-              className="global_input"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Unit Cost {unitCostError && "*"}
-            </label>
-            <input
-              type="number"
-              value={formData.unitCost}
-              onChange={(e) => handleChange("unitCost", e.target.value, true)}
-              className="global_input"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Sell Price</label>
-            <input
-              type="number"
-              value={formData.mrp}
-              onChange={(e) => handleChange("mrp", e.target.value, true)}
-              className="global_input"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Dealer Price
-            </label>
-            <input
-              type="number"
-              value={formData.dp}
-              onChange={(e) => handleChange("dp", e.target.value, true)}
-              className="global_input"
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-4 mt-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Decimal</label>
-            <ToggleSwitch
-              value={formData.decimal}
-              onChange={(val) => handleChange("decimal", val, true)}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Manage Stock
-            </label>
-            <ToggleSwitch
-              value={formData.manageStock}
-              onChange={(val) => handleChange("manageStock", val, true)}
-            />
-          </div>
-        </div>
-
-        <div className="flex justify-end mt-4">
-          <button type="submit" className="global_button w-full md:w-fit">
-            Update Product
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
       <ToastContainer />
     </div>
   );
