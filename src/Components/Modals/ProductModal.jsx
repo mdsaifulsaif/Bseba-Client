@@ -24,14 +24,12 @@ const ProductModal = () => {
 
   const [form, setForm] = useState({});
 
-  // Initialize form when modalType changes
   useEffect(() => {
     if (config) {
       setForm({ [config.fieldName]: "" });
     }
   }, [config]);
 
-  // Lock body scroll when modal is open
   useEffect(() => {
     if (modalOpen) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "auto";
@@ -67,11 +65,11 @@ const ProductModal = () => {
   return createPortal(
     <div
       onClick={closeModal}
-      className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center overflow-y-auto pt-10"
+      className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center overflow-y-auto pt-10 px-3"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white dark:bg-[#1E2939] p-6 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto shadow-lg"
+        className="bg-white dark:bg-[#1E2939] p-6 rounded-lg w-full sm:w-[90%] max-w-md max-h-[90vh] overflow-y-auto shadow-lg"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-bold dark:text-white text-lg">{config.title}</h2>
@@ -80,7 +78,10 @@ const ProductModal = () => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex gap-3">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col sm:flex-row gap-3"
+        >
           <input
             name={config.fieldName}
             value={form[config.fieldName] || ""}
@@ -88,7 +89,7 @@ const ProductModal = () => {
             placeholder={config.title}
             className="global_input flex-1 dark:text-gray-300"
           />
-          <button className="global_button" type="submit">
+          <button className="global_button w-full sm:w-auto" type="submit">
             Create
           </button>
         </form>
