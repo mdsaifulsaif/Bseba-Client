@@ -44,6 +44,7 @@ import UserDashboardPage from "./Pages/Dashboard/UserDashboardPage";
 import NewProductPage from "./Pages/Product/NewProductPage";
 import UnitPage from "./Pages/Product/UnitPage";
 import BrandPage from "./Pages/Product/BrandPage";
+import EditProductPage from "./Pages/Product/EditProductPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -59,6 +60,7 @@ function App() {
             <Route path="/CreateBusiness" element={<CreateBusiness />} />
             <Route path="/NewProduct" element={<NewProductPage />} />
             <Route path="/ProductList" element={<ProductListPage />} />
+            <Route path="/EditProduct/:id" element={<EditProductPage />} />
             <Route path="/Category" element={<CreateCategoryPage />} />
             <Route path="/Unit" element={<UnitPage />} />
             <Route path="/Brand" element={<BrandPage />} />

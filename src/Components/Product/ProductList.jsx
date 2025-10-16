@@ -5,8 +5,10 @@ import { BaseURL } from "../../Helper/Config";
 import { getToken } from "../../Helper/SessionHelper";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const ProductList = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(20);
@@ -23,7 +25,9 @@ const ProductList = () => {
         { headers: { token: getToken() } }
       );
       if (res.data.status === "Success") {
-        setProducts(res.data.data || []);
+        const reversedData = (res.data.data || []).slice().reverse();
+        setProducts(reversedData);
+        // setProducts(res.data.data || []);
         setTotal(res.data.total || 0);
       }
     } catch (error) {
@@ -93,10 +97,10 @@ const ProductList = () => {
     });
   };
 
-  // Placeholder for edite form data
-  const handleUpdate = (product) => {
-    console.log("Edit product:", product);
-  };
+  // // Placeholder for edite form data
+  // const handleUpdate = (product) => {
+  //   console.log("Edit product:", product);
+  // };
 
   return (
     <div className="global_sub_container">
@@ -191,11 +195,22 @@ const ProductList = () => {
                     </td> */}
                     <td className="global_td flex gap-2">
                       <button
+                        className="px-2 py-1 bg-blue-500 text-white rounded"
+                        onClick={() =>
+                          navigate(`/EditProduct/${product._id}`, {
+                            state: { product },
+                          })
+                        }
+                      >
+                        Edit
+                      </button>
+                      {/* <button
                         onClick={() => handleUpdate(product)}
                         className="px-2 py-1 bg-blue-500 text-white rounded"
                       >
                         Edit
-                      </button>
+                      </button> */}
+
                       <button
                         onClick={() => HandleProductDelet(product._id)}
                         className="px-2 py-1 bg-red-500 text-white rounded"
