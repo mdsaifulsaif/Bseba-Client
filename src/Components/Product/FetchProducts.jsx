@@ -38,8 +38,8 @@ const FetchProducts = () => {
     fetchProducts();
   }, [page, limit, search]);
 
+  console.log("sercer value", search);
   return (
-    // <div className="global_container">
     <div className="global_sub_container">
       {/* Header + Search + Limit */}
       <div className="py-2">
@@ -86,42 +86,53 @@ const FetchProducts = () => {
                 <tr>
                   <th className="global_th">No</th>
                   <th className="global_th">Name</th>
+                  <th className="global_th">Brand</th>
                   <th className="global_th">Category</th>
                   <th className="global_th">Stock</th>
                   <th className="global_th">Sell Price</th>
                   <th className="global_th">Special Price</th>
                   <th className="global_th">Barcode</th>
+                  {/*  Creation Date */}
+                  <th className="global_th">Action</th> {/* Action Buttons */}
                 </tr>
               </thead>
               <tbody className="global_tbody">
                 {products.map((product, index) => (
                   <tr className="global_tr" key={product._id}>
                     <td className="global_td">{index + 1}</td>
+                    <td className="global_td">{product.name}</td>
                     <td className="global_td">
-                      {product.name}{" "}
-                      {product.weight && (
-                        <span className="text-xs text-green-400">
-                          (
-                          {product.weight >= 1000
-                            ? product.weight / 1000 + " KG"
-                            : product.weight + " Gram"}
-                          )
-                        </span>
-                      )}
+                      {product.Brands?.name || "N/A"}
                     </td>
                     <td className="global_td">
-                      {product.Categorys?.name || "N/A"}
+                      {product.Categories?.name || "N/A"}
                     </td>
                     <td className="global_td">
-                      {parseInt(product.stock || 0)}
+                      {parseInt(product.stock || product.qty || 0)}
                     </td>
                     <td className="global_td">
-                      {parseFloat(product.price || 0).toFixed(2)}
+                      {parseFloat(product.price || product.mrp || 0).toFixed(2)}
                     </td>
                     <td className="global_td">
-                      {parseFloat(product.sp || 0).toFixed(2)}
+                      {parseFloat(product.sp || product.dp || 0).toFixed(2)}
                     </td>
                     <td className="global_td">{product.barcode || "N/A"}</td>
+
+                    {/*  Action Column */}
+                    <td className="global_td flex gap-2">
+                      <button
+                        onClick={() => handleUpdate(product)}
+                        className="px-2 py-1 bg-blue-500 text-white rounded"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(product._id)}
+                        className="px-2 py-1 bg-red-500 text-white rounded"
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -163,7 +174,6 @@ const FetchProducts = () => {
         </div>
       )}
     </div>
-    // </div>
   );
 };
 

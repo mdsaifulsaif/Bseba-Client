@@ -28,6 +28,8 @@ const NewProduct = () => {
 
   const [unitCostError, setUnitCostError] = useState(false);
 
+  const [newProducts, setNewProducts] = useState([]);
+
   const [formData, setFormData] = useState({
     Product: {
       categoryID: "",
@@ -208,6 +210,29 @@ const NewProduct = () => {
     setUnitCostError(false);
   };
 
+  // get new product data
+  const fetchNewProducts = async () => {
+    setGlobalLoader(true);
+    try {
+      const res = await axios.get(`${BaseURL}/NewProductList`, {
+        headers: { token: getToken() },
+      });
+      if (res.data.status === "Success") {
+        setNewProducts(res.data.data || []);
+      }
+    } catch (error) {
+      ErrorToast("Failed to load products");
+      console.error(error);
+    } finally {
+      setGlobalLoader(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNewProducts();
+  }, []);
+
+  //  create new product
   const handleCreateProduct = async (e) => {
     e.preventDefault();
 
@@ -230,6 +255,7 @@ const NewProduct = () => {
       });
       if (res.data.status === "Success") {
         SuccessToast("Product created successfully!");
+        fetchNewProducts();
         resetForm();
       } else {
         ErrorToast(res.data.message || "Failed to create product");
@@ -471,7 +497,75 @@ const NewProduct = () => {
             </div>
           </form>
         </div>
-        <FetchProducts />
+        {/* <FetchProducts /> */}
+        {/* New Products List */}
+
+        <div className="global_sub_container">
+          <div>
+            <h2 className="text-xl mb-3 font-semibold flex flex-col">
+              Products List
+            </h2>
+          </div>
+
+          {newProducts.length > 0 ? (
+            <div>
+              <div className="overflow-x-auto">
+                <table className="global_table">
+                  <thead className="global_thead">
+                    <tr>
+                      <th className="global_th">No</th>
+                      <th className="global_th">Name</th>
+                      <th className="global_th">Brand</th>
+                      <th className="global_th">Category</th>
+                      <th className="global_th">Stock</th>
+                      <th className="global_th">Purchase (unitCost)</th>
+                      <th className="global_th">Sell Price (mrp)</th>
+                      <th className="global_th">Created At</th>{" "}
+                      {/*  New Column */}
+                    </tr>
+                  </thead>
+                  <tbody className="global_tbody">
+                    {newProducts.map((product, index) => (
+                      <tr className="global_tr" key={product._id}>
+                        <td className="global_td">{index + 1}</td>
+                        <td className="global_td">{product.name}</td>
+                        <td className="global_td">
+                          {product.brandName || "N/A"}
+                        </td>
+                        <td className="global_td">
+                          {product.categoryName || "N/A"}
+                        </td>
+                        <td className="global_td">
+                          {parseInt(product.stock || product.qty || 0)}
+                        </td>
+                        <td className="global_td">
+                          {parseFloat(product.unitCost || 0).toFixed(2)}
+                        </td>
+                        <td className="global_td">
+                          {parseFloat(product.mrp || 0).toFixed(2)}
+                        </td>
+
+                        {/*  Created At Display */}
+                        <td className="global_td">
+                          {product.createdAt
+                            ? new Date(product.createdAt).toLocaleDateString(
+                                "en-GB"
+                              ) // DD/MM/YYYY
+                            : "N/A"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">No products found.</p>
+            </div>
+          )}
+        </div>
+
         <ProductModal />
       </div>
     </>
