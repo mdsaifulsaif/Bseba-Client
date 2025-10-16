@@ -362,38 +362,43 @@ const NewProduct = () => {
 
               {/* Unit, Decimal, Manage Stock */}
               <div className="grid grid-cols-1 md:grid-cols-6 gap-2 items-end">
-                <div className="md:col-span-2 w-full">
-                  <label className="block text-sm font-medium mb-1 whitespace-nowrap">
-                    Product Unit <span className="text-red-500">*</span>
-                  </label>
-                  <Select
-                    options={units}
-                    value={selectedUnit}
-                    onChange={(unit) => {
-                      setSelectedUnit(unit);
-                      handleProductChange("unit", unit?.value || "");
-                    }}
-                    placeholder="Select Unit"
-                    classNamePrefix="react-select"
-                    isClearable
-                    menuPortalTarget={document.body}
-                    styles={{
-                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      openModal("unit", () => {
-                        fetchUnits();
-                      })
-                    }
-                    className="border border-green-600 text-green-600 py-1 rounded w-full"
-                  >
-                    + Unit
-                  </button>
+                <div className="md:col-span-3 w-full flex items-end gap-3">
+                  {/* Unit Select */}
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium mb-1 whitespace-nowrap">
+                      Product Unit <span className="text-red-500">*</span>
+                    </label>
+                    <Select
+                      options={units}
+                      value={selectedUnit}
+                      onChange={(unit) => {
+                        setSelectedUnit(unit);
+                        handleProductChange("unit", unit?.value || "");
+                      }}
+                      placeholder="Select Unit"
+                      classNamePrefix="react-select"
+                      isClearable
+                      menuPortalTarget={document.body}
+                      styles={{
+                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                      }}
+                    />
+                  </div>
+
+                  {/* Add Unit Button */}
+                  <div className="flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        openModal("unit", () => {
+                          fetchUnits();
+                        })
+                      }
+                      className="border border-green-600 text-green-600 py-1 px-3 rounded w-full"
+                    >
+                      + Unit
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex gap-3">
@@ -496,7 +501,7 @@ const NewProduct = () => {
             </div>
           </form>
         </div>
-        {/* <FetchProducts /> */}
+
         {/* New Products List */}
 
         <div className="global_sub_container">

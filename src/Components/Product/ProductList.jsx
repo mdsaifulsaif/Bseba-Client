@@ -229,7 +229,7 @@ const ProductList = () => {
             <button
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
               disabled={page === 1}
-              className={`px-4 py-2 rounded-r-md rounded-l-full ${
+              className={`px-4 dark:text-gray-800 py-2 rounded-r-md rounded-l-full ${
                 page === 1 ? "bg-gray-200 cursor-not-allowed" : "global_button"
               }`}
             >
@@ -241,9 +241,9 @@ const ProductList = () => {
             <button
               onClick={() => setPage((p) => p + 1)}
               disabled={page >= Math.ceil(total / limit)}
-              className={`px-4 py-2 rounded-l-md rounded-r-full ${
+              className={`px-4 dark:text-gray-800 py-2 rounded-l-md rounded-r-full ${
                 page >= Math.ceil(total / limit)
-                  ? "bg-gray-200 cursor-not-allowed"
+                  ? "bg-gray-200  cursor-not-allowed"
                   : "global_button"
               }`}
             >

@@ -204,6 +204,7 @@ const EditProduct = () => {
                   handleChange("brandID", val?.value);
                 }}
                 placeholder="Select Brand"
+                classNamePrefix="react-select"
                 isClearable
               />
             </div>
@@ -221,6 +222,7 @@ const EditProduct = () => {
                 }}
                 placeholder="Select Category"
                 isClearable
+                classNamePrefix="react-select"
               />
             </div>
 
@@ -234,6 +236,7 @@ const EditProduct = () => {
                   handleChange("unit", val?.value);
                 }}
                 placeholder="Select Unit"
+                classNamePrefix="react-select"
                 isClearable
               />
             </div>
@@ -241,9 +244,7 @@ const EditProduct = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Alert Qty
-              </label>
+              <label className="block text-sm font-medium mb-1">Qty</label>
               <input
                 type="number"
                 value={formData.alert}

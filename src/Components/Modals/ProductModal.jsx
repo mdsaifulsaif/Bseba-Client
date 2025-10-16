@@ -74,7 +74,7 @@ const ProductModal = () => {
         className="bg-white dark:bg-[#1E2939] p-6 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto shadow-lg"
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="font-bold text-lg">{config.title}</h2>
+          <h2 className="font-bold dark:text-white text-lg">{config.title}</h2>
           <button className="global_button_red" onClick={closeModal}>
             Close
           </button>
@@ -86,7 +86,7 @@ const ProductModal = () => {
             value={form[config.fieldName] || ""}
             onChange={handleChange}
             placeholder={config.title}
-            className="global_input flex-1"
+            className="global_input flex-1 dark:text-gray-300"
           />
           <button className="global_button" type="submit">
             Create
