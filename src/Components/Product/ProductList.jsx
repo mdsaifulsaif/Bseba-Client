@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { ErrorToast } from "../../Helper/FormHelper";
+import { ErrorToast, SuccessToast } from "../../Helper/FormHelper";
 import loadingStore from "../../Zustand/LoadingStore";
 import { BaseURL } from "../../Helper/Config";
 import { getToken } from "../../Helper/SessionHelper";
 import axios from "axios";
+import Swal from "sweetalert2";
 
-const ProductsList = () => {
+const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(20);
@@ -35,6 +36,67 @@ const ProductsList = () => {
   useEffect(() => {
     fetchProducts();
   }, [page, limit, search]);
+
+  // Delete product Handle
+  const HandleProductDelet = async (id) => {
+    Swal.fire({
+      title: '<span class="text-gray-900 dark:text-white">Are you sure?</span>',
+      html: '<p class="text-gray-600 dark:text-gray-300">This action cannot be undone!</p>',
+      icon: "warning",
+      showCancelButton: true,
+      background: "rgba(255, 255, 255, 0.2)",
+      backdrop: `
+          rgba(0,0,0,0.4)
+          url("/images/nyan-cat.gif")
+          left top
+          no-repeat
+        `,
+      customClass: {
+        popup:
+          "rounded-lg border border-white/20 dark:border-gray-700/50 shadow-xl backdrop-blur-lg bg-white/80 dark:bg-gray-800/80",
+        confirmButton:
+          "px-4 py-2 bg-red-600/90 hover:bg-red-700/90 text-white rounded-md font-medium transition-colors backdrop-blur-sm ml-3",
+        cancelButton:
+          "px-4 py-2 bg-white/90 dark:bg-gray-700/90 hover:bg-gray-100/90 dark:hover:bg-gray-600/90 text-gray-800 dark:text-gray-200 border border-white/20 dark:border-gray-600/50 rounded-md font-medium transition-colors ml-2 backdrop-blur-sm",
+        title: "text-lg font-semibold",
+        htmlContainer: "mt-2",
+      },
+      buttonsStyling: false,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setGlobalLoader(true);
+          const response = await axios.get(`${BaseURL}/DeleteProduct/${id}`, {
+            headers: { token: getToken() },
+          });
+
+          if (response.data.status === "Success") {
+            SuccessToast(response.data.message);
+
+            // Auto remove from list
+            setProducts((prev) => prev.filter((p) => p._id !== id));
+            setTotal((prevTotal) => prevTotal - 1);
+          } else {
+            ErrorToast(response.data.message);
+          }
+        } catch (error) {
+          ErrorToast(
+            error.response?.data?.message || "Failed to delete Product"
+          );
+        } finally {
+          setGlobalLoader(false);
+        }
+      }
+    });
+  };
+
+  // Placeholder for edite form data
+  const handleUpdate = (product) => {
+    console.log("Edit product:", product);
+  };
 
   return (
     <div className="global_sub_container">
@@ -90,8 +152,9 @@ const ProductsList = () => {
                   <th className="global_th">Stock</th>
                   <th className="global_th">Purchase (unitCost)</th>
                   <th className="global_th">Sell Price (mrp)</th>
-                  <th className="global_th">Deler Price </th>
+                  <th className="global_th">Dealer Price (dp)</th>
                   <th className="global_th">Barcode</th>
+                  {/* <th className="global_th">Created</th> */}
                   <th className="global_th">Action</th>
                 </tr>
               </thead>
@@ -111,28 +174,32 @@ const ProductsList = () => {
                     <td className="global_td">
                       {parseInt(product.stock || product.qty || 0)}
                     </td>
-
-                    {/* Purchase Price */}
                     <td className="global_td">
                       {parseFloat(product.unitCost || 0).toFixed(2)}
                     </td>
-
-                    {/* Sell Price */}
                     <td className="global_td">
                       {parseFloat(product.mrp || 0).toFixed(2)}
                     </td>
-                    {/* Deler Price */}
                     <td className="global_td">
                       {parseFloat(product.dp || 0).toFixed(2)}
                     </td>
-
                     <td className="global_td">{product.barcode || "N/A"}</td>
-
+                    {/* <td className="global_td">
+                      {product.createdAt
+                        ? new Date(product.createdAt).toLocaleDateString()
+                        : "N/A"}
+                    </td> */}
                     <td className="global_td flex gap-2">
-                      <button className="px-2 py-1 bg-blue-500 text-white rounded">
+                      <button
+                        onClick={() => handleUpdate(product)}
+                        className="px-2 py-1 bg-blue-500 text-white rounded"
+                      >
                         Edit
                       </button>
-                      <button className="px-2 py-1 bg-red-500 text-white rounded">
+                      <button
+                        onClick={() => HandleProductDelet(product._id)}
+                        className="px-2 py-1 bg-red-500 text-white rounded"
+                      >
                         Delete
                       </button>
                     </td>
@@ -178,4 +245,4 @@ const ProductsList = () => {
   );
 };
 
-export default ProductsList;
+export default ProductList;

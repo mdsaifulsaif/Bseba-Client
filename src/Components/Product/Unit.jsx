@@ -131,7 +131,7 @@ const Unit = () => {
     });
   };
 
-  // ✅ Filter brands by search keyword
+  //  Filter brands by search keyword
   const filteredUnits = units.filter((unit) =>
     unit.name.toLowerCase().includes(searchKeyWord.toLowerCase())
   );
