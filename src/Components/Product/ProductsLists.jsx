@@ -5,7 +5,7 @@ import { BaseURL } from "../../Helper/Config";
 import { getToken } from "../../Helper/SessionHelper";
 import axios from "axios";
 
-const FetchProducts = () => {
+const ProductsList = () => {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(20);
@@ -177,4 +177,4 @@ const FetchProducts = () => {
   );
 };
 
-export default FetchProducts;
+export default ProductsList;

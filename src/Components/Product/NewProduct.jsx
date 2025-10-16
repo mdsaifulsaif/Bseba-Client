@@ -12,7 +12,6 @@ import openCloseStore from "../../Zustand/OpenCloseStore";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import FetchProducts from "./fetchProducts";
 
 const NewProduct = () => {
   const { setGlobalLoader } = loadingStore();
@@ -520,7 +519,7 @@ const NewProduct = () => {
                       <th className="global_th">Stock</th>
                       <th className="global_th">Purchase (unitCost)</th>
                       <th className="global_th">Sell Price (mrp)</th>
-                      <th className="global_th">Created At</th>{" "}
+                      <th className="global_th">Created At</th>
                       {/*  New Column */}
                     </tr>
                   </thead>

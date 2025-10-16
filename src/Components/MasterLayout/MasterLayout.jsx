@@ -75,7 +75,7 @@ const MasterLayout = ({ children }) => {
             children: [
               {
                 id: "product list",
-                title: "Product",
+                title: "Product List",
                 path: "/ProductList",
                 icon: <RiRedPacketLine />,
               },
