@@ -45,6 +45,8 @@ import NewProductPage from "./Pages/Product/NewProductPage";
 import UnitPage from "./Pages/Product/UnitPage";
 import BrandPage from "./Pages/Product/BrandPage";
 import EditProductPage from "./Pages/Product/EditProductPage";
+import EditContact from "./Components/Contact/EditContact";
+import EditContactPage from "./Pages/Contact/EditContactPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -76,6 +78,7 @@ function App() {
             <Route path="/BankAccount" element={<AccountPage />} />
             <Route path="/Dealer" element={<DealerPage />} />
             <Route path="/Supplier" element={<SupplierPage />} />
+            <Route path="/EditContact/:id" element={<EditContactPage />} />
             <Route
               path="/ViewDealerLaser/:id"
               element={<ViewDealerLaserPage />}

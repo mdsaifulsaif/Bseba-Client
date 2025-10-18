@@ -308,7 +308,7 @@ const Supplier = () => {
               }}
               className="global_input"
             />
-            {console.log("serch key", search)}
+
             <select
               value={limit}
               onChange={(e) => setLimit(parseInt(e.target.value))}
@@ -362,12 +362,13 @@ const Supplier = () => {
                     {/* Optional Edit Button */}
 
                     <td className="global_td">
-                      <button
-                        onClick={() => handleEdit(s)}
+                      <Link
+                        to={`/EditContact/${s._id}`}
+                        // onClick={() => handleEdit(s)}
                         className="global_edit"
                       >
                         Edit
-                      </button>
+                      </Link>
                     </td>
 
                     <td className="global_td">
