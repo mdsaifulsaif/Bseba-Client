@@ -171,6 +171,7 @@ const Supplier = () => {
               value={form.supplier}
               onChange={handleChange}
               className="global_input"
+              placeholder="Supplier Name"
               required
             />
           </div>
@@ -187,6 +188,7 @@ const Supplier = () => {
               value={form.company}
               onChange={handleChange}
               className="global_input"
+              placeholder="Company"
               required
             />
           </div>
@@ -203,6 +205,7 @@ const Supplier = () => {
               value={form.mobile}
               onChange={handleChange}
               className="global_input"
+              placeholder="Mobile Number"
               required
             />
           </div>
@@ -220,6 +223,7 @@ const Supplier = () => {
               value={form.email}
               onChange={handleChange}
               className="global_input"
+              placeholder="Email"
             />
           </div>
 
@@ -236,6 +240,7 @@ const Supplier = () => {
               value={form.address}
               onChange={handleChange}
               className="global_input"
+              placeholder="Address"
               required
             />
           </div>

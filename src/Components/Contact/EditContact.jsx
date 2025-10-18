@@ -20,7 +20,7 @@ const EditContact = () => {
     businessName: "", // hidden থাকবে
   });
 
-  // ✅ Business Name আনার জন্য আলাদা API call
+  //  Business Name anar jonno API call
   const fetchBusinessName = async (businessID) => {
     try {
       const res = await axios.get(`${BaseURL}/GetBusinessById/${businessID}`, {
@@ -38,7 +38,7 @@ const EditContact = () => {
     }
   };
 
-  // ✅ Contact আনো
+  //  Contact আনো
   const fetchContact = async () => {
     setGlobalLoader(true);
     try {
@@ -50,7 +50,7 @@ const EditContact = () => {
         const data = res.data.data;
         console.log(data);
 
-        // BusinessName আলাদা করে আনো
+        // BusinessName alada kore neya holo
         const businessName = await fetchBusinessName(data.businessID);
 
         setForm({
@@ -99,7 +99,13 @@ const EditContact = () => {
 
       if (res.data.status === "Success") {
         SuccessToast("Contact updated successfully");
-        navigate("/Supplier");
+        if (form.contactType === "Customer") {
+          navigate("/Customer");
+        } else if (form.contactType === "Supplier") {
+          navigate("/Supplier");
+        } else {
+          navigate(-1); // যদি Both বা অন্য কিছু হয়, আগের পেজে ফিরে যাবে
+        }
       } else {
         ErrorToast("Update failed");
       }

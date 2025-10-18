@@ -113,9 +113,9 @@ const MasterLayout = ({ children }) => {
             icon: <RiContactsBook3Line />,
             children: [
               {
-                id: "dealer",
-                title: "Dealer",
-                path: "/Dealer",
+                id: "customer",
+                title: "Customer",
+                path: "/Customer",
                 icon: <GrContactInfo />,
               },
               {
