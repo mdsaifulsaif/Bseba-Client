@@ -3,9 +3,12 @@ import axios from "axios";
 import { BaseURL } from "../../Helper/Config";
 import { getToken } from "../../Helper/SessionHelper";
 import loadingStore from "../../Zustand/LoadingStore";
-import { ErrorToast } from "../../Helper/FormHelper";
+import { ErrorToast, SuccessToast } from "../../Helper/FormHelper"; // ✅ SuccessToast যোগ করা হয়েছে
 import { Link } from "react-router-dom";
 import { printElement } from "../../Helper/Printer";
+import { MdDeleteOutline } from "react-icons/md";
+import { FaRegEye } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const PurchaseList = () => {
   const { setGlobalLoader } = loadingStore();
@@ -21,9 +24,10 @@ const PurchaseList = () => {
     try {
       const keyword = searchKeyword.trim() === "" ? 0 : searchKeyword;
       const res = await axios.get(
-        `${BaseURL}/PurchasesList/${page}/${limit}/${keyword}`, // include limit
+        `${BaseURL}/PurchasesList/${page}/${limit}/${keyword}`,
         { headers: { token: getToken() } }
       );
+
       if (res.data.status === "Success") {
         const purchasesDAta = (res.data.data || []).reverse();
         setPurchases(purchasesDAta);
@@ -32,11 +36,61 @@ const PurchaseList = () => {
         ErrorToast("Failed to fetch purchases");
       }
     } catch (error) {
-      console.error(error);
       ErrorToast("Something went wrong");
     } finally {
       setGlobalLoader(false);
     }
+  };
+
+  // ✅ Fixed Delete Function
+  const handleDelete = async (id) => {
+    Swal.fire({
+      title: '<span class="text-gray-900 dark:text-white">Are you sure?</span>',
+      html: '<p class="text-gray-600 dark:text-gray-300">This action cannot be undone!</p>',
+      icon: "warning",
+      showCancelButton: true,
+      background: "rgba(255, 255, 255, 0.2)",
+      backdrop: `
+          rgba(0,0,0,0.4)
+          url("/images/nyan-cat.gif")
+          left top
+          no-repeat
+        `,
+      customClass: {
+        popup:
+          "rounded-lg border border-white/20 dark:border-gray-700/50 shadow-xl backdrop-blur-lg bg-white/80 dark:bg-gray-800/80",
+        confirmButton:
+          "px-4 py-2 bg-red-600/90 hover:bg-red-700/90 text-white rounded-md font-medium transition-colors backdrop-blur-sm ml-3",
+        cancelButton:
+          "px-4 py-2 bg-white/90 dark:bg-gray-700/90 hover:bg-gray-100/90 dark:hover:bg-gray-600/90 text-gray-800 dark:text-gray-200 border border-white/20 dark:border-gray-600/50 rounded-md font-medium transition-colors ml-2 backdrop-blur-sm",
+        title: "text-lg font-semibold",
+        htmlContainer: "mt-2",
+      },
+      buttonsStyling: false,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setGlobalLoader(true);
+          const response = await axios.get(`${BaseURL}/DeletePurchase/${id}`, {
+            headers: { token: getToken() },
+          });
+
+          if (String(response?.data?.status).toLowerCase() === "success") {
+            SuccessToast(response.data.message || "Deleted Successfully");
+            fetchPurchases(); // ✅ রিলোড কাজ করবে এখন
+          } else {
+            ErrorToast(response.data?.message || "Delete failed");
+          }
+        } catch (error) {
+          ErrorToast("Failed to delete Purchase");
+        } finally {
+          setGlobalLoader(false);
+        }
+      }
+    });
   };
 
   useEffect(() => {
@@ -101,6 +155,9 @@ const PurchaseList = () => {
               <th className="global_th" id="no-print">
                 Details
               </th>
+              <th className="global_th" id="no-print">
+                Delete
+              </th>
             </tr>
           </thead>
           <tbody className="global_tbody">
@@ -141,6 +198,16 @@ const PurchaseList = () => {
                     >
                       View
                     </Link>
+                  </td>
+                  <td className="global_td flex items-center justify-center gap-3">
+                    <span
+                      onClick={() => handleDelete(p._id)}
+                      className="px-2 py-1 bg-red-500 cursor-pointer text-white rounded"
+                    >
+                      {" "}
+                      Delete
+                      {/* <MdDeleteOutline size={18} className="text-red-500" /> */}
+                    </span>
                   </td>
                 </tr>
               ))

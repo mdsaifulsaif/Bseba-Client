@@ -97,11 +97,6 @@ const ProductList = () => {
     });
   };
 
-  // // Placeholder for edite form data
-  // const handleUpdate = (product) => {
-  //   console.log("Edit product:", product);
-  // };
-
   return (
     <div className="global_sub_container">
       {/* Header + Search + Limit */}
