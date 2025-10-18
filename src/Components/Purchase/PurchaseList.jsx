@@ -25,7 +25,8 @@ const PurchaseList = () => {
         { headers: { token: getToken() } }
       );
       if (res.data.status === "Success") {
-        setPurchases(res.data.data || []);
+        const purchasesDAta = (res.data.data || []).reverse();
+        setPurchases(purchasesDAta);
         setTotal(res.data.total || 0);
       } else {
         ErrorToast("Failed to fetch purchases");
@@ -90,8 +91,8 @@ const PurchaseList = () => {
             <tr className="global_tr">
               <th className="global_th">No</th>
               <th className="global_th">Supplier</th>
-              <th className="global_th">Company</th>
-              <th className="global_th">Address</th>
+              {/* <th className="global_th">Company</th>
+              <th className="global_th">Address</th> */}
               <th className="global_th">Grand Total</th>
               <th className="global_th">Paid</th>
               <th className="global_th">Due</th>
@@ -105,28 +106,25 @@ const PurchaseList = () => {
           <tbody className="global_tbody">
             {purchases.length === 0 ? (
               <tr className="global_tr">
-                <td colSpan={8} className="text-center py-4 text-gray-500">
+                <td colSpan={10} className="text-center py-4 text-gray-500">
                   No purchases found
                 </td>
               </tr>
             ) : (
               purchases.map((p, idx) => (
                 <tr className="global_tr" key={p._id}>
-                  <td className="global_td">{p.referenceNo}</td>
-                  <td className="global_td">
-                    {p.Supplier?.[0]?.supplier || ""}
-                  </td>
-                  <td className="global_td">
+                  <td className="global_td">{idx + 1}</td>
+                  <td className="global_td">{p.Supplier?.[0]?.name || ""}</td>
+                  {/* <td className="global_td">
                     {p.Supplier?.[0]?.company || ""}
                   </td>
                   <td className="global_td min-w-[150px] max-w-[200px] truncate">
                     {p.Supplier?.[0]?.address || ""}
-                  </td>
-
+                  </td> */}
                   <td className="global_td">{p.grandTotal.toFixed(2)}</td>
                   <td className="global_td">{p.paid.toFixed(2)}</td>
                   <td className="global_td">{p.dueAmount.toFixed(2)}</td>
-                  <td className="global_td">{p.Users?.[0]?.name || ""}</td>
+                  <td className="global_td">{p.Users?.[0]?.fullName || ""}</td>
                   <td className="global_td min-w-[100px]">
                     {(() => {
                       const d = new Date(p.CreatedDate);

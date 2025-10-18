@@ -193,9 +193,9 @@ const ProductList = () => {
                         ? new Date(product.createdAt).toLocaleDateString()
                         : "N/A"}
                     </td> */}
-                    <td className="global_td flex gap-2">
+                    <td className="global_td flex ">
                       <button
-                        className="px-2 py-1 bg-blue-500 text-white rounded"
+                        className="mr-1 px-2 py-1 bg-blue-500 text-white rounded"
                         onClick={() =>
                           navigate(`/EditProduct/${product._id}`, {
                             state: { product },

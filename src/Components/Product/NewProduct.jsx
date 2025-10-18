@@ -416,8 +416,8 @@ const NewProduct = () => {
               </div>
 
               {/* Unit, Decimal, Manage Stock */}
-              <div className="grid grid-cols-1 md:grid-cols-6 gap-2 items-end">
-                <div className="md:col-span-3 w-full flex items-end gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-7 gap-2 items-end">
+                <div className="md:col-span-4 w-full flex items-end gap-2">
                   {/* Unit Select */}
                   <div className="flex-1">
                     <label className="block text-sm font-medium mb-1 whitespace-nowrap">
@@ -456,7 +456,7 @@ const NewProduct = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <div className="flex flex-col">
                     <label className="block text-sm font-medium mb-1 whitespace-nowrap">
                       Decimal
@@ -613,10 +613,10 @@ const NewProduct = () => {
                               ) // DD/MM/YYYY
                             : "N/A"}
                         </td>
-                        <td className="global_td flex items-center justify-center gap-2">
+                        <td className="global_td  ">
                           {/* update button  */}
                           <button
-                            className="px-2 py-1 outline-0 bg-blue-500 text-white rounded"
+                            className="mr-1 px-2 py-1 outline-0 bg-blue-500 text-white rounded"
                             onClick={() =>
                               navigate(`/EditProduct/${product._id}`, {
                                 state: { product },
