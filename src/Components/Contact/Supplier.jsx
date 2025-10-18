@@ -35,6 +35,7 @@ const Supplier = () => {
       );
       if (res.data.status === "Success") {
         setSuppliers(res.data.data);
+        console.log(res.data.data);
         setTotal(res.data.total);
       } else {
         ErrorToast("Failed to fetch suppliers");
@@ -307,6 +308,7 @@ const Supplier = () => {
               }}
               className="global_input"
             />
+            {console.log("serch key", search)}
             <select
               value={limit}
               onChange={(e) => setLimit(parseInt(e.target.value))}
@@ -327,11 +329,11 @@ const Supplier = () => {
               <tr>
                 <th className="global_th">#</th>
                 <th className="global_th">Name</th>
-                <th className="global_th">Company</th>
+                <th className="global_th">Balance</th>
                 <th className="global_th">Mobile</th>
                 <th className="global_th">Address</th>
-                <th className="global_th">Balance</th>
-                {/* <th className="global_th">Edit</th> */}
+                {/* <th className="global_th">Balance</th> */}
+                <th className="global_th">Edit</th>
                 <th className="global_th">Laser</th>
               </tr>
             </thead>
@@ -340,13 +342,14 @@ const Supplier = () => {
                 suppliers.map((s, i) => (
                   <tr key={s._id} className="global_tr">
                     <td className="global_td">{i + 1}</td>
-                    <td className="global_td">{s.type}</td>
-                    <td className="global_td">{s.businessName}</td>
+                    <td className="global_td">{s.name}</td>
+                    <td className="global_td">{s.balance}</td>
                     <td className="global_td">{s.mobile}</td>
                     <td className="global_td max-w-[150px] truncate">
                       {s.address}
                     </td>
-                    <td
+
+                    {/* <td
                       className={`global_td ${
                         s.balance >= 0
                           ? "text-green-600 dark:text-green-400"
@@ -354,19 +357,18 @@ const Supplier = () => {
                       }`}
                     >
                       {s.balance}
-                    </td>
+                    </td> */}
 
                     {/* Optional Edit Button */}
-                    {/* 
-          <td className="global_td">
-            <button
-              onClick={() => handleEdit(s)}
-              className="global_edit"
-            >
-              Edit
-            </button>
-          </td>
-          */}
+
+                    <td className="global_td">
+                      <button
+                        onClick={() => handleEdit(s)}
+                        className="global_edit"
+                      >
+                        Edit
+                      </button>
+                    </td>
 
                     <td className="global_td">
                       <Link
