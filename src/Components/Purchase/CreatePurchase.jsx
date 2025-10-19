@@ -293,6 +293,7 @@ const CreatePurchase = () => {
       });
 
       if (res.data.status === "Success") {
+        console.log("after create prucech", res.data.purchaseID);
         SuccessToast("Purchase created successfully");
         setSelectedProducts([]);
         setSelectedSupplier(null);
@@ -601,7 +602,94 @@ const CreatePurchase = () => {
       )}
 
       {/* Serial Modal */}
+
+      {/* Serial Modal */}
       {serialModalOpen &&
+        createPortal(
+          <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-black/20">
+            <div className="bg-white rounded-lg p-6 w-96">
+              <h2 className="text-lg font-semibold mb-4">Add Serial Numbers</h2>
+
+              {/* Serial Inputs */}
+              {serialInputs.map((s, i) => (
+                <div key={i} className="flex items-center gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={s}
+                    onChange={(e) => handleSerialChange(i, e.target.value)}
+                    onKeyDown={(e) => handleSerialKeyDown(e, i)}
+                    className="global_input flex-1"
+                    placeholder={`Serial ${i + 1}`}
+                  />
+                  {serialInputs.length > 1 && (
+                    <button
+                      onClick={() => removeSerialInput(i)}
+                      className="bg-red-500 px-2 py-1 cursor-pointer text-white rounded"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              {/* Add More Button */}
+              <div className="flex items-center gap-2 mb-4">
+                <button
+                  onClick={addSerialInput}
+                  className="bg-green-100 text-green-700 px-3 py-1 rounded-md font-medium hover:bg-green-200 transition"
+                >
+                  Add More
+                </button>
+                <div className="text-xs text-gray-600">
+                  Tip: Press Enter to add new serial.
+                </div>
+              </div>
+
+              {/* Previously Saved Serials */}
+              {currentProductIndex !== null &&
+                selectedProducts[currentProductIndex] &&
+                selectedProducts[currentProductIndex].serialNos &&
+                selectedProducts[currentProductIndex].serialNos.length > 0 && (
+                  <div className="mb-3">
+                    <div className="text-sm font-medium mb-1">
+                      Previously saved:
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProducts[currentProductIndex].serialNos.map(
+                        (sn, i) => (
+                          <div
+                            key={i}
+                            className="text-xs px-2 py-1 bg-gray-100 rounded"
+                          >
+                            {sn}
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+
+              {/* Cancel / Save Buttons */}
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => {
+                    setSerialModalOpen(false);
+                    setSerialInputs([""]);
+                  }}
+                  className="global_button_red"
+                >
+                  Cancel
+                </button>
+                <button onClick={saveSerialNos} className="global_button">
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
+
+      {/* {serialModalOpen &&
         createPortal(
           <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 w-96">
@@ -677,7 +765,7 @@ const CreatePurchase = () => {
             </div>
           </div>,
           document.body
-        )}
+        )} */}
 
       <ProductAddModal onSuccess={fetchProducts} />
       <CreateSupplierModal onSuccess={fetchSuppliers} />

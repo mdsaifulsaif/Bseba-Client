@@ -46,7 +46,7 @@ const PurchaseDetails = () => {
     });
   };
 
-  if (!details) return <div className="p-4">Loading...</div>;
+  // if (!details) return <div className="p-4">Loading...</div>;
 
   const totalQty = details?.Products?.reduce(
     (sum, p) => sum + Number(p.quantity || 0),
