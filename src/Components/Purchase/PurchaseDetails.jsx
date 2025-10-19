@@ -39,9 +39,11 @@ const PurchaseDetails = () => {
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
     const d = new Date(dateStr);
-    return `${String(d.getDate()).padStart(2, "0")}-${String(
-      d.getMonth() + 1
-    ).padStart(2, "0")}-${d.getFullYear()}`;
+    return d.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
   };
 
   if (!details) return <div className="p-4">Loading...</div>;
@@ -59,125 +61,141 @@ const PurchaseDetails = () => {
     <div className="global_container">
       <div
         ref={printRef}
-        className="max-w-4xl mx-auto bg-white shadow-lg p-6 rounded-lg border border-gray-200"
+        className="max-w-5xl mx-auto bg-white rounded-md shadow border border-gray-200 p-6"
       >
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
+        {/* Header Section */}
+        <div className="flex justify-between items-center mb-2">
           <div>
-            <h1 className="text-2xl font-bold">{businessDetails?.name}</h1>
+            <h2 className="text-2xl font-semibold text-[#0a47a9]">
+              {businessDetails?.name || "Chuadanga Computer"}
+            </h2>
             <p className="text-gray-600">{businessDetails?.address}</p>
           </div>
-          <div className="text-right bg-blue-600 text-white px-4 py-2 rounded">
-            <h2 className="font-bold">Purchase Invoice</h2>
-            <p className="text-sm">
-              #{details?.PurchaseSummary?.Reference || id}
+          <div className="text-right">
+            <h3 className="text-sm font-semibold text-gray-600">
+              Purchase Invoice
+            </h3>
+            <p className="text-blue-500 font-medium text-sm">
+              #{details?.PurchaseSummary?.Reference}
             </p>
           </div>
         </div>
 
-        {/* Supplier Info */}
-        <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded mb-4">
-          <div>
-            <p>
-              <strong>Name:</strong> {details?.Supplier?.name}
-            </p>
-            <p>
-              <strong>Mobile:</strong> {details?.Supplier?.mobile}
-            </p>
-            <p>
-              <strong>Address:</strong> {details?.Supplier?.address}
-            </p>
+        {/* Supplier & Purchase Info */}
+        <div className="bg-gray-50 border rounded-md mb-4">
+          <div className="border-b px-4 py-2 font-semibold text-sm text-gray-700">
+            Supplier & Purchase Information
           </div>
-          <div>
-            <p>
-              <strong>Date:</strong>{" "}
-              {formatDate(details?.PurchaseSummary?.Date)}
-            </p>
-            <p>
-              <strong>Reference:</strong> {details?.PurchaseSummary?.Reference}
-            </p>
-            <p>
-              <strong>Created:</strong> {details?.Users?.[0]?.fullName || "N/A"}
-            </p>
+          <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 p-4 text-sm">
+            <div>
+              <p>
+                <strong>Name:</strong> {details?.Supplier?.name}
+              </p>
+              <p>
+                <strong>Mobile:</strong> {details?.Supplier?.mobile}
+              </p>
+              <p>
+                <strong>Address:</strong> {details?.Supplier?.address}
+              </p>
+            </div>
+            <div>
+              <p>
+                <strong>Date:</strong>{" "}
+                {formatDate(details?.PurchaseSummary?.Date)}
+              </p>
+              <p>
+                <strong>Reference:</strong>{" "}
+                {details?.PurchaseSummary?.Reference}
+              </p>
+              <p>
+                <strong>Created:</strong> {details?.Users?.name || "N/A"}
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Products Table */}
         <div className="overflow-x-auto mb-4">
-          <table className="w-full border border-gray-300">
-            <thead className="bg-gray-200 text-left">
+          <table className="w-full text-sm border border-gray-300">
+            <thead className="bg-gray-100 font-semibold">
               <tr>
-                <th className="border p-2">#</th>
-                <th className="border p-2">Product</th>
-                <th className="border p-2">Qty</th>
-                <th className="border p-2">Unit Price</th>
-                <th className="border p-2">Total</th>
+                <th className="border p-2 text-center w-10">#</th>
+                <th className="border p-2 text-left">Product</th>
+                <th className="border p-2 text-center w-16">Qty</th>
+                <th className="border p-2 text-center w-28">Unit Price</th>
+                <th className="border p-2 text-center w-28">Total</th>
               </tr>
             </thead>
             <tbody>
               {details?.Products?.map((p, i) => (
-                <tr key={p.id || i}>
-                  <td className="border p-2">{i + 1}</td>
-                  <td className="border p-2">{p.name}</td>
-                  <td className="border p-2">{p.quantity}</td>
-                  <td className="border p-2">{p.unitCost}</td>
-                  <td className="border p-2">{p.total}</td>
+                <tr key={i}>
+                  <td className="border p-2 text-center">{i + 1}</td>
+                  <td className="border p-2">
+                    <span className="font-medium">{p.name}</span>
+                    {p.serialNos && p.serialNos.length > 0 && (
+                      <div className="text-xs text-gray-600 mt-1">
+                        <strong>Serial Numbers:</strong>{" "}
+                        {p.serialNos.join(", ")}
+                      </div>
+                    )}
+                  </td>
+                  <td className="border p-2 text-center">{p.quantity}</td>
+                  <td className="border p-2 text-center">{p.unitCost}</td>
+                  <td className="border p-2 text-center">{p.total}</td>
                 </tr>
               ))}
             </tbody>
             <tfoot>
-              <tr className="font-semibold bg-gray-100">
-                <td className="border p-2" colSpan={2}>
+              <tr className="font-semibold bg-gray-50">
+                <td className="border p-2 text-center" colSpan="2">
                   Total
                 </td>
-                <td className="border p-2">{totalQty}</td>
+                <td className="border p-2 text-center">{totalQty}</td>
                 <td className="border p-2"></td>
-                <td className="border p-2">{totalAmount}</td>
+                <td className="border p-2 text-center">{totalAmount}</td>
               </tr>
             </tfoot>
           </table>
         </div>
 
         {/* Payment Summary */}
-        <div className="flex flex-col lg:flex-row justify-between mt-4">
-          <div>
-            <p className="italic text-green-700">
-              In Words:{" "}
-              {numberToWords(details?.PurchaseSummary?.grandTotal || 0)} Taka
-              Only
-            </p>
-            {details?.PurchaseSummary?.note && (
-              <p className="text-sm text-gray-600 mt-1">
-                <strong>Note:</strong> {details.PurchaseSummary.note}
-              </p>
-            )}
+        <div className="flex flex-col md:flex-row justify-end">
+          <div className="bg-gray-50 border rounded-md p-4 w-full md:w-80 text-sm">
+            <h4 className="font-semibold mb-2 border-b pb-1 text-gray-700">
+              Payment Summary
+            </h4>
+            <div className="flex justify-between">
+              <span>Subtotal:</span>
+              <span>{details?.PurchaseSummary?.total?.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Paid Amount:</span>
+              <span className="text-green-600">
+                {details?.PurchaseSummary?.paid?.toFixed(2)}
+              </span>
+            </div>
+            <div className="flex justify-between font-semibold text-red-600 mt-1">
+              <span>Due Amount:</span>
+              <span>{details?.PurchaseSummary?.dueAmount?.toFixed(2)}</span>
+            </div>
           </div>
-          <div className="bg-gray-50 p-4 rounded w-full lg:w-1/3 mt-4 lg:mt-0">
-            <p className="flex justify-between">
-              <strong>Subtotal:</strong> {details?.PurchaseSummary?.total}
-            </p>
-            {details?.PurchaseSummary?.discount > 0 && (
-              <p className="flex justify-between">
-                <strong>Discount:</strong> {details?.PurchaseSummary?.discount}
-              </p>
-            )}
-            <p className="flex justify-between bg-green-100 p-2 rounded mt-2">
-              <strong>Grand Total:</strong>{" "}
-              {details?.PurchaseSummary?.grandTotal}
-            </p>
-            <p className="flex justify-between">
-              <strong>Paid:</strong> {details?.PurchaseSummary?.paid}
-            </p>
-            <p className="flex justify-between text-red-600">
-              <strong>Due:</strong> {details?.PurchaseSummary?.dueAmount}
-            </p>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-4 text-xs text-center text-gray-600 border-t pt-2">
+          Generated on {formatDate(new Date())} | Thank you for your business
+          <div className="mt-1 font-medium text-gray-700">
+            {businessDetails?.name || "Bseba"}
           </div>
         </div>
       </div>
 
       {/* Print Button */}
       <div className="flex justify-end mt-4">
-        <button onClick={handlePrint} className="global_button">
+        <button
+          onClick={handlePrint}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all"
+        >
           Print Receipt
         </button>
       </div>

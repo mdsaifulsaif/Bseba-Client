@@ -25,10 +25,19 @@ const CreatePurchase = () => {
   const { setGlobalLoader } = loadingStore();
   const { setSupplierModal } = openCloseStore();
   const [note, setNote] = useState("");
-  const [lastEdited, setLastEdited] = useState(null); // "discount" | "percent"
+  const [lastEdited, setLastEdited] = useState(null);
   const [purchaseDate, setPurchaseDate] = useState(new Date());
   const [grandTotal, setGrandTotal] = useState(0);
   const [dueAmount, setDueAmount] = useState(0);
+  ////
+
+  ///
+
+  // Serial Modal
+  const [serialModalOpen, setSerialModalOpen] = useState(false);
+  const [currentProductIndex, setCurrentProductIndex] = useState(null);
+  const [serialInputs, setSerialInputs] = useState([""]); // dynamic array
+
   const navigate = useNavigate();
 
   // Fetch suppliers
@@ -120,10 +129,8 @@ const CreatePurchase = () => {
   const handleProductChange = (index, field, value) => {
     const updated = [...selectedProducts];
     updated[index][field] = value === "" ? 0 : Number(value);
-
     updated[index].total =
       (updated[index].qty || 0) * (updated[index].unitCost || 0);
-
     setSelectedProducts(updated);
   };
 
@@ -133,38 +140,56 @@ const CreatePurchase = () => {
     0
   );
 
-  // Auto calculate based on percentage
   useEffect(() => {
     if (lastEdited === "percent") {
-      if (discountPercent === 0) {
-        setDiscount(0);
-      } else if (discountPercent > 0) {
-        const calcDiscount = (totalAmount * discountPercent) / 100;
-        setDiscount(Number(calcDiscount.toFixed(2)));
-      }
+      if (discountPercent === 0) setDiscount(0);
+      else
+        setDiscount(Number(((totalAmount * discountPercent) / 100).toFixed(2)));
     }
   }, [discountPercent, totalAmount, lastEdited]);
 
-  // Keep percentage synced if user edits flat discount
   useEffect(() => {
     if (lastEdited === "discount") {
-      if (discount === 0) {
-        setDiscountPercent(0);
-      } else if (totalAmount > 0) {
-        const percent = (discount / totalAmount) * 100;
-        setDiscountPercent(Number(percent.toFixed(2)));
-      }
+      if (discount === 0) setDiscountPercent(0);
+      else if (totalAmount > 0)
+        setDiscountPercent(Number(((discount / totalAmount) * 100).toFixed(2)));
     }
-  }, [discount, totalAmount, lastEdited]);
+  }, [discount, totalAmount]);
 
-  // Always recalc grandTotal & dueAmount
   useEffect(() => {
     const newGrand = totalAmount - (discount || 0);
     setGrandTotal(newGrand);
-
-    const newDue = Math.max(0, newGrand - (paidAmount || 0));
-    setDueAmount(newDue);
+    setDueAmount(Math.max(0, newGrand - (paidAmount || 0)));
   }, [totalAmount, discount, paidAmount]);
+
+  // Serial modal handlers
+  const openSerialModal = (index) => {
+    setCurrentProductIndex(index);
+    setSerialInputs(
+      selectedProducts[index].serialNos.length > 0
+        ? [...selectedProducts[index].serialNos]
+        : [""]
+    );
+    setSerialModalOpen(true);
+  };
+
+  const addSerialInput = () => setSerialInputs([...serialInputs, ""]);
+  const removeSerialInput = (i) => {
+    setSerialInputs(serialInputs.filter((_, idx) => idx !== i));
+  };
+  const handleSerialChange = (i, value) => {
+    const updated = [...serialInputs];
+    updated[i] = value;
+    setSerialInputs(updated);
+  };
+  const saveSerialNos = () => {
+    const serials = serialInputs.map((s) => s.trim()).filter((s) => s !== "");
+    const updatedProducts = [...selectedProducts];
+    updatedProducts[currentProductIndex].serialNos = serials;
+    setSelectedProducts(updatedProducts);
+    setSerialModalOpen(false);
+    setSerialInputs([""]);
+  };
 
   // Submit purchase
   const handleSubmit = async () => {
@@ -181,7 +206,7 @@ const CreatePurchase = () => {
         paid: paidAmount,
         dueAmount: dueAmount,
         note: note,
-        date: purchaseDate.toISOString(), // send date too
+        date: purchaseDate.toISOString(),
       },
       PurchasesProduct: selectedProducts.map((p) => ({
         productID: p._id,
@@ -195,21 +220,16 @@ const CreatePurchase = () => {
       })),
     };
 
-    console.log("Payload:", payload); // ✅ Debug
-
     try {
       setGlobalLoader(true);
       const res = await axios.post(`${BaseURL}/CreatePurchases`, payload, {
         headers: { token: getToken() },
       });
 
-      console.log("API Response:", res.data.data); //  Debug
-
       if (res.data.status === "Success") {
         SuccessToast("Purchase created successfully");
         setSelectedProducts([]);
         setSelectedSupplier(null);
-        // navigate(`/PurchaseDetails/${res.data.contactID}`);
       } else {
         ErrorToast(res.data.message || "Failed to create purchase");
       }
@@ -300,17 +320,18 @@ const CreatePurchase = () => {
                 <th className="global_th">No</th>
                 <th className="global_th">Product Name</th>
                 <th className="global_th">Qty</th>
+                <th className="global_th">Serial</th>
                 <th className="global_th">Unit Cost</th>
                 <th className="global_th">DP</th>
                 <th className="global_th">MRP</th>
-                <th className="global_th">Warranty (Days)</th>
+                <th className="global_th">Warranty</th>
                 <th className="global_th">Total</th>
                 <th className="global_th">Action</th>
               </tr>
             </thead>
             <tbody className="global_tbody">
               {selectedProducts.map((p, idx) => (
-                <tr className="global_tr" key={p._id}>
+                <tr key={p._id} className="global_tr">
                   <td className="global_td">{idx + 1}</td>
                   <td className="global_td">{p.name}</td>
                   <td className="global_td w-24">
@@ -322,6 +343,20 @@ const CreatePurchase = () => {
                       }
                       className="global_input w-24"
                     />
+                    {/* <button
+                      className="text-blue-500 underline mt-1"
+                      onClick={() => openSerialModal(idx)}
+                    >
+                      Add Serial
+                    </button> */}
+                  </td>
+                  <td className="global_td text-center">
+                    <button
+                      className="bg-green-100 text-green-700 px-3 py-1 rounded-md font-medium hover:bg-green-200 transition"
+                      onClick={() => openSerialModal(idx)}
+                    >
+                      Add
+                    </button>
                   </td>
                   <td className="global_td w-24">
                     <input
@@ -389,8 +424,8 @@ const CreatePurchase = () => {
 
       {/* Purchase Summary */}
       {selectedProducts.length > 0 && (
-        <div className="global_sub_container">
-          <div className="flex flex-col lg:flex-row rounded-lg gap-6">
+        <div className="global_sub_container mt-4">
+          <div className="flex flex-col lg:flex-row gap-6">
             <div className="flex-1">
               <label className="block mb-2 font-medium text-gray-700">
                 Note
@@ -402,18 +437,18 @@ const CreatePurchase = () => {
               />
             </div>
 
-            <div className="flex-1 global_sub_container space-y-3">
-              <div className="flex justify-between items-center">
+            <div className="flex-1 space-y-3">
+              <div className="flex justify-between">
                 <label>Total:</label>
                 <input
                   type="number"
                   value={totalAmount.toFixed(2)}
                   disabled
-                  className="global_input w-40 rounded-sm text-right bg-gray-100 cursor-not-allowed"
+                  className="global_input w-40 rounded-sm bg-gray-100 cursor-not-allowed text-right"
                 />
               </div>
-              <div className="flex justify-between items-center">
-                <label>Discount % :</label>
+              <div className="flex justify-between">
+                <label>Discount %:</label>
                 <input
                   type="number"
                   value={discountPercent === 0 ? "" : discountPercent}
@@ -423,12 +458,12 @@ const CreatePurchase = () => {
                     );
                     setLastEdited("percent");
                   }}
-                  className="global_input rounded-sm w-40 text-right"
+                  className="global_input w-40 rounded-sm text-right"
                   min="0"
                   max="100"
                 />
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between">
                 <label>Discount Amount:</label>
                 <input
                   type="number"
@@ -439,21 +474,21 @@ const CreatePurchase = () => {
                     );
                     setLastEdited("discount");
                   }}
-                  className="global_input rounded-sm w-40 text-right"
+                  className="global_input w-40 rounded-sm text-right"
                   min="0"
                   max={totalAmount}
                 />
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between">
                 <label>Grand Total:</label>
                 <input
                   type="number"
                   value={grandTotal.toFixed(2)}
                   disabled
-                  className="global_input w-40 rounded-sm text-right bg-gray-100 cursor-not-allowed"
+                  className="global_input w-40 rounded-sm bg-gray-100 cursor-not-allowed text-right"
                 />
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between">
                 <label>Paid Amount:</label>
                 <input
                   type="number"
@@ -467,18 +502,18 @@ const CreatePurchase = () => {
                   className="global_input w-40 rounded-sm text-right"
                 />
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between">
                 <label>Due Amount:</label>
                 <input
                   type="number"
                   value={dueAmount.toFixed(2)}
                   disabled
-                  className="global_input w-40 rounded-sm text-right bg-gray-100 cursor-not-allowed"
+                  className="global_input w-40 rounded-sm bg-gray-100 cursor-not-allowed text-right"
                 />
               </div>
             </div>
           </div>
-          <div className="mt-4 w-full flex justify-center lg:justify-end">
+          <div className="mt-4 flex justify-center lg:justify-end">
             <button
               onClick={handleSubmit}
               className="global_button w-full lg:w-fit"
@@ -488,6 +523,52 @@ const CreatePurchase = () => {
           </div>
         </div>
       )}
+
+      {/* Serial Modal */}
+      {serialModalOpen &&
+        createPortal(
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-96">
+              <h2 className="text-lg font-semibold mb-4">Add Serial Numbers</h2>
+              {serialInputs.map((s, i) => (
+                <div key={i} className="flex items-center gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={s}
+                    onChange={(e) => handleSerialChange(i, e.target.value)}
+                    className="global_input flex-1"
+                  />
+                  {serialInputs.length > 1 && (
+                    <button
+                      onClick={() => removeSerialInput(i)}
+                      className="text-red-500"
+                    >
+                      X
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                onClick={addSerialInput}
+                className="bg-green-100 text-green-700 px-3 py-1 rounded-md font-medium hover:bg-green-200 transition"
+              >
+                Add More
+              </button>
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => setSerialModalOpen(false)}
+                  className="global_button_red"
+                >
+                  Cancel
+                </button>
+                <button onClick={saveSerialNos} className="global_button">
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };
