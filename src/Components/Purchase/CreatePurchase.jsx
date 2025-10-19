@@ -12,6 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import openCloseStore from "../../Zustand/OpenCloseStore";
 import ProductAddModal from "../Modals/ProductAddModal";
+import CreateSupplierModal from "../Modals/CreateSupplierModal";
 
 const CreatePurchase = () => {
   const { openModal } = openCloseStore();
@@ -583,6 +584,7 @@ const CreatePurchase = () => {
           document.body
         )}
       <ProductAddModal onSuccess={fetchProducts} />
+      <CreateSupplierModal onSuccess={fetchSuppliers} />
     </div>
   );
 };
