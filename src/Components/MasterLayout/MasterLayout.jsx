@@ -157,6 +157,12 @@ const MasterLayout = ({ children }) => {
                 icon: <FaList />,
                 path: "/PurchaseList",
               },
+              {
+                id: "purchasereturnlist",
+                title: "Purchase Return List",
+                icon: <FaList />,
+                path: "/PurchaseReturnList",
+              },
             ],
           },
 

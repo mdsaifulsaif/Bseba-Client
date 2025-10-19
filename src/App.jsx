@@ -48,6 +48,8 @@ import EditProductPage from "./Pages/Product/EditProductPage";
 import EditContact from "./Components/Contact/EditContact";
 import EditContactPage from "./Pages/Contact/EditContactPage";
 import CustomerPage from "./Pages/Contact/CustomerPage";
+import PurchaseReturnPage from "./Pages/Purchase/PurchaseReturnPage";
+import PurchaseReturnList from "./Components/Purchase/PurchaseReturnList";
 
 function App() {
   const isLoggedIn = getToken();
@@ -103,7 +105,15 @@ function App() {
               path="/PurchaseDetails/:id"
               element={<PurchaseDetailsPage />}
             />
+            <Route
+              path="/PurchaseReturnList"
+              element={<PurchaseReturnList />}
+            />
             <Route path="/CreatePurchase" element={<CreatePurchasePage />} />
+            <Route
+              path="/PurchaseReturn/:id"
+              element={<PurchaseReturnPage />}
+            />
 
             <Route path="/DealerList/:id" element={<DealerListPage />} />
             <Route path="/MyDealer" element={<MyDealerPage />} />

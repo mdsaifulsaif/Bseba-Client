@@ -42,7 +42,7 @@ const PurchaseList = () => {
     }
   };
 
-  // ✅ Fixed Delete Function
+  //  Delete Function
   const handleDelete = async (id) => {
     Swal.fire({
       title: '<span class="text-gray-900 dark:text-white">Are you sure?</span>',
@@ -91,6 +91,11 @@ const PurchaseList = () => {
         }
       }
     });
+  };
+
+  //Return function
+  const handleReturn = (id) => {
+    console.log("retuend product id", id);
   };
 
   useEffect(() => {
@@ -155,6 +160,7 @@ const PurchaseList = () => {
               <th className="global_th" id="no-print">
                 Details
               </th>
+              <th className="global_th">Return</th>
               <th className="global_th" id="no-print">
                 Delete
               </th>
@@ -191,7 +197,7 @@ const PurchaseList = () => {
                       return `${day}-${month}-${year}`;
                     })()}
                   </td>
-                  <td className="global_td" id="no-print">
+                  <td className="global_td text-center" id="no-print">
                     <Link
                       className="global_button"
                       to={`/PurchaseDetails/${p._id}`}
@@ -199,7 +205,17 @@ const PurchaseList = () => {
                       View
                     </Link>
                   </td>
-                  <td className="global_td flex items-center justify-center gap-3">
+                  <td className="global_td text-center ">
+                    <Link
+                      to={`/PurchaseReturn/${p._id}`}
+                      className="px-2 py-1 bg-yellow-400 cursor-pointer text-white rounded"
+                    >
+                      {" "}
+                      Return
+                      {/* <MdDeleteOutline size={18} className="text-red-500" /> */}
+                    </Link>
+                  </td>
+                  <td className="global_td flex text-center items-center justify-center gap-3">
                     <span
                       onClick={() => handleDelete(p._id)}
                       className="px-2 py-1 bg-red-500 cursor-pointer text-white rounded"

@@ -15,7 +15,7 @@ import ProductAddModal from "../Modals/ProductAddModal";
 import CreateSupplierModal from "../Modals/CreateSupplierModal";
 
 const CreatePurchase = () => {
-  const { openModal } = openCloseStore();
+  const { openModal, setSupplierModal } = openCloseStore();
   const [discountPercent, setDiscountPercent] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [paidAmount, setPaidAmount] = useState(0);
@@ -26,15 +26,11 @@ const CreatePurchase = () => {
   const [searchProductKeyword, setSearchProductKeyword] = useState("");
   const [searchSupplierKeyword, setSearchSupplierKeyword] = useState("");
   const { setGlobalLoader } = loadingStore();
-  const { setSupplierModal } = openCloseStore();
   const [note, setNote] = useState("");
   const [lastEdited, setLastEdited] = useState(null);
   const [purchaseDate, setPurchaseDate] = useState(new Date());
   const [grandTotal, setGrandTotal] = useState(0);
   const [dueAmount, setDueAmount] = useState(0);
-  ////
-
-  ///
 
   // Serial Modal
   const [serialModalOpen, setSerialModalOpen] = useState(false);
@@ -55,6 +51,7 @@ const CreatePurchase = () => {
           res.data.data.map((s) => ({
             value: s._id,
             label: `${s.name} (${s.mobile})`,
+            ...s,
           }))
         );
       } else {
@@ -111,20 +108,28 @@ const CreatePurchase = () => {
 
   // Add product
   const handleAddProduct = (product) => {
-    if (!selectedProducts.find((p) => p._id === product._id)) {
+    if (!product) return;
+    const pid = product._id || product.value;
+    const pname =
+      product.name || product.label || product.productName || product.name;
+
+    if (!selectedProducts.find((p) => p._id === pid)) {
       setSelectedProducts((prev) => [
         ...prev,
         {
-          ...product,
+          _id: pid,
+          name: pname,
           qty: 1,
           unitCost: product.unitCost || 0,
           dp: product.price || 0,
           mrp: product.mrp || product.price || 0,
           warranty: product.warranty || 0,
           total: product.unitCost || 0,
-          serialNos: [],
+          serialNos: product.serialNos || [],
         },
       ]);
+    } else {
+      ErrorToast("Product already added");
     }
   };
 
@@ -168,28 +173,86 @@ const CreatePurchase = () => {
   // Serial modal handlers
   const openSerialModal = (index) => {
     setCurrentProductIndex(index);
-    setSerialInputs(
-      selectedProducts[index].serialNos.length > 0
-        ? [...selectedProducts[index].serialNos]
-        : [""]
-    );
+    const existing = selectedProducts[index].serialNos || [];
+    setSerialInputs(existing.length > 0 ? [...existing] : [""]);
     setSerialModalOpen(true);
   };
 
-  const addSerialInput = () => setSerialInputs([...serialInputs, ""]);
-  const removeSerialInput = (i) => {
-    setSerialInputs(serialInputs.filter((_, idx) => idx !== i));
+  const addSerialInput = () => {
+    const duplicates = checkDuplicates(serialInputs);
+    if (duplicates.length > 0) {
+      ErrorToast(`Duplicate serials: ${duplicates.join(", ")}`);
+      return;
+    }
+    setSerialInputs((s) => [...s, ""]);
   };
+
+  const removeSerialInput = (i) => {
+    setSerialInputs((prev) => prev.filter((_, idx) => idx !== i));
+  };
+
   const handleSerialChange = (i, value) => {
     const updated = [...serialInputs];
     updated[i] = value;
     setSerialInputs(updated);
+
+    const duplicates = checkDuplicates(updated);
+    if (duplicates.length > 0) {
+      ErrorToast(`Duplicate serials: ${duplicates.join(", ")}`);
+    }
   };
+
+  const handleSerialKeyDown = (e, i) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const val = (serialInputs[i] || "").trim();
+      if (val === "") return;
+      const duplicates = checkDuplicates(serialInputs);
+      if (duplicates.length > 0) {
+        ErrorToast(`Duplicate serials: ${duplicates.join(", ")}`);
+        return;
+      }
+      if (i === serialInputs.length - 1) addSerialInput();
+    }
+  };
+
+  const checkDuplicates = (serials) => {
+    const trimmed = serials
+      .map((s) => (s || "").trim())
+      .filter((s) => s !== "");
+    const duplicates = new Set();
+    const seen = new Set();
+
+    // within current inputs
+    trimmed.forEach((s) => {
+      if (seen.has(s)) duplicates.add(s);
+      else seen.add(s);
+    });
+
+    // against other products
+    selectedProducts.forEach((p, idx) => {
+      if (idx === currentProductIndex) return;
+      (p.serialNos || []).forEach((s) => {
+        if (s && trimmed.includes(s)) duplicates.add(s);
+      });
+    });
+
+    return Array.from(duplicates);
+  };
+
   const saveSerialNos = () => {
-    const serials = serialInputs.map((s) => s.trim()).filter((s) => s !== "");
+    const serials = serialInputs
+      .map((s) => (s || "").trim())
+      .filter((s) => s !== "");
+    const duplicates = checkDuplicates(serials);
+    if (duplicates.length > 0) {
+      ErrorToast(`Duplicate serials: ${duplicates.join(", ")}`);
+      return;
+    }
     const updatedProducts = [...selectedProducts];
     updatedProducts[currentProductIndex].serialNos = serials;
     setSelectedProducts(updatedProducts);
+    SuccessToast("Serial numbers saved");
     setSerialModalOpen(false);
     setSerialInputs([""]);
   };
@@ -345,7 +408,7 @@ const CreatePurchase = () => {
             </thead>
             <tbody className="global_tbody">
               {selectedProducts.map((p, idx) => (
-                <tr key={p._id} className="global_tr">
+                <tr key={p._id + "-" + idx} className="global_tr">
                   <td className="global_td">{idx + 1}</td>
                   <td className="global_td">{p.name}</td>
                   <td className="global_td w-24">
@@ -357,12 +420,6 @@ const CreatePurchase = () => {
                       }
                       className="global_input w-24"
                     />
-                    {/* <button
-                      className="text-blue-500 underline mt-1"
-                      onClick={() => openSerialModal(idx)}
-                    >
-                      Add Serial
-                    </button> */}
                   </td>
                   <td className="global_td text-center">
                     <button
@@ -371,6 +428,11 @@ const CreatePurchase = () => {
                     >
                       Add
                     </button>
+                    {p.serialNos && p.serialNos.length > 0 && (
+                      <div className="text-xs mt-1 text-gray-600">
+                        {p.serialNos.length} saved
+                      </div>
+                    )}
                   </td>
                   <td className="global_td w-24">
                     <input
@@ -412,7 +474,7 @@ const CreatePurchase = () => {
                       className="global_input w-24"
                     />
                   </td>
-                  <td className="global_td">{p.total.toFixed(2)}</td>
+                  <td className="global_td">{(p.total || 0).toFixed(2)}</td>
                   <td className="global_td">
                     <button
                       onClick={() =>
@@ -544,33 +606,66 @@ const CreatePurchase = () => {
           <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 w-96">
               <h2 className="text-lg font-semibold mb-4">Add Serial Numbers</h2>
+
               {serialInputs.map((s, i) => (
                 <div key={i} className="flex items-center gap-2 mb-2">
                   <input
                     type="text"
                     value={s}
                     onChange={(e) => handleSerialChange(i, e.target.value)}
+                    onKeyDown={(e) => handleSerialKeyDown(e, i)}
                     className="global_input flex-1"
+                    placeholder={`Serial ${i + 1}`}
                   />
                   {serialInputs.length > 1 && (
                     <button
                       onClick={() => removeSerialInput(i)}
-                      className="text-red-500"
+                      className="bg-red-500 px-2 py-1  cursor-pointer text-white rounded"
                     >
-                      X
+                      Remove
                     </button>
                   )}
                 </div>
               ))}
-              <button
-                onClick={addSerialInput}
-                className="bg-green-100 text-green-700 px-3 py-1 rounded-md font-medium hover:bg-green-200 transition"
-              >
-                Add More
-              </button>
+
+              <div className="flex items-center gap-2 mb-4">
+                <button
+                  onClick={addSerialInput}
+                  className="bg-green-100 text-green-700 px-3 py-1 rounded-md font-medium hover:bg-green-200 transition"
+                >
+                  Add More
+                </button>
+              </div>
+
+              {currentProductIndex !== null &&
+                selectedProducts[currentProductIndex] &&
+                selectedProducts[currentProductIndex].serialNos &&
+                selectedProducts[currentProductIndex].serialNos.length > 0 && (
+                  <div className="mb-3">
+                    <div className="text-sm font-medium mb-1">
+                      Previously saved:
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProducts[currentProductIndex].serialNos.map(
+                        (sn, i) => (
+                          <div
+                            key={i}
+                            className="text-xs px-2 py-1 bg-gray-100 rounded"
+                          >
+                            {sn}
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+
               <div className="flex justify-end gap-2">
                 <button
-                  onClick={() => setSerialModalOpen(false)}
+                  onClick={() => {
+                    setSerialModalOpen(false);
+                    setSerialInputs([""]);
+                  }}
                   className="global_button_red"
                 >
                   Cancel
@@ -583,6 +678,7 @@ const CreatePurchase = () => {
           </div>,
           document.body
         )}
+
       <ProductAddModal onSuccess={fetchProducts} />
       <CreateSupplierModal onSuccess={fetchSuppliers} />
     </div>

@@ -35,7 +35,7 @@ const Supplier = () => {
       );
       if (res.data.status === "Success") {
         setSuppliers(res.data.data);
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setTotal(res.data.total);
       } else {
         ErrorToast("Failed to fetch suppliers");
