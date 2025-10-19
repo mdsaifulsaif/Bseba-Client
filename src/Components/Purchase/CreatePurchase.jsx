@@ -7,12 +7,14 @@ import loadingStore from "../../Zustand/LoadingStore";
 import { BaseURL } from "../../Helper/Config";
 import { ErrorToast, SuccessToast } from "../../Helper/FormHelper";
 import { useNavigate } from "react-router-dom";
-import openCloseStore from "../../Zustand/OpenCloseStore";
 import { createPortal } from "react-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import openCloseStore from "../../Zustand/OpenCloseStore";
+import ProductAddModal from "../Modals/ProductAddModal";
 
 const CreatePurchase = () => {
+  const { openModal } = openCloseStore();
   const [discountPercent, setDiscountPercent] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [paidAmount, setPaidAmount] = useState(0);
@@ -247,7 +249,7 @@ const CreatePurchase = () => {
       <div className="global_sub_container grid grid-cols-4 gap-4">
         <div className="col-span-4 lg:col-span-2">
           <label className="block text-sm font-medium mb-1">
-            Supplier Name *
+            Supplier Name <span className="text-red-500"> *</span>
           </label>
           <Select
             options={suppliers}
@@ -297,8 +299,9 @@ const CreatePurchase = () => {
 
         <div className="col-span-4 lg:col-span-2">
           <label className="block text-sm font-medium mb-1">
-            Product Name *
+            Product Name <span className="text-red-500"> *</span>
           </label>
+
           <Select
             options={products}
             onChange={handleAddProduct}
@@ -308,6 +311,16 @@ const CreatePurchase = () => {
             menuPortalTarget={document.body}
             styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
           />
+        </div>
+        <div className="col-span-4 lg:col-span-2 flex gap-2">
+          <div className="flex items-end">
+            <button
+              className="flex items-center justify-center gap-2 global_button"
+              onClick={() => openModal("product")}
+            >
+              Add Product
+            </button>
+          </div>
         </div>
       </div>
 
@@ -569,6 +582,7 @@ const CreatePurchase = () => {
           </div>,
           document.body
         )}
+      <ProductAddModal onSuccess={fetchProducts} />
     </div>
   );
 };
