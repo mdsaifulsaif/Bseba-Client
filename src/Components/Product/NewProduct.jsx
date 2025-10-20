@@ -418,6 +418,7 @@ const NewProduct = () => {
     <>
       <div className="global_container">
         <div className="global_sub_container">
+          <h1 className="text-xl font-semibold mb-3">Add New Product</h1>
           <form onSubmit={handleCreateProduct}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Product Name */}

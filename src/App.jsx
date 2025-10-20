@@ -8,9 +8,9 @@ import BusinessSettingPage from "./Pages/BusinessSetting/BusinessSettingPage";
 // import NewProductPage from "./Pages/Product/NewProductPage";
 import ProductListPage from "./Pages/Product/ProductListPage";
 import CreateCategoryPage from "./Pages/Product/CategoryPage";
-import AllUserPage from "./Pages/Team/AllUserPage";
-import RolePage from "./Pages/Team/RolePage";
-import PermissionPage from "./Pages/Team/PermissionPage";
+// import AllUserPage from "./Pages/Team/AllUserPage";
+// import RolePage from "./Pages/Team/RolePage";
+// import PermissionPage from "./Pages/Team/PermissionPage";
 import AccountPage from "./Pages/Accounts/AccountPage";
 import DealerPage from "./Pages/Contact/DealerPage";
 import SupplierPage from "./Pages/Contact/SupplierPage";
@@ -75,9 +75,9 @@ function App() {
               element={<AddStockDetailsPage />}
             />
             <Route path="/AddStockList" element={<AddStockListPage />} />
-            <Route path="/AllUser" element={<AllUserPage />} />
+            {/* <Route path="/AllUser" element={<AllUserPage />} />
             <Route path="/Role" element={<RolePage />} />
-            <Route path="/Permission/:id" element={<PermissionPage />} />
+            <Route path="/Permission/:id" element={<PermissionPage />} /> */}
             <Route path="/BankAccount" element={<AccountPage />} />
             <Route path="/Dealer" element={<DealerPage />} />
             <Route path="/Customer" element={<CustomerPage />} />

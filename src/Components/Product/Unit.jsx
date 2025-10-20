@@ -139,9 +139,7 @@ const Unit = () => {
   return (
     <div ref={formRef} className="global_container">
       <div className="global_sub_container">
-        <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
-          Unit Management
-        </h1>
+        <h1 className="text-xl font-semibold mb-3">Unit Management</h1>
 
         {/* Form */}
         <form

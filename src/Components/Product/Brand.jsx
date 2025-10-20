@@ -173,9 +173,7 @@ const Brand = () => {
   return (
     <div ref={formRef} className="global_container">
       <div className="global_sub_container">
-        <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
-          Brand Management{" "}
-        </h1>
+        <h1 className="text-xl font-semibold mb-3"> Brand Management</h1>
 
         {/* Form */}
         <form

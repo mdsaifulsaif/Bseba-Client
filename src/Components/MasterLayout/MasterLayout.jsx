@@ -199,60 +199,60 @@ const MasterLayout = ({ children }) => {
               },
             ],
           },
-          {
-            id: "Team",
-            title: "Team",
-            icon: <GiTeamIdea />,
-            children: [
-              {
-                id: "users",
-                title: "All Users",
-                icon: <FaUserCog />,
-                path: "/AllUser",
-              },
-              {
-                id: "role",
-                title: "Roles",
-                icon: <FaUsersCog />,
-                path: "/Role",
-              },
-              {
-                id: "rsm",
-                title: "RSM",
-                icon: <FaUsersCog />,
-                path: "/RSM",
-              },
-              {
-                id: "asm",
-                title: "ASM",
-                icon: <FaUsersCog />,
-                path: "/ASM",
-              },
-              {
-                id: "mso",
-                title: "MSO",
-                icon: <FaUsersCog />,
-                path: "/MSO",
-              },
-            ],
-          },
-          {
-            id: "settings",
-            title: "Settings",
-            icon: <CiSettings />,
-            children: [
-              ...(isAdmin
-                ? [
-                    {
-                      id: "BusinessSetting",
-                      title: "Business Setting",
-                      path: "/BusinessSetting",
-                    },
-                  ]
-                : []),
-              { id: "profile", title: "profile", path: "/profile" },
-            ].filter(Boolean), // This removes any falsy values
-          },
+          // {
+          //   id: "Team",
+          //   title: "Team",
+          //   icon: <GiTeamIdea />,
+          //   children: [
+          //     {
+          //       id: "users",
+          //       title: "All Users",
+          //       icon: <FaUserCog />,
+          //       path: "/AllUser",
+          //     },
+          //     {
+          //       id: "role",
+          //       title: "Roles",
+          //       icon: <FaUsersCog />,
+          //       path: "/Role",
+          //     },
+          //     {
+          //       id: "rsm",
+          //       title: "RSM",
+          //       icon: <FaUsersCog />,
+          //       path: "/RSM",
+          //     },
+          //     {
+          //       id: "asm",
+          //       title: "ASM",
+          //       icon: <FaUsersCog />,
+          //       path: "/ASM",
+          //     },
+          //     {
+          //       id: "mso",
+          //       title: "MSO",
+          //       icon: <FaUsersCog />,
+          //       path: "/MSO",
+          //     },
+          //   ],
+          // },
+          // {
+          //   id: "settings",
+          //   title: "Settings",
+          //   icon: <CiSettings />,
+          //   children: [
+          //     ...(isAdmin
+          //       ? [
+          //           {
+          //             id: "BusinessSetting",
+          //             title: "Business Setting",
+          //             path: "/BusinessSetting",
+          //           },
+          //         ]
+          //       : []),
+          //     { id: "profile", title: "profile", path: "/profile" },
+          //   ].filter(Boolean), // This removes any falsy values
+          // },
         ]
       : []),
   ];

@@ -136,9 +136,7 @@ const Supplier = () => {
       {/* Form */}
       <div ref={formRef} className={`global_sub_container`}>
         <div className="mb-4">
-          <h1 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
-            Add New Supplier
-          </h1>
+          <h1 className="text-xl font-semibold mb-3">Add New Supplier</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-8 gap-4">
