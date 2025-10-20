@@ -51,7 +51,7 @@ const SignUp = () => {
     e.preventDefault();
 
     if (IsEmpty(mobile)) return ErrorToast("Mobile number is required");
-    if (IsEmpty(fullName)) return ErrorToast("Full name is required");
+    if (IsEmpty(fullName)) return ErrorToast("Name is required");
     if (IsEmpty(password)) return ErrorToast("Password is required");
     if (IsEmpty(otp)) return ErrorToast("OTP is required");
 
@@ -71,8 +71,8 @@ const SignUp = () => {
       if (data.status === "Success") {
         setToken(data.token);
         setMobile(mobile);
-        setName(data.data.name);
-        navigate("/CreateBusiness");
+        setName(data.data.fullName);
+        window.location.href = "/CreateBusiness";
       } else {
         ErrorToast(data.message);
       }
@@ -153,7 +153,7 @@ const SignUp = () => {
                 <input
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Enter Your Full Name"
+                  placeholder="Enter Your Name"
                   className="w-full px-4 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg 
                              text-white placeholder-white/70 disabled:bg-white/10"
                   type="text"

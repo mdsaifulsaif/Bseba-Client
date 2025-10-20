@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { getToken, removeSessions } from "../../Helper/SessionHelper";
 import { BaseURL } from "../../Helper/Config";
 import { ErrorToast, SuccessToast } from "../../Helper/FormHelper";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const CreateBusiness = () => {
@@ -12,6 +13,7 @@ const CreateBusiness = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   // 🧩 Handle Input Change
   const handleChange = (e) => {
@@ -22,7 +24,7 @@ const CreateBusiness = () => {
     }));
   };
 
-  // 🚀 Handle Form Submit
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -33,10 +35,10 @@ const CreateBusiness = () => {
           token: getToken(),
         },
       });
-
-      if (response.status === 200) {
+      if (response.data.status === "Success") {
         SuccessToast(response.data.message || "Business created successfully!");
-        removeSessions();
+        removeSessions(); 
+        navigate("/login"); 
       } else {
         ErrorToast(response.data.message || "Failed to create business!");
       }
@@ -125,11 +127,10 @@ const CreateBusiness = () => {
             type="submit"
             disabled={isLoading}
             className={`w-full py-3 mt-4 rounded-lg font-bold text-white shadow-lg 
-                        transition-all ${
-                          isLoading
-                            ? "bg-gray-500/50 cursor-not-allowed"
-                            : "bg-gradient-to-r from-teal-400/70 to-blue-400/70 hover:from-teal-400 hover:to-blue-400"
-                        }`}
+                        transition-all ${isLoading
+                ? "bg-gray-500/50 cursor-not-allowed"
+                : "bg-gradient-to-r from-teal-400/70 to-blue-400/70 hover:from-teal-400 hover:to-blue-400"
+              }`}
           >
             {isLoading ? "Creating..." : "Create Business"}
           </button>

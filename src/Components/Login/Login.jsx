@@ -43,7 +43,7 @@ const UserLogin = () => {
       if (data.status === "Success") {
         setToken(data.token);
         setMobile(mobile);
-        setName(data.data.name);
+        setName(data.data.fullName);
         SuccessToast(data.message || "Login Successful.");
         window.location.href = "/";
       } else {

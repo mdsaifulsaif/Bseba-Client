@@ -18,24 +18,6 @@ const UserDashboard = () => {
   const [ownBusinessData, setOwnBusinessData] = useState([]);
   const [userBusinessData, setUserBusinessData] = useState([]);
 
-  const fetchTotalInvoice = async () => {
-    setGlobalLoader(true);
-    try {
-      const res = await axios.get(`${BaseURL}/MyTotalInvoice`, {
-        headers: { token: getToken() },
-      });
-      if (res.data.status === "Success") {
-        setTotalInvoice(res.data.totalInvoices);
-      } else {
-        ErrorToast(res.data.error);
-      }
-    } catch (error) {
-      console.log(error);
-      ErrorToast(error.message);
-    } finally {
-      setGlobalLoader(false);
-    }
-  };
   const fetchOwnBusiness = async () => {
     setGlobalLoader(true);
     try {
@@ -101,18 +83,26 @@ const UserDashboard = () => {
   };
   useEffect(() => {
     const getAllData = async () => {
-      await Promise.all([
-        fetchTotalInvoice(),
-        fetchOwnBusiness(),
-        fetchUserBusiness(),
-      ]);
+      await Promise.all([fetchOwnBusiness(), fetchUserBusiness()]);
     };
     getAllData();
   }, []);
   return (
     <div className="bg-white h-screen p-10 flex gap-5">
       <div className="global_sub_container w-full">
-        <h1>Your Business List</h1>
+        <div className="flex items-center justify-between mb-3 ">
+          <h1>Your Business List</h1>
+          {/* -----------  */}
+          <button
+            onClick={() => {
+              removeSessions();
+            }}
+            className="global_button"
+          >
+            Logout
+          </button>
+        </div>
+        {/* -----------  */}
         <div className="overflow-x-auto">
           <table className="global_table">
             <thead className="global_thead">
@@ -140,9 +130,6 @@ const UserDashboard = () => {
             </tbody>
           </table>
         </div>
-      </div>
-      <div className="global_sub_container w-full">
-        Total Invoices = {totalInvoice}
       </div>
     </div>
   );
