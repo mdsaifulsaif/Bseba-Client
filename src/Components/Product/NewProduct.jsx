@@ -422,40 +422,45 @@ const NewProduct = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Product Name */}
               <div className="relative">
-                <label className="block text-sm font-medium mb-1">
-                  Product Name <span className="text-red-500">*</span>
-                </label>
-                <div>
-                  <input
-                    type="text"
-                    value={formData.Product.name}
-                    onChange={(e) =>
-                      handleProductChange("name", e.target.value)
-                    }
-                    className="global_input"
-                    placeholder="Enter product name"
-                    autoComplete="off"
-                  />
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setDisibleSuggetion(!disibleSuggetion);
-                    }}
-                  >
-                    bb
-                  </button>
+                <div className="flex items-center justify-between ">
+                  <label className="block text-sm font-medium mb-1">
+                    Product Name <span className="text-red-500">*</span>
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <label
+                      htmlFor="disableSuggestion"
+                      className="text-sm font-medium "
+                    >
+                      Suggetion {disibleSuggetion ? "Disabled" : "Enabled"}
+                    </label>
+
+                    <input
+                      id="disableSuggestion"
+                      type="checkbox"
+                      checked={!disibleSuggetion}
+                      onChange={(e) => setDisibleSuggetion(!e.target.checked)}
+                      className="toggle toggle-success"
+                    />
+                  </div>
                 </div>
+                <input
+                  type="text"
+                  value={formData.Product.name}
+                  onChange={(e) => handleProductChange("name", e.target.value)}
+                  className="global_input"
+                  placeholder="Enter product name"
+                  autoComplete="off"
+                />
                 {suggetionProducts.length > 0 && (
                   <ul
                     className={`${
                       hiddenSuggetion ? "" : "hidden"
-                    } absolute z-50 w-full bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-auto shadow-lg`}
+                    } absolute z-50 w-full  border border-gray-300 rounded mt-1 max-h-40 overflow-auto shadow-lg`}
                   >
                     {suggetionProducts.map((prod) => (
                       <li
                         key={prod._id}
-                        className="px-2 py-1 hover:bg-gray-200 cursor-pointer"
+                        className="px-2 py-1 dark:bg-gray-800 bg-white cursor-pointer"
                         onClick={() => {
                           handleProductChange("name", prod.name);
                           setSuggetionProducts([]);
