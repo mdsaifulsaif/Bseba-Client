@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import loadingStore from "../../Zustand/LoadingStore";
 import { BaseURL } from "../../Helper/Config";
-import axios, { Axios } from "axios";
+import axios from "axios";
 import { getToken } from "../../Helper/SessionHelper";
 import { ErrorToast, SuccessToast } from "../../Helper/FormHelper";
 import { Link } from "react-router-dom";
@@ -16,11 +16,11 @@ const Supplier = () => {
   const formRef = useRef(null);
   const [suppliers, setSuppliers] = useState([]);
   const [form, setForm] = useState({
-    company: "",
-    email: "",
-    mobile: "",
-    address: "",
     supplier: "",
+    mobile: "",
+    email: "",
+    address: "",
+    contactType: "Supplier", // default Supplier
   });
 
   const { setGlobalLoader } = loadingStore();
@@ -35,7 +35,6 @@ const Supplier = () => {
       );
       if (res.data.status === "Success") {
         setSuppliers(res.data.data);
-        // console.log(res.data.data);
         setTotal(res.data.total);
       } else {
         ErrorToast("Failed to fetch suppliers");
@@ -53,20 +52,21 @@ const Supplier = () => {
     fetchSuppliers();
   }, [search]);
 
-  // handle edit
+  useEffect(() => {
+    fetchSuppliers();
+  }, []);
+
   const handleEdit = (supplier) => {
     setEditId(supplier._id);
     setBalance(supplier.balance || 0);
     setForm({
-      company: supplier.company,
-      email: supplier.email,
+      supplier: supplier.supplier,
       mobile: supplier.mobile || "",
+      email: supplier.email,
       address: supplier.address,
-
-      supplier: supplier.supplier, // Not editable, just to show if needed
+      contactType: supplier.type || "Supplier",
     });
 
-    // Scroll to form with smooth animation
     if (formRef.current) {
       formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -74,11 +74,11 @@ const Supplier = () => {
 
   const resetForm = () => {
     setForm({
-      company: "",
-      email: "",
-      mobile: "",
-      address: "",
       supplier: "",
+      mobile: "",
+      email: "",
+      address: "",
+      contactType: "Supplier",
     });
     setEditId(null);
   };
@@ -86,20 +86,16 @@ const Supplier = () => {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  useEffect(() => {
-    fetchSuppliers();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setGlobalLoader(true);
     try {
       if (editId) {
-        // UPDATE (no balance)
-        const { company, email, mobile, address, supplier } = form;
+        const { supplier, mobile, email, address, contactType } = form;
         const res = await axios.put(
           `${BaseURL}/UpdateSupplierByID/${editId}`,
-          { company, email, mobile, address, supplier },
+          { supplier, mobile, email, address, type: contactType },
           { headers: { token: getToken() } }
         );
         if (res.data.status === "Success") {
@@ -110,27 +106,18 @@ const Supplier = () => {
           ErrorToast(res.data.message || "Failed to update Dealer");
         }
       } else {
-        // CREATE (send balance as credit/debit)
         const payload = {
-          // company: form.company,
-          // email: form.email,
-          // mobile: form.mobile,
-          // address: form.address,
-          // supplier: form.supplier,
           name: form.supplier,
           mobile: form.mobile,
           type: form.contactType,
-          businessName: form.company,
           address: form.address,
           email: form.email,
         };
-        console.log(payload);
         const res = await axios.post(`${BaseURL}/CreateContact`, payload, {
           headers: { token: getToken() },
         });
         if (res.data.status === "Success") {
           SuccessToast("Dealer created successfully");
-          // resetForm();
           fetchSuppliers();
         } else {
           ErrorToast(res.data.message || "Failed to create Dealer");
@@ -149,12 +136,9 @@ const Supplier = () => {
       {/* Form */}
       <div ref={formRef} className={`global_sub_container`}>
         <div className="mb-4">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-            {editId ? "Update Dealer" : ""}
+          <h1 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
+            Add New Supplier
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
-            {editId ? "Update existing Dealer details" : ""}
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-8 gap-4">
@@ -175,23 +159,7 @@ const Supplier = () => {
               required
             />
           </div>
-          <div className="flex flex-col col-span-8 lg:col-span-2">
-            <label
-              htmlFor="company"
-              className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              Company <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="company"
-              value={form.company}
-              onChange={handleChange}
-              className="global_input"
-              placeholder="Company"
-              required
-            />
-          </div>
+
           <div className="flex flex-col col-span-8 lg:col-span-2">
             <label
               htmlFor="mobile"
@@ -245,8 +213,7 @@ const Supplier = () => {
             />
           </div>
 
-          {/* =================  */}
-          {/* Contact Type Field */}
+          {/* Contact Type */}
           <div className="flex flex-col col-span-8 lg:col-span-2">
             <label
               htmlFor="contactType"
@@ -266,7 +233,6 @@ const Supplier = () => {
               <option value="Both">Both (Customer and Supplier)</option>
             </select>
           </div>
-          {/* =================  */}
 
           <div className="flex justify-center lg:justify-start items-end col-span-8 lg:col-span-2">
             <button
@@ -327,8 +293,8 @@ const Supplier = () => {
             </select>
           </div>
         </div>
-        <div className="  overflow-x-auto">
-          {" "}
+
+        <div className="overflow-x-auto">
           <table className="global_table">
             <thead className="global_thead">
               <tr>
@@ -337,7 +303,6 @@ const Supplier = () => {
                 <th className="global_th">Balance</th>
                 <th className="global_th">Mobile</th>
                 <th className="global_th">Address</th>
-                {/* <th className="global_th">Balance</th> */}
                 <th className="global_th">Edit</th>
                 <th className="global_th">Laser</th>
               </tr>
@@ -353,29 +318,14 @@ const Supplier = () => {
                     <td className="global_td max-w-[150px] truncate">
                       {s.address}
                     </td>
-
-                    {/* <td
-                      className={`global_td ${
-                        s.balance >= 0
-                          ? "text-green-600 dark:text-green-400"
-                          : "text-red-600 dark:text-red-400"
-                      }`}
-                    >
-                      {s.balance}
-                    </td> */}
-
-                    {/* Optional Edit Button */}
-
                     <td className="global_td">
                       <Link
                         to={`/EditContact/${s._id}`}
-                        // onClick={() => handleEdit(s)}
                         className="global_edit"
                       >
                         Edit
                       </Link>
                     </td>
-
                     <td className="global_td">
                       <Link
                         to={`/ViewSupplierLaser/${s._id}`}

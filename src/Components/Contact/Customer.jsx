@@ -16,7 +16,6 @@ const Customer = () => {
   const formRef = useRef(null);
   const [customers, setCustomers] = useState([]);
   const [form, setForm] = useState({
-    company: "",
     email: "",
     mobile: "",
     address: "",
@@ -53,16 +52,19 @@ const Customer = () => {
     fetchCustomers();
   }, [search]);
 
+  useEffect(() => {
+    fetchCustomers();
+  }, [page, limit]);
+
   const handleEdit = (customer) => {
     setEditId(customer._id);
     setBalance(customer.balance || 0);
     setForm({
-      company: customer.company,
-      email: customer.email,
+      email: customer.email || "",
       mobile: customer.mobile || "",
-      address: customer.address,
-      customer: customer.customer,
-      contactType: customer.contactType || "Customer",
+      address: customer.address || "",
+      customer: customer.name || "",
+      contactType: customer.type || "Customer",
     });
 
     if (formRef.current) {
@@ -72,7 +74,6 @@ const Customer = () => {
 
   const resetForm = () => {
     setForm({
-      company: "",
       email: "",
       mobile: "",
       address: "",
@@ -86,16 +87,12 @@ const Customer = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setGlobalLoader(true);
     try {
       if (editId) {
-        const { company, email, mobile, address, customer } = form;
+        const { email, mobile, address, customer, contactType } = form;
         const res = await axios.put(
           `${BaseURL}/UpdateContactById/${editId}`,
           {
@@ -103,14 +100,14 @@ const Customer = () => {
             mobile,
             email,
             address,
-            businessName: company,
-            type: "Customer",
+            type: contactType,
           },
           { headers: { token: getToken() } }
         );
         if (res.data.status === "Success") {
           SuccessToast("Customer updated successfully");
           resetForm();
+          setPage(1);
           fetchCustomers();
         } else {
           ErrorToast(res.data.message || "Failed to update Customer");
@@ -119,16 +116,17 @@ const Customer = () => {
         const payload = {
           name: form.customer,
           mobile: form.mobile,
-          type: "Customer",
-          businessName: form.company,
-          address: form.address,
           email: form.email,
+          address: form.address,
+          type: form.contactType,
         };
         const res = await axios.post(`${BaseURL}/CreateContact`, payload, {
           headers: { token: getToken() },
         });
         if (res.data.status === "Success") {
           SuccessToast("Customer created successfully");
+          resetForm();
+          setPage(1);
           fetchCustomers();
         } else {
           ErrorToast(res.data.message || "Failed to create Customer");
@@ -147,12 +145,9 @@ const Customer = () => {
       {/* Form */}
       <div ref={formRef} className={`global_sub_container`}>
         <div className="mb-4">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-            {editId ? "Update Customer" : ""}
+          <h1 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
+            Add New Customer
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
-            {editId ? "Update existing Customer details" : ""}
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-8 gap-4">
@@ -170,20 +165,7 @@ const Customer = () => {
               required
             />
           </div>
-          <div className="flex flex-col col-span-8 lg:col-span-2">
-            <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-              Company / Business Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="company"
-              value={form.company}
-              onChange={handleChange}
-              className="global_input"
-              placeholder="Business Name"
-              required
-            />
-          </div>
+
           <div className="flex flex-col col-span-8 lg:col-span-2">
             <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Mobile <span className="text-red-500">*</span>
@@ -226,6 +208,26 @@ const Customer = () => {
               placeholder="Address"
               required
             />
+          </div>
+
+          <div className="flex flex-col col-span-8 lg:col-span-2">
+            <label
+              htmlFor="contactType"
+              className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Contact Type <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="contactType"
+              value={form.contactType}
+              onChange={handleChange}
+              required
+              className="global_input appearance-none bg-white dark:bg-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="Customer">Customer</option>
+              <option value="Supplier">Supplier</option>
+              <option value="Both">Both (Customer & Supplier)</option>
+            </select>
           </div>
 
           <div className="flex justify-center lg:justify-start items-end col-span-8 lg:col-span-2">
@@ -287,6 +289,7 @@ const Customer = () => {
             </select>
           </div>
         </div>
+
         <div className="overflow-x-auto">
           <table className="global_table">
             <thead className="global_thead">
