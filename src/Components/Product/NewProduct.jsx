@@ -31,6 +31,11 @@ const NewProduct = () => {
   const [unitCostError, setUnitCostError] = useState(false);
   const [newProducts, setNewProducts] = useState([]);
 
+  const [suggetionKey, setSuggetionKey] = useState("");
+  const [suggetionProducts, setSuggetionProducts] = useState([]);
+  const [disibleSuggetion, setDisibleSuggetion] = useState(false);
+  const [hiddenSuggetion, setHiddenSuggetion] = useState(false);
+
   const [initialLoadDone, setInitialLoadDone] = useState({
     brands: false,
     categories: false,
@@ -66,6 +71,14 @@ const NewProduct = () => {
       },
     }));
 
+    if (field === "name") {
+      setSuggetionKey(val);
+      setHiddenSuggetion(true);
+      if (!val) {
+        setSuggetionProducts([]); // <-- blank hole suggestion hide
+      }
+    }
+
     if (field === "qty") {
       if (
         val &&
@@ -85,6 +98,42 @@ const NewProduct = () => {
       }
     }
   };
+
+  // const handleProductChange = (field, value, isNumber = false) => {
+  //   let val = value;
+  //   if (isNumber) val = value === "" ? "" : Number(value);
+
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     Product: {
+  //       ...prev.Product,
+  //       [field]: val,
+  //     },
+  //   }));
+
+  //   if (field === "name") {
+  //     setSuggetionKey(val);
+  //   }
+
+  //   if (field === "qty") {
+  //     if (
+  //       val &&
+  //       (!formData.Product.unitCost || formData.Product.unitCost <= 0)
+  //     ) {
+  //       setUnitCostError(true);
+  //     } else {
+  //       setUnitCostError(false);
+  //     }
+  //   }
+
+  //   if (field === "unitCost") {
+  //     if (formData.Product.qty && (!val || val <= 0)) {
+  //       setUnitCostError(true);
+  //     } else {
+  //       setUnitCostError(false);
+  //     }
+  //   }
+  // };
 
   // Fetch Brands
   const fetchBrands = async (autoSelect = false) => {
@@ -179,6 +228,28 @@ const NewProduct = () => {
     }
   };
 
+  // Fetch product suggestions
+  const fetchSuggetion = async () => {
+    if (!suggetionKey) return;
+    setGlobalLoader(true);
+    try {
+      const res = await axios.get(`${BaseURL}/AllProductList/${suggetionKey}`, {
+        headers: { token: getToken() },
+      });
+      setSuggetionProducts(res.data.data || []);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setGlobalLoader(false);
+    }
+  };
+
+  useEffect(() => {
+    if (disibleSuggetion) return;
+    fetchSuggetion();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [suggetionKey]);
+
   useEffect(() => {
     const fetchAll = async () => {
       try {
@@ -238,6 +309,8 @@ const NewProduct = () => {
     setSelectedUnit(null);
     setSelectedBrand(null);
     setUnitCostError(false);
+    setSuggetionProducts([]);
+    setSuggetionKey("");
   };
 
   const fetchNewProducts = async () => {
@@ -348,17 +421,52 @@ const NewProduct = () => {
           <form onSubmit={handleCreateProduct}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Product Name */}
-              <div>
+              <div className="relative">
                 <label className="block text-sm font-medium mb-1">
                   Product Name <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
-                  value={formData.Product.name}
-                  onChange={(e) => handleProductChange("name", e.target.value)}
-                  className="global_input"
-                  placeholder="Enter product name"
-                />
+                <div>
+                  <input
+                    type="text"
+                    value={formData.Product.name}
+                    onChange={(e) =>
+                      handleProductChange("name", e.target.value)
+                    }
+                    className="global_input"
+                    placeholder="Enter product name"
+                    autoComplete="off"
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setDisibleSuggetion(!disibleSuggetion);
+                    }}
+                  >
+                    bb
+                  </button>
+                </div>
+                {suggetionProducts.length > 0 && (
+                  <ul
+                    className={`${
+                      hiddenSuggetion ? "" : "hidden"
+                    } absolute z-50 w-full bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-auto shadow-lg`}
+                  >
+                    {suggetionProducts.map((prod) => (
+                      <li
+                        key={prod._id}
+                        className="px-2 py-1 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => {
+                          handleProductChange("name", prod.name);
+                          setSuggetionProducts([]);
+                          setHiddenSuggetion(false);
+                        }}
+                      >
+                        {prod.name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
 
               {/* Brand */}
@@ -387,7 +495,6 @@ const NewProduct = () => {
                   type="button"
                   onClick={() =>
                     openModal("brand", () => {
-                      // modal will create new brand and then call this fetch
                       fetchBrands();
                     })
                   }
@@ -424,11 +531,7 @@ const NewProduct = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={() =>
-                    openModal("category", () => {
-                      fetchCategories();
-                    })
-                  }
+                  onClick={() => openModal("category", fetchCategories)}
                   className="border border-green-600 text-green-600 px-3 py-1 rounded"
                 >
                   + Category
@@ -464,11 +567,7 @@ const NewProduct = () => {
                   <div className="flex-shrink-0">
                     <button
                       type="button"
-                      onClick={() =>
-                        openModal("unit", () => {
-                          fetchUnits();
-                        })
-                      }
+                      onClick={() => openModal("unit", fetchUnits)}
                       className="border border-green-600 text-green-600 py-1 px-3 rounded w-full"
                     >
                       + Unit
@@ -535,7 +634,7 @@ const NewProduct = () => {
                     handleProductChange("unitCost", e.target.value, true)
                   }
                   placeholder="Unit Cost"
-                  className={`global_input `}
+                  className="global_input"
                 />
               </div>
               <div>
@@ -586,77 +685,70 @@ const NewProduct = () => {
           </div>
 
           {newProducts.length > 0 ? (
-            <div>
-              <div className="overflow-x-auto">
-                <table className="global_table">
-                  <thead className="global_thead">
-                    <tr>
-                      <th className="global_th">No</th>
-                      <th className="global_th">Name</th>
-                      <th className="global_th">Brand</th>
-                      <th className="global_th">Category</th>
-                      <th className="global_th">Stock</th>
-                      <th className="global_th">Purchase (unitCost)</th>
-                      <th className="global_th">Sell Price (mrp)</th>
-                      <th className="global_th">Created At</th>
-                      <th className="global_th">Action</th>
+            <div className="overflow-x-auto">
+              <table className="global_table">
+                <thead className="global_thead">
+                  <tr>
+                    <th className="global_th">No</th>
+                    <th className="global_th">Name</th>
+                    <th className="global_th">Brand</th>
+                    <th className="global_th">Category</th>
+                    <th className="global_th">Stock</th>
+                    <th className="global_th">Purchase (unitCost)</th>
+                    <th className="global_th">Sell Price (mrp)</th>
+                    <th className="global_th">Created At</th>
+                    <th className="global_th">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="global_tbody">
+                  {newProducts.map((product, index) => (
+                    <tr className="global_tr" key={product._id}>
+                      <td className="global_td">{index + 1}</td>
+                      <td className="global_td">{product.name}</td>
+                      <td className="global_td">
+                        {product.brandName || "N/A"}
+                      </td>
+                      <td className="global_td">
+                        {product.categoryName || "N/A"}
+                      </td>
+                      <td className="global_td">
+                        {parseInt(product.stock || product.qty || 0)}
+                      </td>
+                      <td className="global_td">
+                        {parseFloat(product.unitCost || 0).toFixed(2)}
+                      </td>
+                      <td className="global_td">
+                        {parseFloat(product.mrp || 0).toFixed(2)}
+                      </td>
+                      <td className="global_td">
+                        {product.createdAt
+                          ? new Date(product.createdAt).toLocaleDateString(
+                              "en-GB"
+                            )
+                          : "N/A"}
+                      </td>
+                      <td className="global_td">
+                        <button
+                          className="mr-1 mb-2 md:mb-0 px-2 py-1 outline-0 bg-blue-500 text-white rounded"
+                          onClick={() =>
+                            navigate(`/EditProduct/${product._id}`, {
+                              state: { product },
+                            })
+                          }
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => HandleProductDelet(product._id)}
+                          className="px-2 py-1 bg-red-500 text-white rounded"
+                        >
+                          Delete
+                        </button>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="global_tbody">
-                    {newProducts.map((product, index) => (
-                      <tr className="global_tr" key={product._id}>
-                        <td className="global_td">{index + 1}</td>
-                        <td className="global_td">{product.name}</td>
-                        <td className="global_td">
-                          {product.brandName || "N/A"}
-                        </td>
-                        <td className="global_td">
-                          {product.categoryName || "N/A"}
-                        </td>
-                        <td className="global_td">
-                          {parseInt(product.stock || product.qty || 0)}
-                        </td>
-                        <td className="global_td">
-                          {parseFloat(product.unitCost || 0).toFixed(2)}
-                        </td>
-                        <td className="global_td">
-                          {parseFloat(product.mrp || 0).toFixed(2)}
-                        </td>
-
-                        {/*  Created At Display */}
-                        <td className="global_td">
-                          {product.createdAt
-                            ? new Date(product.createdAt).toLocaleDateString(
-                                "en-GB"
-                              ) // DD/MM/YYYY
-                            : "N/A"}
-                        </td>
-                        <td className="global_td  ">
-                          {/* update button  */}
-                          <button
-                            className="mr-1 mb-2 md:mb-0 px-2 py-1 outline-0 bg-blue-500 text-white rounded"
-                            onClick={() =>
-                              navigate(`/EditProduct/${product._id}`, {
-                                state: { product },
-                              })
-                            }
-                          >
-                            Edit
-                          </button>
-
-                          {/* delet button  */}
-                          <button
-                            onClick={() => HandleProductDelet(product._id)}
-                            className="px-2 py-1 bg-red-500 text-white rounded"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           ) : (
             <div className="text-center py-12">
