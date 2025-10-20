@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { ErrorToast, SuccessToast } from "../../Helper/FormHelper";
 import loadingStore from "../../Zustand/LoadingStore";
@@ -29,13 +30,8 @@ const NewProduct = () => {
   const [selectedBrand, setSelectedBrand] = useState(null);
 
   const [unitCostError, setUnitCostError] = useState(false);
-  const [newProducts, setNewProducts] = useState([]);
 
-  const [initialLoadDone, setInitialLoadDone] = useState({
-    brands: false,
-    categories: false,
-    units: false,
-  });
+  const [newProducts, setNewProducts] = useState([]);
 
   const [formData, setFormData] = useState({
     Product: {
@@ -56,7 +52,11 @@ const NewProduct = () => {
 
   const handleProductChange = (field, value, isNumber = false) => {
     let val = value;
-    if (isNumber) val = value === "" ? "" : Number(value);
+
+    // Number field handle
+    if (isNumber) {
+      val = value === "" ? "" : Number(value);
+    }
 
     setFormData((prev) => ({
       ...prev,
@@ -66,6 +66,7 @@ const NewProduct = () => {
       },
     }));
 
+    // Real-time Unit Cost validation if QTY is entered
     if (field === "qty") {
       if (
         val &&
@@ -86,8 +87,8 @@ const NewProduct = () => {
     }
   };
 
-  // Fetch Brands
-  const fetchBrands = async (autoSelect = false) => {
+  // fetchBrands - after fetching, always auto-select the newest item (assumed at index 0 after reverse)
+  const fetchBrands = async () => {
     setGlobalLoader(true);
     try {
       const res = await axios.get(`${BaseURL}/GetBrands`, {
@@ -101,11 +102,19 @@ const NewProduct = () => {
       }));
       setBrands(mapped);
 
-      if ((autoSelect || initialLoadDone.brands) && mapped.length > 0) {
+      // Auto-select newest item if exists (always replace previous selection)
+      if (mapped.length > 0) {
         setSelectedBrand(mapped[0]);
+        // also set formData.Product.brandID accordingly
         setFormData((prev) => ({
           ...prev,
           Product: { ...prev.Product, brandID: mapped[0].brand._id },
+        }));
+      } else {
+        setSelectedBrand(null);
+        setFormData((prev) => ({
+          ...prev,
+          Product: { ...prev.Product, brandID: "" },
         }));
       }
     } catch (error) {
@@ -113,13 +122,11 @@ const NewProduct = () => {
       ErrorToast("Failed to load brands");
     } finally {
       setGlobalLoader(false);
-      if (!initialLoadDone.brands)
-        setInitialLoadDone((prev) => ({ ...prev, brands: true }));
     }
   };
 
-  // Fetch Categories
-  const fetchCategories = async (autoSelect = false) => {
+  // fetchCategories - after fetching, always auto-select newest item
+  const fetchCategories = async () => {
     setGlobalLoader(true);
     try {
       const res = await axios.get(`${BaseURL}/GetCategory`, {
@@ -132,11 +139,18 @@ const NewProduct = () => {
       }));
       setCategories(mapped);
 
-      if ((autoSelect || initialLoadDone.categories) && mapped.length > 0) {
+      // Auto-select newest item if exists
+      if (mapped.length > 0) {
         setSelectedCategory(mapped[0]);
         setFormData((prev) => ({
           ...prev,
           Product: { ...prev.Product, categoryID: mapped[0].category._id },
+        }));
+      } else {
+        setSelectedCategory(null);
+        setFormData((prev) => ({
+          ...prev,
+          Product: { ...prev.Product, categoryID: "" },
         }));
       }
     } catch (error) {
@@ -144,13 +158,11 @@ const NewProduct = () => {
       ErrorToast("Failed to load categories");
     } finally {
       setGlobalLoader(false);
-      if (!initialLoadDone.categories)
-        setInitialLoadDone((prev) => ({ ...prev, categories: true }));
     }
   };
 
-  // Fetch Units
-  const fetchUnits = async (autoSelect = false) => {
+  // fetchUnits - after fetching, always auto-select newest item
+  const fetchUnits = async () => {
     setGlobalLoader(true);
     try {
       const res = await axios.get(`${BaseURL}/GetUnit`, {
@@ -162,11 +174,18 @@ const NewProduct = () => {
       }));
       setUnits(mapped);
 
-      if ((autoSelect || initialLoadDone.units) && mapped.length > 0) {
+      // Auto-select newest item if exists
+      if (mapped.length > 0) {
         setSelectedUnit(mapped[0]);
         setFormData((prev) => ({
           ...prev,
           Product: { ...prev.Product, unit: mapped[0].value },
+        }));
+      } else {
+        setSelectedUnit(null);
+        setFormData((prev) => ({
+          ...prev,
+          Product: { ...prev.Product, unit: "" },
         }));
       }
     } catch (error) {
@@ -174,14 +193,13 @@ const NewProduct = () => {
       ErrorToast("Failed to load units");
     } finally {
       setGlobalLoader(false);
-      if (!initialLoadDone.units)
-        setInitialLoadDone((prev) => ({ ...prev, units: true }));
     }
   };
 
   useEffect(() => {
     const fetchAll = async () => {
       try {
+        // On initial load, fetch all; each fetch will also set a selection (per requirement)
         await Promise.all([fetchCategories(), fetchUnits(), fetchBrands()]);
       } catch (error) {
         console.error("Error fetching initial data:", error);
@@ -193,6 +211,7 @@ const NewProduct = () => {
 
   const validateForm = () => {
     const p = formData.Product;
+
     if (!p.name.trim()) {
       toast.error("Product name is required");
       return false;
@@ -209,12 +228,14 @@ const NewProduct = () => {
       toast.error("Please select a brand");
       return false;
     }
+
     if (p.qty && (!p.unitCost || p.unitCost <= 0)) {
       setUnitCostError(true);
       toast.error("Unit Cost is required when Stock QTY is entered");
       return false;
     }
-    return true;
+
+    return true; //  সব ভ্যালিড হলে true রিটার্ন করবে
   };
 
   const resetForm = () => {
@@ -240,6 +261,7 @@ const NewProduct = () => {
     setUnitCostError(false);
   };
 
+  // get new product data
   const fetchNewProducts = async () => {
     setGlobalLoader(true);
     try {
@@ -259,10 +281,13 @@ const NewProduct = () => {
 
   useEffect(() => {
     fetchNewProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  //  create new product
   const handleCreateProduct = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) return;
 
     const payload = {
@@ -302,7 +327,12 @@ const NewProduct = () => {
       icon: "warning",
       showCancelButton: true,
       background: "rgba(255, 255, 255, 0.2)",
-      backdrop: `rgba(0,0,0,0.4) url("/images/nyan-cat.gif") left top no-repeat`,
+      backdrop: `
+          rgba(0,0,0,0.4)
+          url("/images/nyan-cat.gif")
+          left top
+          no-repeat
+        `,
       customClass: {
         popup:
           "rounded-lg border border-white/20 dark:border-gray-700/50 shadow-xl backdrop-blur-lg bg-white/80 dark:bg-gray-800/80",
@@ -324,6 +354,7 @@ const NewProduct = () => {
           const response = await axios.get(`${BaseURL}/DeleteProduct/${id}`, {
             headers: { token: getToken() },
           });
+
           if (response.data.status === "Success") {
             SuccessToast(response.data.message);
             fetchNewProducts();
@@ -577,7 +608,8 @@ const NewProduct = () => {
           </form>
         </div>
 
-        {/* --- Products List Table --- */}
+        {/* New Products List */}
+
         <div className="global_sub_container">
           <div>
             <h2 className="text-xl mb-3 font-semibold flex flex-col">
@@ -634,7 +666,7 @@ const NewProduct = () => {
                         <td className="global_td  ">
                           {/* update button  */}
                           <button
-                            className="mr-1 mb-2 md:mb-0 px-2 py-1 outline-0 bg-blue-500 text-white rounded"
+                            className="mr-1 px-2 py-1 outline-0 bg-blue-500 text-white rounded"
                             onClick={() =>
                               navigate(`/EditProduct/${product._id}`, {
                                 state: { product },
