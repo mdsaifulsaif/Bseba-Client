@@ -181,41 +181,44 @@ const Expense = () => {
   return (
     <div className="global_container">
       {/* Create Expense Section */}
+      {/* Create Expense Section */}
       <div className="global_sub_container">
         <h1 className="text-xl font-semibold mb-3">Add Expense</h1>
 
+        {/* === Row 1: Expense Type + Add Button + Date + Amount === */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {/* Expense Type */}
-          <div className="col-span-1">
-            <label className="text-sm font-medium mb-1 flex items-center">
-              <FaTag className="mr-2 text-green-600" /> Expense Type
-            </label>
-            <select
-              value={selectedExpense}
-              onChange={(e) => setSelectedExpense(e.target.value)}
-              className="global_dropdown w-full"
-            >
-              <option value="">Choose Expense Type</option>
-              {expenseTypes.map((exp) => (
-                <option key={exp._id} value={exp._id}>
-                  {exp.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* Expense Type + Add Button */}
+          <div className="col-span-2 flex items-end gap-3">
+            <div className="flex-1">
+              <label className="text-sm font-medium mb-1 flex items-center">
+                <FaTag className="mr-2 text-green-600" /> Expense Type
+              </label>
+              <select
+                value={selectedExpense}
+                onChange={(e) => setSelectedExpense(e.target.value)}
+                className="global_dropdown w-full"
+              >
+                <option value="">Choose Expense Type</option>
+                {expenseTypes.map((exp) => (
+                  <option key={exp._id} value={exp._id}>
+                    {exp.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* + Expense Type Button */}
-          <div className="col-span-1 flex items-end justify-center lg:justify-start">
-            <button
-              onClick={() => setExpenseTypeModal(true)}
-              className="global_button w-full md:w-auto"
-            >
-              + Expense Type
-            </button>
+            <div>
+              <button
+                onClick={() => setExpenseTypeModal(true)}
+                className="global_button whitespace-nowrap"
+              >
+                + Expense Type
+              </button>
+            </div>
           </div>
 
           {/* Date */}
-          <div className="col-span-1">
+          <div>
             <label className="text-sm font-medium mb-1 flex items-center">
               <FaCalendarAlt className="mr-2 text-green-600" /> Select Date
             </label>
@@ -231,7 +234,7 @@ const Expense = () => {
           </div>
 
           {/* Amount */}
-          <div className="col-span-1">
+          <div>
             <label className="text-sm font-medium mb-1 flex items-center">
               <FaDollarSign className="mr-2 text-green-600" /> Amount
             </label>
@@ -243,30 +246,30 @@ const Expense = () => {
               placeholder="Enter amount"
             />
           </div>
+        </div>
 
-          {/* Note */}
-          <div className="col-span-1 md:col-span-2 lg:col-span-3">
-            <label className="text-sm font-medium mb-1 flex items-center">
-              <FaStickyNote className="mr-2 text-green-600" /> Note
-            </label>
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              rows={3}
-              className="global_input w-full"
-              placeholder="Write a note (optional)"
-            />
-          </div>
+        {/* === Row 2: Note === */}
+        <div className="mt-5">
+          <label className="text-sm font-medium mb-1 flex items-center">
+            <FaStickyNote className="mr-2 text-green-600" /> Note
+          </label>
+          <textarea
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            rows={3}
+            className="global_input w-full"
+            placeholder="Write a note (optional)"
+          />
+        </div>
 
-          {/* Create Button */}
-          <div className="col-span-1 flex items-end justify-center lg:justify-start">
-            <button
-              onClick={handleSubmit}
-              className="global_button w-full md:w-auto"
-            >
-              Create Expense
-            </button>
-          </div>
+        {/* === Row 3: Button === */}
+        <div className="mt-5 flex justify-center lg:justify-start">
+          <button
+            onClick={handleSubmit}
+            className="global_button w-full md:w-auto"
+          >
+            Create Expense
+          </button>
         </div>
       </div>
 
