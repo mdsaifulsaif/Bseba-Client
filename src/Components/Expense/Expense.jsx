@@ -42,7 +42,7 @@ const Expense = () => {
       const res = await axios.get(`${BaseURL}/GetExpenseTypes`, {
         headers: { token: getToken() },
       });
-      setExpenseTypes(res.data.data || []);
+      setExpenseTypes((res.data.data || []).reverse());
     } catch {
       ErrorToast("Failed to load Expenses");
     } finally {
@@ -148,7 +148,7 @@ const Expense = () => {
     }
 
     const payload = {
-      TypeID: selectedExpense,
+      typeID: selectedExpense,
       amount: parseFloat(amount),
       note,
       CreatedDate: createDate,

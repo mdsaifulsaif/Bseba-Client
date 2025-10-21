@@ -23,6 +23,10 @@ const Customer = () => {
     contactType: "Customer",
   });
 
+  // Previous transaction, default "পাবে"
+  const [transactionType, setTransactionType] = useState("পাবে");
+  const [transactionAmount, setTransactionAmount] = useState("");
+
   const { setGlobalLoader } = loadingStore();
 
   // Fetch Customers
@@ -56,21 +60,25 @@ const Customer = () => {
     fetchCustomers();
   }, [page, limit]);
 
-  const handleEdit = (customer) => {
-    setEditId(customer._id);
-    setBalance(customer.balance || 0);
-    setForm({
-      email: customer.email || "",
-      mobile: customer.mobile || "",
-      address: customer.address || "",
-      customer: customer.name || "",
-      contactType: customer.type || "Customer",
-    });
+  // const handleEdit = (customer) => {
+  //   setEditId(customer._id);
+  //   setBalance(customer.balance || 0);
+  //   setForm({
+  //     email: customer.email || "",
+  //     mobile: customer.mobile || "",
+  //     address: customer.address || "",
+  //     customer: customer.name || "",
+  //     contactType: customer.type || "Customer",
+  //   });
 
-    if (formRef.current) {
-      formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
+  //   // Previous transaction on edit, default "পাবে" if none
+  //   setTransactionType(customer.previousTransaction?.type || "পাবে");
+  //   setTransactionAmount(customer.previousTransaction?.amount || "");
+
+  //   if (formRef.current) {
+  //     formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+  //   }
+  // };
 
   const resetForm = () => {
     setForm({
@@ -81,6 +89,8 @@ const Customer = () => {
       contactType: "Customer",
     });
     setEditId(null);
+    setTransactionType("পাবে"); // default reset
+    setTransactionAmount("");
   };
 
   const handleChange = (e) => {
@@ -91,17 +101,22 @@ const Customer = () => {
     e.preventDefault();
     setGlobalLoader(true);
     try {
+      const payload = {
+        name: form.customer,
+        mobile: form.mobile,
+        email: form.email,
+        address: form.address,
+        type: form.contactType,
+        previousTransaction: {
+          type: transactionType,
+          amount: transactionAmount,
+        },
+      };
+
       if (editId) {
-        const { email, mobile, address, customer, contactType } = form;
         const res = await axios.put(
           `${BaseURL}/UpdateContactById/${editId}`,
-          {
-            name: customer,
-            mobile,
-            email,
-            address,
-            type: contactType,
-          },
+          payload,
           { headers: { token: getToken() } }
         );
         if (res.data.status === "Success") {
@@ -113,13 +128,6 @@ const Customer = () => {
           ErrorToast(res.data.message || "Failed to update Customer");
         }
       } else {
-        const payload = {
-          name: form.customer,
-          mobile: form.mobile,
-          email: form.email,
-          address: form.address,
-          type: form.contactType,
-        };
         const res = await axios.post(`${BaseURL}/CreateContact`, payload, {
           headers: { token: getToken() },
         });
@@ -149,6 +157,7 @@ const Customer = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-8 gap-4">
+          {/* Customer Name */}
           <div className="flex flex-col col-span-8 lg:col-span-2">
             <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Customer Name <span className="text-red-500">*</span>
@@ -164,6 +173,7 @@ const Customer = () => {
             />
           </div>
 
+          {/* Mobile */}
           <div className="flex flex-col col-span-8 lg:col-span-2">
             <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Mobile <span className="text-red-500">*</span>
@@ -179,6 +189,7 @@ const Customer = () => {
             />
           </div>
 
+          {/* Email */}
           <div className="flex flex-col col-span-8 lg:col-span-2">
             <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Email
@@ -193,6 +204,7 @@ const Customer = () => {
             />
           </div>
 
+          {/* Address */}
           <div className="flex flex-col col-span-8 lg:col-span-2">
             <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Address <span className="text-red-500">*</span>
@@ -208,6 +220,7 @@ const Customer = () => {
             />
           </div>
 
+          {/* Contact Type */}
           <div className="flex flex-col col-span-8 lg:col-span-2">
             <label
               htmlFor="contactType"
@@ -228,6 +241,49 @@ const Customer = () => {
             </select>
           </div>
 
+          {/* Previous Transaction */}
+          <div className="flex flex-col col-span-8 lg:col-span-2">
+            <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+              পূর্বের লেনদেন যদি থাকে
+            </label>
+            <div className="flex gap-2">
+              <select
+                value={transactionType}
+                onChange={(e) => {
+                  setTransactionType(e.target.value);
+                  setTransactionAmount(""); // reset amount on type change
+                }}
+                className="global_input"
+              >
+                <option value="পাবে">পাবে</option>
+                <option value="দেবে">দেবে</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Amount */}
+          <div className="flex flex-col col-span-8 lg:col-span-2">
+            {transactionType && (
+              <>
+                <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Amount
+                </label>
+                <input
+                  type="text"
+                  value={transactionAmount}
+                  onChange={(e) => setTransactionAmount(e.target.value)}
+                  placeholder={
+                    transactionType === "দেবে"
+                      ? "আমার কাছে পাবে"
+                      : "পাবে আমার কাছে"
+                  }
+                  className="global_input"
+                />
+              </>
+            )}
+          </div>
+
+          {/* Submit buttons */}
           <div className="flex justify-center lg:justify-start items-end col-span-8 lg:col-span-2">
             <button
               type="submit"
@@ -250,6 +306,7 @@ const Customer = () => {
         </form>
       </div>
 
+      {/* Customer list */}
       {/* Customer list */}
       <div className="global_sub_container">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">

@@ -23,6 +23,10 @@ const Supplier = () => {
     contactType: "Supplier", // default Supplier
   });
 
+  // Previous transaction state, default “দেবে”
+  const [transactionType, setTransactionType] = useState("দেবে");
+  const [transactionAmount, setTransactionAmount] = useState("");
+
   const { setGlobalLoader } = loadingStore();
 
   // Fetch suppliers
@@ -60,12 +64,16 @@ const Supplier = () => {
     setEditId(supplier._id);
     setBalance(supplier.balance || 0);
     setForm({
-      supplier: supplier.supplier,
+      supplier: supplier.supplier || "",
       mobile: supplier.mobile || "",
-      email: supplier.email,
-      address: supplier.address,
+      email: supplier.email || "",
+      address: supplier.address || "",
       contactType: supplier.type || "Supplier",
     });
+
+    // Previous transaction on edit, default to “দেবে” if not present
+    setTransactionType(supplier.previousTransaction?.type || "দেবে");
+    setTransactionAmount(supplier.previousTransaction?.amount || "");
 
     if (formRef.current) {
       formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -81,6 +89,8 @@ const Supplier = () => {
       contactType: "Supplier",
     });
     setEditId(null);
+    setTransactionType("দেবে"); // reset default
+    setTransactionAmount("");
   };
 
   const handleChange = (e) => {
@@ -91,11 +101,22 @@ const Supplier = () => {
     e.preventDefault();
     setGlobalLoader(true);
     try {
+      const payload = {
+        name: form.supplier,
+        mobile: form.mobile,
+        email: form.email,
+        address: form.address,
+        type: form.contactType,
+        previousTransaction: {
+          type: transactionType || "দেবে",
+          amount: transactionAmount || "",
+        },
+      };
+
       if (editId) {
-        const { supplier, mobile, email, address, contactType } = form;
         const res = await axios.put(
           `${BaseURL}/UpdateSupplierByID/${editId}`,
-          { supplier, mobile, email, address, type: contactType },
+          payload,
           { headers: { token: getToken() } }
         );
         if (res.data.status === "Success") {
@@ -103,24 +124,18 @@ const Supplier = () => {
           resetForm();
           fetchSuppliers();
         } else {
-          ErrorToast(res.data.message || "Failed to update Dealer");
+          ErrorToast(res.data.message || "Failed to update Supplier");
         }
       } else {
-        const payload = {
-          name: form.supplier,
-          mobile: form.mobile,
-          type: form.contactType,
-          address: form.address,
-          email: form.email,
-        };
         const res = await axios.post(`${BaseURL}/CreateContact`, payload, {
           headers: { token: getToken() },
         });
         if (res.data.status === "Success") {
-          SuccessToast("Dealer created successfully");
+          SuccessToast("Supplier created successfully");
           fetchSuppliers();
+          resetForm();
         } else {
-          ErrorToast(res.data.message || "Failed to create Dealer");
+          ErrorToast(res.data.message || "Failed to create Supplier");
         }
       }
     } catch (error) {
@@ -140,11 +155,9 @@ const Supplier = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-8 gap-4">
+          {/* Supplier Name */}
           <div className="flex flex-col col-span-8 lg:col-span-2">
-            <label
-              htmlFor="supplier"
-              className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+            <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Supplier Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -158,11 +171,9 @@ const Supplier = () => {
             />
           </div>
 
+          {/* Mobile */}
           <div className="flex flex-col col-span-8 lg:col-span-2">
-            <label
-              htmlFor="mobile"
-              className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+            <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Mobile <span className="text-red-500">*</span>
             </label>
             <input
@@ -176,11 +187,9 @@ const Supplier = () => {
             />
           </div>
 
+          {/* Email */}
           <div className="flex flex-col col-span-8 lg:col-span-2">
-            <label
-              htmlFor="email"
-              className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+            <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Email
             </label>
             <input
@@ -193,11 +202,9 @@ const Supplier = () => {
             />
           </div>
 
+          {/* Address */}
           <div className="flex flex-col col-span-8 lg:col-span-2">
-            <label
-              htmlFor="address"
-              className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+            <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Address <span className="text-red-500">*</span>
             </label>
             <input
@@ -213,10 +220,7 @@ const Supplier = () => {
 
           {/* Contact Type */}
           <div className="flex flex-col col-span-8 lg:col-span-2">
-            <label
-              htmlFor="contactType"
-              className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+            <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Contact Type <span className="text-red-500">*</span>
             </label>
             <select
@@ -226,12 +230,49 @@ const Supplier = () => {
               required
               className="global_input appearance-none bg-white dark:bg-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Select Type</option>
               <option value="Supplier">Supplier</option>
               <option value="Both">Both (Customer and Supplier)</option>
             </select>
           </div>
 
+          {/* Previous Transaction */}
+          <div className="flex flex-col col-span-8 lg:col-span-2">
+            <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+              পূর্বের লেনদেন যদি থাকে
+            </label>
+            <div className="flex gap-2">
+              <select
+                value={transactionType}
+                onChange={(e) => setTransactionType(e.target.value)}
+                className="global_input"
+              >
+                <option value="দেবে">দেবে</option>
+                <option value="পাবে">পাবে</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Amount */}
+          <div className="flex flex-col col-span-8 lg:col-span-2">
+            <label className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+              Amount
+            </label>
+            <input
+              type="text"
+              value={transactionAmount}
+              onChange={(e) => setTransactionAmount(e.target.value)}
+              placeholder={
+                transactionType === "দেবে"
+                  ? "আমার কাছে পাবে"
+                  : transactionType === "পাবে"
+                  ? "পাবে আমার কাছে"
+                  : "Amount"
+              }
+              className="global_input"
+            />
+          </div>
+
+          {/* Submit */}
           <div className="flex justify-center lg:justify-start items-end col-span-8 lg:col-span-2">
             <button
               type="submit"

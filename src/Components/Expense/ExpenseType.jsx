@@ -21,7 +21,7 @@ const ExpenseType = () => {
       const res = await axios.get(`${BaseURL}/GetExpenseTypes`, {
         headers: { token: getToken() },
       });
-      setExpenseTypes(res.data.data || []);
+      setExpenseTypes((res.data.data || []).reverse());
     } catch (error) {
       ErrorToast("Failed to load Expenses");
     } finally {
@@ -90,7 +90,7 @@ const ExpenseType = () => {
     }
   };
 
-  // 🔹 Edit
+  // Edit
   const handleEdit = (item) => {
     console.log(item._id);
     setEditId(item._id);
@@ -98,7 +98,7 @@ const ExpenseType = () => {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // 🔹 Delete
+  //  Delete
   const handleDelete = async (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -130,7 +130,7 @@ const ExpenseType = () => {
     });
   };
 
-  // 🔹 Filter
+  //  Filter
   const filteredExpenses = expenseTypes.filter((item) =>
     item.name.toLowerCase().includes(searchKeyWord.toLowerCase())
   );
@@ -195,12 +195,12 @@ const ExpenseType = () => {
                   >
                     Edit
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => handleDelete(expense._id)}
                     className="global_button_red"
                   >
                     Delete
-                  </button>
+                  </button> */}
                 </div>
               </div>
             ))

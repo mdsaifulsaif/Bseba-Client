@@ -55,7 +55,6 @@ const ExpenseByID = () => {
     if (!selectedType) return;
     setGlobalLoader(true);
     try {
-      const businessID = "68f5a635910a8618cc8a7a2a"; // Replace with dynamic if needed
       const res = await axios.get(
         `${BaseURL}/GetExpenseByDateID/${formatDateWithOffset(
           startDate
@@ -64,7 +63,7 @@ const ExpenseByID = () => {
       );
       if (res.data.status === "Success") {
         setExpenseData(res.data.data || []);
-        // Calculate total amount dynamically
+        // Calculate total amount
         const total = (res.data.data || []).reduce(
           (sum, item) => sum + parseFloat(item.amount || 0),
           0
@@ -170,7 +169,7 @@ const ExpenseByID = () => {
             selected={startDate}
             onChange={(date) => setStartDate(date)}
             dateFormat="dd-MM-yyyy"
-            className="global_input w-60"
+            className="global_input w-60 -z-50"
           />
         </div>
 
