@@ -183,6 +183,12 @@ const MasterLayout = ({ children }) => {
                 icon: <LiaSortAmountUpSolid />,
                 path: "/ExpenseType",
               },
+              {
+                id: "ExpenseByType",
+                title: "Expense By Type",
+                icon: <LiaSortAmountUpSolid />,
+                path: "/ExpenseByType",
+              },
             ],
           },
 

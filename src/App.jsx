@@ -50,6 +50,7 @@ import EditContactPage from "./Pages/Contact/EditContactPage";
 import CustomerPage from "./Pages/Contact/CustomerPage";
 import PurchaseReturnPage from "./Pages/Purchase/PurchaseReturnPage";
 import PurchaseReturnList from "./Components/Purchase/PurchaseReturnList";
+import ExpenseByIDPage from "./Pages/Expense/ExpenseByIDPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -94,6 +95,7 @@ function App() {
 
             <Route path="/Expense" element={<ExpensePage />} />
             <Route path="/ExpenseType" element={<ExpenseTypePage />} />
+            <Route path="/ExpenseByType" element={<ExpenseByIDPage />} />
 
             <Route path="/NewSale" element={<NewSalePage />} />
             <Route path="/SaleList" element={<SaleListPage />} />

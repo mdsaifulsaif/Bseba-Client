@@ -14,7 +14,7 @@ const ExpenseType = () => {
   const [searchKeyWord, setSearchKeyword] = useState("");
   const formRef = useRef(null);
 
-  // 🔹 Fetch All Expense Types
+  //  Fetch All Expense Types
   const GetExpenseTypes = async () => {
     setGlobalLoader(true);
     try {
@@ -136,76 +136,80 @@ const ExpenseType = () => {
   );
 
   return (
-    <div ref={formRef} className="global_sub_container">
-      <h1 className="text-xl font-semibold mb-3">Expense Type Management</h1>
+    <div className="global_container">
+      <div ref={formRef} className="global_sub_container">
+        <h1 className="text-xl font-semibold mb-3">Expense Type Management</h1>
 
-      {/* Form Section */}
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4 mb-6 flex flex-col lg:flex-row lg:justify-between gap-4"
-      >
-        <div className="flex flex-col lg:flex-row justify-center lg:justify-start gap-5 w-full">
+        {/* Form Section */}
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 mb-6 flex flex-col lg:flex-row lg:justify-between gap-4"
+        >
+          <div className="flex flex-col lg:flex-row justify-center lg:justify-start gap-5 w-full">
+            <input
+              type="text"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Expense Type Name"
+              className="global_input"
+              required
+            />
+            <button
+              type="submit"
+              className={
+                editId ? "global_edit" : "global_button w-full lg:w-fit"
+              }
+            >
+              {editId ? "Update Expense Type" : "Add Expense Type"}
+            </button>
+          </div>
+
           <input
             type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Expense Type Name"
-            className="global_input"
-            required
+            placeholder="Search Expense Type"
+            value={searchKeyWord}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            className="global_input h-fit w-full lg:w-lg"
           />
-          <button
-            type="submit"
-            className={editId ? "global_edit" : "global_button w-full lg:w-fit"}
-          >
-            {editId ? "Update Expense Type" : "Add Expense Type"}
-          </button>
-        </div>
+        </form>
 
-        <input
-          type="text"
-          placeholder="Search Expense Type"
-          value={searchKeyWord}
-          onChange={(e) => setSearchKeyword(e.target.value)}
-          className="global_input h-fit w-full lg:w-lg"
-        />
-      </form>
-
-      {/* List Section */}
-      <div className="space-y-2">
-        {filteredExpenses.length > 0 ? (
-          filteredExpenses.map((expense) => (
-            <div
-              key={expense._id}
-              className="border border-white/30 dark:border-gray-700/50
+        {/* List Section */}
+        <div className="space-y-2">
+          {filteredExpenses.length > 0 ? (
+            filteredExpenses.map((expense) => (
+              <div
+                key={expense._id}
+                className="border border-white/30 dark:border-gray-700/50
                 px-5 py-2 text-sm rounded-xl flex justify-between items-center
                 bg-white/40 dark:bg-gray-800/40 backdrop-blur-md
                 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <h2 className="font-semibold text-gray-800 dark:text-gray-200">
-                {expense.name}
-              </h2>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleEdit(expense)}
-                  className="global_edit"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(expense._id)}
-                  className="global_button_red"
-                >
-                  Delete
-                </button>
+              >
+                <h2 className="font-semibold text-gray-800 dark:text-gray-200">
+                  {expense.name}
+                </h2>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleEdit(expense)}
+                    className="global_edit"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(expense._id)}
+                    className="global_button_red"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-600 dark:text-gray-400 text-sm">
-            No Expense Type found.
-          </p>
-        )}
+            ))
+          ) : (
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              No Expense Type found.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

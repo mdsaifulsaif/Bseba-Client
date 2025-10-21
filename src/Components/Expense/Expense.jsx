@@ -18,10 +18,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import { createPortal } from "react-dom";
 import { printElement } from "../../Helper/Printer";
 import TimeAgo from "../../Helper/UI/TimeAgo";
+import openCloseStore from "../../Zustand/OpenCloseStore";
+import ExpenceTypeModal from "../Modals/ExpenceTypeModal";
 
 const Expense = () => {
+  const { setExpenseTypeModal } = openCloseStore();
   const [expenseTypes, setExpenseTypes] = useState([]);
-  const [selectedExpense, setSelectedExpense] = useState("");
+  const [selectedExpense, setSelectedExpense] = useState(""); // keep one selected state
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [createDate, setCreateDate] = useState(new Date());
@@ -29,7 +32,6 @@ const Expense = () => {
   const [endDate, setEndDate] = useState(new Date());
   const [expenseReport, setExpenseReport] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
-
   const { setGlobalLoader } = loadingStore();
   const componentRef = useRef();
 
@@ -94,7 +96,7 @@ const Expense = () => {
       icon: "warning",
       showCancelButton: true,
       background: "rgba(255, 255, 255, 0.2)",
-      backdrop: `rgba(0,0,0,0.4) url("/images/nyan-cat.gif") left top no-repeat`,
+      backdrop: `rgba(0,0,0,0.4)`,
       customClass: {
         popup:
           "rounded-lg border border-white/20 dark:border-gray-700/50 shadow-xl backdrop-blur-lg bg-white/80 dark:bg-gray-800/80",
@@ -129,6 +131,14 @@ const Expense = () => {
         }
       }
     });
+  };
+
+  //  new expense type add hole auto select + modal close
+  const handleExpenseTypeCreated = (newType) => {
+    console.log("new added exp type", newType);
+    setExpenseTypes((prev) => [...prev, newType]);
+    setSelectedExpense(newType._id); // now selects new type
+    setExpenseTypeModal(false); // close modal
   };
 
   const handleSubmit = async () => {
@@ -173,9 +183,10 @@ const Expense = () => {
       {/* Create Expense Section */}
       <div className="global_sub_container">
         <h1 className="text-xl font-semibold mb-3">Add Expense</h1>
-        <div className="grid grid-cols-4 gap-5">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {/* Expense Type */}
-          <div className="mb-4 col-span-4 lg:col-span-1">
+          <div className="col-span-1">
             <label className="text-sm font-medium mb-1 flex items-center">
               <FaTag className="mr-2 text-green-600" /> Expense Type
             </label>
@@ -193,8 +204,18 @@ const Expense = () => {
             </select>
           </div>
 
+          {/* + Expense Type Button */}
+          <div className="col-span-1 flex items-end justify-center lg:justify-start">
+            <button
+              onClick={() => setExpenseTypeModal(true)}
+              className="global_button w-full md:w-auto"
+            >
+              + Expense Type
+            </button>
+          </div>
+
           {/* Date */}
-          <div className="col-span-4 lg:col-span-1">
+          <div className="col-span-1">
             <label className="text-sm font-medium mb-1 flex items-center">
               <FaCalendarAlt className="mr-2 text-green-600" /> Select Date
             </label>
@@ -210,7 +231,7 @@ const Expense = () => {
           </div>
 
           {/* Amount */}
-          <div className="mb-4 col-span-4 lg:col-span-1">
+          <div className="col-span-1">
             <label className="text-sm font-medium mb-1 flex items-center">
               <FaDollarSign className="mr-2 text-green-600" /> Amount
             </label>
@@ -218,13 +239,13 @@ const Expense = () => {
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="global_input"
+              className="global_input w-full"
               placeholder="Enter amount"
             />
           </div>
 
           {/* Note */}
-          <div className="mb-4 col-span-4 lg:col-span-3">
+          <div className="col-span-1 md:col-span-2 lg:col-span-3">
             <label className="text-sm font-medium mb-1 flex items-center">
               <FaStickyNote className="mr-2 text-green-600" /> Note
             </label>
@@ -232,16 +253,16 @@ const Expense = () => {
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={3}
-              className="global_input"
+              className="global_input w-full"
               placeholder="Write a note (optional)"
             />
           </div>
 
           {/* Create Button */}
-          <div className="lg:mt-6 col-span-4 lg:col-span-1 flex justify-center lg:justify-start">
+          <div className="col-span-1 flex items-end justify-center lg:justify-start">
             <button
               onClick={handleSubmit}
-              className="global_button w-full lg:w-fit"
+              className="global_button w-full md:w-auto"
             >
               Create Expense
             </button>
@@ -250,6 +271,7 @@ const Expense = () => {
       </div>
 
       {/* Expense Report Section */}
+
       <div className="global_sub_container">
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-xl font-semibold mb-3">Expense Report</h1>
@@ -327,7 +349,7 @@ const Expense = () => {
                 </tbody>
               </table>
 
-              {/* ✅ Summary Table */}
+              {/*  Summary Table */}
               <div className="mt-5 border-t pt-4">
                 <h2 className="text-lg font-semibold mb-3 text-center">
                   Expense Summary
@@ -337,7 +359,7 @@ const Expense = () => {
                     <thead className="global_thead">
                       <tr>
                         <th className="global_th">Total Expenses</th>
-                        <th className="global_th">Amount (BDT)</th>
+                        <th className="global_th">Amount </th>
                       </tr>
                     </thead>
                     <tbody className="global_tbody">
@@ -369,6 +391,8 @@ const Expense = () => {
           </button>
         </div>
       </div>
+
+      <ExpenceTypeModal onSuccess={handleExpenseTypeCreated} />
     </div>
   );
 };

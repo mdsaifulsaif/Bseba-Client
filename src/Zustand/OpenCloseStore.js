@@ -19,6 +19,10 @@ const openCloseStore = create((set) => ({
   setDealerModal: (val) => set({ dealerModal: val }),
   setSupplierModal: (val) => set({ supplierModal: val }),
   setCategoryModal: (val) => set({ categoryModal: val }),
+
+  // Add this for expense type modal
+  expenseTypeModal: false,
+  setExpenseTypeModal: (val) => set({ expenseTypeModal: val }),
 }));
 
 export default openCloseStore;
