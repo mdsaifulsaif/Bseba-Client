@@ -188,9 +188,9 @@ const ProductList = () => {
                         ? new Date(product.createdAt).toLocaleDateString()
                         : "N/A"}
                     </td> */}
-                    <td className="global_td flex ">
+                    <td className="global_td flex gap-2 ">
                       <button
-                        className="mr-1 px-2 py-1 bg-blue-500 text-white rounded"
+                        className="global_edit"
                         onClick={() =>
                           navigate(`/EditProduct/${product._id}`, {
                             state: { product },
@@ -202,7 +202,7 @@ const ProductList = () => {
 
                       <button
                         onClick={() => HandleProductDelet(product._id)}
-                        className="px-2 py-1 bg-red-500 text-white rounded"
+                        className="global_button_red"
                       >
                         Delete
                       </button>

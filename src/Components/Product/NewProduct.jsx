@@ -504,7 +504,7 @@ const NewProduct = () => {
                       fetchBrands();
                     })
                   }
-                  className="border border-green-600 text-green-600 px-3 py-1 rounded"
+                  className="global_button"
                 >
                   + Brand
                 </button>
@@ -538,7 +538,7 @@ const NewProduct = () => {
                 <button
                   type="button"
                   onClick={() => openModal("category", fetchCategories)}
-                  className="border border-green-600 text-green-600 px-3 py-1 rounded"
+                  className="global_button"
                 >
                   + Category
                 </button>
@@ -574,7 +574,7 @@ const NewProduct = () => {
                     <button
                       type="button"
                       onClick={() => openModal("unit", fetchUnits)}
-                      className="border border-green-600 text-green-600 py-1 px-3 rounded w-full"
+                      className="global_button"
                     >
                       + Unit
                     </button>
@@ -733,9 +733,9 @@ const NewProduct = () => {
                             )
                           : "N/A"}
                       </td>
-                      <td className="global_td">
+                      <td className="global_td flex gap-2">
                         <button
-                          className="mr-1 mb-2 md:mb-0 px-2 py-1 outline-0 bg-blue-500 text-white rounded"
+                          className="global_edit"
                           onClick={() =>
                             navigate(`/EditProduct/${product._id}`, {
                               state: { product },
@@ -746,7 +746,7 @@ const NewProduct = () => {
                         </button>
                         <button
                           onClick={() => HandleProductDelet(product._id)}
-                          className="px-2 py-1 bg-red-500 text-white rounded"
+                          className="global_button_red"
                         >
                           Delete
                         </button>
