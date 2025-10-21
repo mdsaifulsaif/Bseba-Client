@@ -56,8 +56,13 @@ const Expense = () => {
         `${BaseURL}/GetExpenseByDate/${start.toISOString()}/${end.toISOString()}`,
         { headers: { token: getToken() } }
       );
-      if (res.data.status === "Success") setExpenseReport(res.data.data);
-      console.log(res.data.totalAmount);
+      if (res.data.status === "Success") {
+        setExpenseReport(res.data.data);
+        setTotalAmount(res.data.totalAmount || 0);
+      } else {
+        setExpenseReport([]);
+        setTotalAmount(0);
+      }
     } catch {
       ErrorToast("Failed to load expense report");
     } finally {
@@ -69,14 +74,6 @@ const Expense = () => {
     fetchExpenseTypes();
     fetchExpenseReport(startDate, endDate);
   }, []);
-
-  useEffect(() => {
-    const total = expenseReport.reduce(
-      (sum, item) => sum + parseFloat(item.amount || 0),
-      0
-    );
-    setTotalAmount(total);
-  }, [expenseReport]);
 
   useEffect(() => {
     if (startDate && endDate) fetchExpenseReport(startDate, endDate);
@@ -185,7 +182,7 @@ const Expense = () => {
             <select
               value={selectedExpense}
               onChange={(e) => setSelectedExpense(e.target.value)}
-              className="global_dropdown"
+              className="global_dropdown w-full"
             >
               <option value="">Choose Expense Type</option>
               {expenseTypes.map((exp) => (
@@ -290,44 +287,71 @@ const Expense = () => {
         {/* Table */}
         <div className="overflow-x-auto" ref={componentRef}>
           {expenseReport.length > 0 ? (
-            <table className="global_table">
-              <thead className="global_thead">
-                <tr>
-                  <th className="global_th">#</th>
-                  <th className="global_th">Type</th>
-                  <th className="global_th">Amount</th>
-                  <th className="global_th">Note</th>
-                  <th className="global_th">Date</th>
-                  <th className="global_th">Action</th>
-                </tr>
-              </thead>
-              <tbody className="global_tbody">
-                {expenseReport.map((item, i) => (
-                  <tr key={i} className="global_tr">
-                    <td className="global_td">{i + 1}</td>
-                    <td className="global_td">{item.typeName}</td>
-                    <td className="global_td text-red-600 font-semibold">
-                      {parseFloat(item.amount).toFixed(2)}
-                    </td>
-                    <td className="global_td truncate max-w-[150px]">
-                      {item.note || "-"}
-                    </td>
-                    <td className="global_td">
-                      {formatDisplayDate(item.CreatedDate)}{" "}
-                      <TimeAgo date={item.CreatedDate} />
-                    </td>
-                    <td className="global_td">
-                      <button
-                        onClick={() => handleDelete(item._id)}
-                        className="global_button_red"
-                      >
-                        Delete
-                      </button>
-                    </td>
+            <>
+              <table className="global_table">
+                <thead className="global_thead">
+                  <tr>
+                    <th className="global_th">#</th>
+                    <th className="global_th">Type</th>
+                    <th className="global_th">Amount</th>
+                    <th className="global_th">Note</th>
+                    <th className="global_th">Date</th>
+                    <th className="global_th">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="global_tbody">
+                  {expenseReport.map((item, i) => (
+                    <tr key={i} className="global_tr">
+                      <td className="global_td">{i + 1}</td>
+                      <td className="global_td">{item.typeName || "-"}</td>
+                      <td className="global_td text-red-600 font-semibold">
+                        {parseFloat(item.amount).toFixed(2)}
+                      </td>
+                      <td className="global_td truncate max-w-[150px]">
+                        {item.note || "-"}
+                      </td>
+                      <td className="global_td">
+                        {formatDisplayDate(item.CreatedDate)}{" "}
+                        <TimeAgo date={item.CreatedDate} />
+                      </td>
+                      <td className="global_td">
+                        <button
+                          onClick={() => handleDelete(item._id)}
+                          className="global_button_red"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* ✅ Summary Table */}
+              <div className="mt-5 border-t pt-4">
+                <h2 className="text-lg font-semibold mb-3 text-center">
+                  Expense Summary
+                </h2>
+                <div className="overflow-x-auto">
+                  <table className="global_table w-full text-center">
+                    <thead className="global_thead">
+                      <tr>
+                        <th className="global_th">Total Expenses</th>
+                        <th className="global_th">Amount (BDT)</th>
+                      </tr>
+                    </thead>
+                    <tbody className="global_tbody">
+                      <tr className="global_tr">
+                        <td className="global_td font-medium">All Types</td>
+                        <td className="global_td text-green-600 font-semibold">
+                          {totalAmount.toFixed(2)}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
           ) : (
             <div className="p-8 text-center">
               <FaSearchDollar className="mx-auto text-4xl mb-3" />
