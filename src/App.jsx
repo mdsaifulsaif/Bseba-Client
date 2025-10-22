@@ -51,6 +51,10 @@ import CustomerPage from "./Pages/Contact/CustomerPage";
 import PurchaseReturnPage from "./Pages/Purchase/PurchaseReturnPage";
 import PurchaseReturnList from "./Components/Purchase/PurchaseReturnList";
 import ExpenseByIDPage from "./Pages/Expense/ExpenseByIDPage";
+import PurchaseReturnListPage from "./Pages/Purchase/PurchaseReturnListPage";
+import AddDamagePage from "./Pages/Damage/AddDamagePage";
+import SalsReportPage from "./Pages/Report/SalsReportPage";
+import BusinessReportPage from "./Pages/Report/BusinessReportPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -97,6 +101,11 @@ function App() {
             <Route path="/ExpenseType" element={<ExpenseTypePage />} />
             <Route path="/ExpenseByType" element={<ExpenseByIDPage />} />
 
+            <Route path="/AddDamage" element={<AddDamagePage />}></Route>
+
+            <Route path="/BusinessReport" element={<BusinessReportPage />} />
+            <Route path="/SelsReport" element={<SalsReportPage />} />
+
             <Route path="/NewSale" element={<NewSalePage />} />
             <Route path="/SaleList" element={<SaleListPage />} />
             <Route path="/SaleDetails/:id" element={<SaleDetailsPage />} />
@@ -109,7 +118,7 @@ function App() {
             />
             <Route
               path="/PurchaseReturnList"
-              element={<PurchaseReturnList />}
+              element={<PurchaseReturnListPage />}
             />
             <Route path="/CreatePurchase" element={<CreatePurchasePage />} />
             <Route

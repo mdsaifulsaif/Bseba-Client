@@ -71,9 +71,7 @@ const ExpenceTypeModal = ({ onSuccess }) => {
         className="bg-white dark:bg-[#1E2939] p-6 rounded-lg w-full sm:w-[90%] max-w-lg max-h-[90vh] overflow-y-auto shadow-lg"
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold dark:text-white">
-            Add Expense Type
-          </h2>
+          <h2 className="text-xl font-semibold mb-3">Add Expense Type</h2>
           <button
             className="global_button_red"
             onClick={() => setExpenseTypeModal(false)}
@@ -102,7 +100,8 @@ const ExpenceTypeModal = ({ onSuccess }) => {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="global_button w-full"
+              className="global_button 
+              "
               disabled={loading}
             >
               {loading ? "Creating..." : "Create Expense Type"}

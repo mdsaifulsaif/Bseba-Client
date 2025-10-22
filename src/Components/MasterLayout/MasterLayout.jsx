@@ -1,4 +1,8 @@
-import { MdOutlinePerson4 } from "react-icons/md";
+import {
+  MdOutlinePerson4,
+  MdReportGmailerrorred,
+  MdOutlineAddShoppingCart,
+} from "react-icons/md";
 import { FaListCheck, FaBangladeshiTakaSign } from "react-icons/fa6";
 import { CiCircleList } from "react-icons/ci";
 import { IoListCircleOutline, IoCreateOutline } from "react-icons/io5";
@@ -9,6 +13,7 @@ import { FcSalesPerformance } from "react-icons/fc";
 import { GrContactInfo } from "react-icons/gr";
 import { MdCreateNewFolder } from "react-icons/md";
 import { GiBuyCard, GiTeamIdea } from "react-icons/gi";
+import { TbBusinessplan } from "react-icons/tb";
 import { useState, useEffect } from "react";
 import {
   FaChevronDown,
@@ -191,6 +196,49 @@ const MasterLayout = ({ children }) => {
               },
             ],
           },
+          // ====Damage====
+          {
+            id: "Damage",
+            title: "Damage",
+            icon: <FaSortAmountUp />,
+            children: [
+              {
+                id: "AddDamage",
+                title: "Add Damage",
+                icon: <LiaSortAmountUpSolid />,
+                path: "/AddDamage",
+              },
+              {
+                id: "DamageList",
+                title: "Damage List",
+                icon: <LiaSortAmountUpSolid />,
+                path: "/DamageList",
+              },
+            ],
+          },
+          // ========
+
+          // ====Report====
+          {
+            id: "Repot",
+            title: "Repot",
+            icon: <MdReportGmailerrorred />,
+            children: [
+              {
+                id: "BusinessReport",
+                title: "Business Report",
+                icon: <TbBusinessplan />,
+                path: "/BusinessReport",
+              },
+              {
+                id: "SaleReport",
+                title: "Sale Report",
+                icon: <MdOutlineAddShoppingCart />,
+                path: "/SaleReport",
+              },
+            ],
+          },
+          // ========
 
           {
             id: "accounts",

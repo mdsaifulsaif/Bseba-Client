@@ -126,64 +126,67 @@ const ExpenseByID = () => {
 
   return (
     <div className="global_container">
-      <div className="global_sub_container flex flex-wrap gap-4 items-end">
-        {/* Expense Type */}
-        <div className="flex flex-col">
-          <label className="font-medium mb-1 flex items-center">
-            <FaTag className="mr-2 text-green-600" /> Expense Type
-          </label>
-          <select
-            value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
-            className="global_dropdown w-60"
-          >
-            <option value="">Select Expense Type</option>
-            {expenseTypes.map((exp) => (
-              <option key={exp._id} value={exp._id}>
-                {exp.name}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="global_sub_container ">
+        <h2 className="text-xl font-semibold mb-3">Expense Type By Id</h2>
+        <div className="flex  gap-4 items-end">
+          {/* Expense Type */}
+          <div className="flex flex-col">
+            <label className="font-medium mb-1 flex items-center">
+              <FaTag className="mr-2 text-green-600" /> Expense Type
+            </label>
+            <select
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+              className="global_dropdown w-50"
+            >
+              <option value="">Select Expense Type</option>
+              {expenseTypes.map((exp) => (
+                <option key={exp._id} value={exp._id}>
+                  {exp.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* Period */}
-        <div className="flex flex-col">
-          <label className="font-medium mb-1">Period</label>
-          <select
-            value={period}
-            onChange={(e) => handlePeriodChange(e.target.value)}
-            className="global_dropdown w-60"
-          >
-            <option value="thisMonth">This Month</option>
-            <option value="lastMonth">Last Month</option>
-            <option value="custom">Custom</option>
-          </select>
-        </div>
+          {/* Period */}
+          <div className="flex flex-col">
+            <label className="font-medium mb-1">Period</label>
+            <select
+              value={period}
+              onChange={(e) => handlePeriodChange(e.target.value)}
+              className="global_dropdown w-50"
+            >
+              <option value="thisMonth">This Month</option>
+              <option value="lastMonth">Last Month</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
 
-        {/* Start Date */}
-        <div className="flex flex-col">
-          <label className="font-medium mb-1 flex items-center">
-            <FaCalendarAlt className="mr-2 text-green-600" /> Start Date
-          </label>
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            dateFormat="dd-MM-yyyy"
-            className="global_input w-60 -z-50"
-          />
-        </div>
+          {/* Start Date */}
+          <div className="flex flex-col">
+            <label className="font-medium mb-1 flex items-center">
+              <FaCalendarAlt className="mr-2 text-green-600" /> Start Date
+            </label>
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              dateFormat="dd-MM-yyyy"
+              className="global_input w-50 -z-50"
+            />
+          </div>
 
-        {/* End Date */}
-        <div className="flex flex-col">
-          <label className="font-medium mb-1 flex items-center">
-            <FaCalendarAlt className="mr-2 text-green-600" /> End Date
-          </label>
-          <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            dateFormat="dd-MM-yyyy"
-            className="global_input w-60"
-          />
+          {/* End Date */}
+          <div className="flex flex-col">
+            <label className="font-medium mb-1 flex items-center">
+              <FaCalendarAlt className="mr-2 text-green-600" /> End Date
+            </label>
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+              dateFormat="dd-MM-yyyy"
+              className="global_input w-50"
+            />
+          </div>
         </div>
       </div>
 
