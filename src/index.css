@@ -31,8 +31,10 @@ body {
            rounded-2xl border border-white/30 dark:border-gray-700/30 
            shadow-lg mb-2;
   }
+
+  /* backdrop-blur-sm */
   .global_sub_container {
-    @apply bg-white/20 dark:bg-gray-900/20 backdrop-blur-sm shadow-md rounded-2xl p-2 lg:p-6 mb-8 transition-all duration-300 ring-2 ring-blue-500;
+    @apply bg-white/20 dark:bg-gray-900/20 shadow-md backdrop-blur-sm rounded-2xl p-2 lg:p-6 mb-8 transition-all duration-300 ring-2 ring-blue-500;
   }
 
   .global_dropdown {

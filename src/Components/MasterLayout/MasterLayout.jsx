@@ -15,6 +15,7 @@ import { MdCreateNewFolder } from "react-icons/md";
 import { GiBuyCard, GiTeamIdea } from "react-icons/gi";
 import { TbBusinessplan } from "react-icons/tb";
 import { useState, useEffect } from "react";
+import { FaUsers } from "react-icons/fa";
 import {
   FaChevronDown,
   FaChevronRight,
@@ -234,7 +235,13 @@ const MasterLayout = ({ children }) => {
                 id: "SaleReport",
                 title: "Sale Report",
                 icon: <MdOutlineAddShoppingCart />,
-                path: "/SaleReport",
+                path: "/SalsReport",
+              },
+              {
+                id: "TopCoustomer",
+                title: "Top Coustomer",
+                icon: <FaUsers />,
+                path: "/TopCoustomer",
               },
             ],
           },

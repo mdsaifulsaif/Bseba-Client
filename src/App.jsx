@@ -55,6 +55,7 @@ import PurchaseReturnListPage from "./Pages/Purchase/PurchaseReturnListPage";
 import AddDamagePage from "./Pages/Damage/AddDamagePage";
 import SalsReportPage from "./Pages/Report/SalsReportPage";
 import BusinessReportPage from "./Pages/Report/BusinessReportPage";
+import TopCustomerPage from "./Pages/Report/TopCustomerPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -104,7 +105,8 @@ function App() {
             <Route path="/AddDamage" element={<AddDamagePage />}></Route>
 
             <Route path="/BusinessReport" element={<BusinessReportPage />} />
-            <Route path="/SelsReport" element={<SalsReportPage />} />
+            <Route path="/SalsReport" element={<SalsReportPage />} />
+            <Route path="/TopCoustomer" element={<TopCustomerPage />} />
 
             <Route path="/NewSale" element={<NewSalePage />} />
             <Route path="/SaleList" element={<SaleListPage />} />

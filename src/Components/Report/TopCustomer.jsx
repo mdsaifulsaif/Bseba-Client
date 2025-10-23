@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getToken } from "../../Helper/SessionHelper";
 import DatePicker from "react-datepicker";
+
 import {
   formatISO,
   startOfWeek,
@@ -31,34 +32,30 @@ const periodOptions = [
   { value: "lastYear", label: "Last Year" },
 ];
 
-const SalesReport = () => {
+const TopCustomer = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [period, setPeriod] = useState("");
   const [dataList, setDataList] = useState([]);
 
-  //  API Call
+  //  Fetch Data from API
   const fetchData = async (start, end) => {
     try {
-      const url = `${BaseURL}/SalesListByDate/${formatISO(start)}/${formatISO(
-        end
-      )}`;
-      console.log(" API Called:", url);
+      const res = await axios.get(
+        `${BaseURL}/TopListByDate/${formatISO(start)}/${formatISO(end)}`,
+        {
+          headers: { token: getToken() },
+        }
+      );
 
-      const res = await axios.get(url, {
-        headers: { token: getToken() },
-      });
-
-      console.log(" API Response:", res.data);
       setDataList(res.data.data || []);
-      toast.success("Sales data fetched successfully!");
+      toast.success("Top List fetched successfully!");
     } catch (error) {
-      console.error(" API Error:", error);
-      toast.error("Failed to fetch sales report data!");
+      toast.error("Failed to fetch Top List!");
     }
   };
 
-  //  Initial fetch
+  // Initial fetch
   useEffect(() => {
     fetchData(startDate, endDate);
   }, [startDate, endDate]);
@@ -106,8 +103,6 @@ const SalesReport = () => {
 
     setStartDate(newStartDate);
     setEndDate(newEndDate);
-
-    //  Select পরিবর্তন হলে সঙ্গে সঙ্গে API কল হবে
     fetchData(newStartDate, newEndDate);
   };
 
@@ -117,11 +112,12 @@ const SalesReport = () => {
 
       <div className="global_sub_container">
         {/* Filter Section */}
-        <div className="grid md:grid-cols-4 grid-cols-2 justify-between items-center gap-5">
-          {/* Period Select */}
+        <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center gap-5">
+          {/* Period Filter */}
           <div>
-            <label className="block text-sm font-medium mb-1">Period</label>
-
+            <label className="block text-sm font-medium mb-1 text-gray-700">
+              Period
+            </label>
             <Select
               classNamePrefix="react-select"
               options={periodOptions}
@@ -138,7 +134,9 @@ const SalesReport = () => {
 
           {/* Start Date */}
           <div>
-            <label className="block text-sm font-medium mb-1">Start Date</label>
+            <label className="block text-sm font-medium mb-1 text-gray-700">
+              Start Date
+            </label>
             <DatePicker
               selected={startDate}
               onChange={(date) => setStartDate(date)}
@@ -150,7 +148,9 @@ const SalesReport = () => {
 
           {/* End Date */}
           <div>
-            <label className="block text-sm font-medium mb-1">End Date</label>
+            <label className="block text-sm font-medium mb-1 text-gray-700">
+              End Date
+            </label>
             <DatePicker
               selected={endDate}
               onChange={(date) => setEndDate(date)}
@@ -159,28 +159,50 @@ const SalesReport = () => {
               calendarClassName="react-datepicker-custom"
             />
           </div>
-
-          {/* Search */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Search</label>
-            <input
-              type="text"
-              placeholder="Search by name or invoice"
-              className="global_input w-full"
-            />
-          </div>
         </div>
       </div>
 
-      {/* Data Section */}
+      {/* Table Section */}
       <div className="global_sub_container mt-5">
-        <h1 className="text-lg font-semibold mb-2">Sales Report Data</h1>
-        <pre className="bg-gray-100 p-3 rounded-md text-sm overflow-auto">
-          {JSON.stringify(dataList, null, 2)}
-        </pre>
+        <h1 className="text-lg font-semibold mb-3">Top Customer Report</h1>
+        <div className="overflow-x-auto">
+          <table className="global_table">
+            <thead className="global_thead">
+              <tr>
+                <th className="global_th">#</th>
+                <th className="global_th">Customer Name</th>
+                <th className="global_th">Contact</th>
+                <th className="global_th">Total Orders</th>
+                <th className="global_th">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataList.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="text-center py-4 text-gray-500 italic"
+                  >
+                    No data available
+                  </td>
+                </tr>
+              ) : (
+                dataList.map((item, index) => (
+                  <tr key={index} className="border-b hover:bg-gray-50">
+                    <td className="px-4 py-2 border-r">{index + 1}</td>
+                    <td className="px-4 py-2 border-r">{item.name}</td>
+                    <td className="px-4 py-2 border-r">{item.contact}</td>
+                    <td className="px-4 py-2 border-r">{item.totalOrders}</td>
+                    <td className="px-4 py-2">{item.amount}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
 };
 
-export default SalesReport;
+export default TopCustomer;

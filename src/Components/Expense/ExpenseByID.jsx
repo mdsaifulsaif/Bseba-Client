@@ -223,9 +223,9 @@ const ExpenseByID = () => {
               </tr>
             )}
           </tbody>
-          <tfoot className="bg-green-100 font-semibold">
+          <tfoot className="bg-green-100 dark:bg-gray-700 font-semibold">
             <tr>
-              <td className="p-2">Total</td>
+              <td className="p-2 dark:text-white ">Total</td>
               <td className="p-2 text-red-600">{totalAmount.toFixed(2)}</td>
               <td></td>
               <td></td>

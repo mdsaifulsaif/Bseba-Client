@@ -3,6 +3,7 @@ import axios from "axios";
 import { BaseURL } from "../../Helper/Config";
 import { getToken } from "../../Helper/SessionHelper";
 import loadingStore from "../../Zustand/LoadingStore";
+import Select from "react-select";
 
 import {
   FaMoneyBillWave,
@@ -22,6 +23,15 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+const periodOptions = [
+  { value: "thisWeek", label: "This Week" },
+  { value: "lastWeek", label: "Last Week" },
+  { value: "thisMonth", label: "This Month" },
+  { value: "lastMonth", label: "Last Month" },
+  { value: "thisYear", label: "This Year" },
+  { value: "lastYear", label: "Last Year" },
+];
+
 // Helper to format date as YYYY-MM-DD
 const formatDate = (date) => {
   const d = new Date(date);
@@ -35,6 +45,7 @@ const BusinessReport = () => {
   const { setGlobalLoader } = loadingStore();
   const [filter, setFilter] = useState("thisWeek");
   const [startDate, setStartDate] = useState(new Date());
+
   const [endDate, setEndDate] = useState(new Date());
   const [data, setData] = useState({});
 
@@ -214,10 +225,26 @@ const BusinessReport = () => {
             <label className="block text-sm font-medium mb-1">
               Select Period
             </label>
-            <select
+
+            <Select
+              options={periodOptions}
+              value={periodOptions.find((opt) => opt.value === filter) || null}
+              onChange={(selectedOption) =>
+                setFilter(selectedOption?.value || "")
+              }
+              placeholder="Select Period"
+              classNamePrefix="react-select"
+              isClearable
+              menuPortalTarget={document.body}
+              styles={{
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+              }}
+            />
+            {/* <Select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="global_input w-full"
+              // className="global_input w-full "
+              classNamePrefix="react-select"
             >
               <option value="thisWeek">This Week</option>
               <option value="lastWeek">Last Week</option>
@@ -225,7 +252,7 @@ const BusinessReport = () => {
               <option value="lastMonth">Last Month</option>
               <option value="thisYear">This Year</option>
               <option value="lastYear">Last Year</option>
-            </select>
+            </Select> */}
           </div>
         </div>
       </div>
@@ -237,13 +264,15 @@ const BusinessReport = () => {
           {cards.map((item, index) => (
             <div
               key={index}
-              className="p-3 rounded-2xl shadow-md border border-gray-200 text-center bg-white hover:shadow-lg transition-shadow duration-200"
+              className="p-3 rounded-2xl  shadow-md border dark:bg-gray-800 border-gray-200 dark:border-gray-500 text-center bg-white hover:shadow-lg transition-shadow duration-200"
             >
               <div className="text-3xl text-green-600 mb-2 flex justify-center">
                 {item.icon}
               </div>
-              <h6 className="text-gray-600 font-medium">{item.title}</h6>
-              <h3 className="text-2xl font-bold text-green-700 mt-1">
+              <h6 className="text-gray-600 dark:text-white font-medium">
+                {item.title}
+              </h6>
+              <h3 className="text-2xl  font-bold text-green-700 mt-1">
                 {item.value ?? 0}
               </h3>
             </div>
