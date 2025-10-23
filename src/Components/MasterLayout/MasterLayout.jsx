@@ -16,6 +16,7 @@ import { GiBuyCard, GiTeamIdea } from "react-icons/gi";
 import { TbBusinessplan } from "react-icons/tb";
 import { useState, useEffect } from "react";
 import { FaUsers } from "react-icons/fa";
+import { FaUsersGear } from "react-icons/fa6";
 import {
   FaChevronDown,
   FaChevronRight,
@@ -197,7 +198,7 @@ const MasterLayout = ({ children }) => {
               },
             ],
           },
-          // ====Damage====
+          // ====Damage=======================================
           {
             id: "Damage",
             title: "Damage",
@@ -217,12 +218,11 @@ const MasterLayout = ({ children }) => {
               },
             ],
           },
-          // ========
 
-          // ====Report====
+          // ====Report===================================
           {
-            id: "Repot",
-            title: "Repot",
+            id: "Report",
+            title: "Report",
             icon: <MdReportGmailerrorred />,
             children: [
               {
@@ -243,9 +243,15 @@ const MasterLayout = ({ children }) => {
                 icon: <FaUsers />,
                 path: "/TopCoustomer",
               },
+              {
+                id: "CoustomerReport",
+                title: "Coustomer Report",
+                icon: <FaUsersGear />,
+                path: "/CoustomerReport",
+              },
             ],
           },
-          // ========
+          // ====accounts===================================
 
           {
             id: "accounts",

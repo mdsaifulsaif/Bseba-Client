@@ -56,6 +56,7 @@ import AddDamagePage from "./Pages/Damage/AddDamagePage";
 import SalsReportPage from "./Pages/Report/SalsReportPage";
 import BusinessReportPage from "./Pages/Report/BusinessReportPage";
 import TopCustomerPage from "./Pages/Report/TopCustomerPage";
+import CoustomerReportPage from "./Pages/Report/CoustomerReportPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -97,22 +98,19 @@ function App() {
               path="/ViewSupplierLaser/:id"
               element={<ViewSupplierLaserPage />}
             />
-
             <Route path="/Expense" element={<ExpensePage />} />
             <Route path="/ExpenseType" element={<ExpenseTypePage />} />
             <Route path="/ExpenseByType" element={<ExpenseByIDPage />} />
-
             <Route path="/AddDamage" element={<AddDamagePage />}></Route>
 
             <Route path="/BusinessReport" element={<BusinessReportPage />} />
             <Route path="/SalsReport" element={<SalsReportPage />} />
             <Route path="/TopCoustomer" element={<TopCustomerPage />} />
-
+            <Route path="/CoustomerReport" element={<CoustomerReportPage />} />
             <Route path="/NewSale" element={<NewSalePage />} />
             <Route path="/SaleList" element={<SaleListPage />} />
             <Route path="/SaleDetails/:id" element={<SaleDetailsPage />} />
             <Route path="/SaleReturnList" element={<SaleReturnListPage />} />
-
             <Route path="/PurchaseList" element={<PurchaseListPage />} />
             <Route
               path="/PurchaseDetails/:id"
@@ -127,7 +125,6 @@ function App() {
               path="/PurchaseReturn/:id"
               element={<PurchaseReturnPage />}
             />
-
             <Route path="/DealerList/:id" element={<DealerListPage />} />
             <Route path="/MyDealer" element={<MyDealerPage />} />
             <Route path="/SellList" element={<SellListPage />} />
