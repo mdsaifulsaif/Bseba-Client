@@ -57,6 +57,7 @@ import SalsReportPage from "./Pages/Report/SalsReportPage";
 import BusinessReportPage from "./Pages/Report/BusinessReportPage";
 import TopCustomerPage from "./Pages/Report/TopCustomerPage";
 import CoustomerReportPage from "./Pages/Report/CoustomerReportPage";
+import ReceivableReportPage from "./Pages/Report/ReceivableReportPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -107,6 +108,11 @@ function App() {
             <Route path="/SalsReport" element={<SalsReportPage />} />
             <Route path="/TopCoustomer" element={<TopCustomerPage />} />
             <Route path="/CoustomerReport" element={<CoustomerReportPage />} />
+            <Route
+              path="/ReceivableReport"
+              element={<ReceivableReportPage />}
+            />
+
             <Route path="/NewSale" element={<NewSalePage />} />
             <Route path="/SaleList" element={<SaleListPage />} />
             <Route path="/SaleDetails/:id" element={<SaleDetailsPage />} />

@@ -4,7 +4,6 @@ import { BaseURL } from "../../Helper/Config";
 import { getToken } from "../../Helper/SessionHelper";
 import { AiOutlineEye } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-// import ReactToPrint from "react-to-print";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -96,7 +95,7 @@ const CoustomerReport = () => {
   };
 
   return (
-    <div className="global-container">
+    <div className="global_container">
       <ToastContainer position="top-right" autoClose={2000} />
       {/* Print, Search, and Column Selection */}
       <div className="global_sub_container">
@@ -151,134 +150,146 @@ const CoustomerReport = () => {
       <div className="global_sub_container">
         {/* Table */}
         <div className="mt-3">
-          <div className="global-content-gap-top global-content-gap-bottom global-font-size-14px">
-            <div className="row">
-              <div className="col-12">
-                <div
-                  className="table-container global-custom-scrollbar"
-                  ref={componentRef}
-                >
-                  <table className="global_table">
-                    <thead className="global_thead">
-                      <tr>
-                        <th className="global_th">#</th>
-                        <th
-                          className="global_th"
-                          onClick={() => handleSort("contactDetails.name")}
-                          style={{ cursor: "pointer" }}
-                        >
-                          Customer Name
-                        </th>
-                        <th className="global_th">Address</th>
-                        <th
-                          className="global_th"
-                          onClick={() => handleSort("contactDetails.mobile")}
-                          style={{ cursor: "pointer" }}
-                        >
-                          Mobile
-                        </th>
+          <div className=" overflow-auto">
+            <div
+              className="table-container global-custom-scrollbar"
+              ref={componentRef}
+            >
+              <table className="global_table">
+                <thead className="global_thead">
+                  <tr>
+                    <th className="global_th">#</th>
+                    <th
+                      className="global_th"
+                      onClick={() => handleSort("contactDetails.name")}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Customer Name
+                    </th>
+                    <th className="global_th">Address</th>
+                    <th
+                      className="global_th"
+                      onClick={() => handleSort("contactDetails.mobile")}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Mobile
+                    </th>
+                    {selectedColumns.totalInvoice && (
+                      <th
+                        className="global_th"
+                        onClick={() => handleSort("totalSalesCount")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Total Invoice
+                      </th>
+                    )}
+                    {selectedColumns.balance && (
+                      <th
+                        className="global_th"
+                        onClick={() => handleSort("balance")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Balance
+                      </th>
+                    )}
+                    {selectedColumns.totalSales && (
+                      <th
+                        className="global_th"
+                        onClick={() => handleSort("totalSalesAmount")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Total Sales
+                      </th>
+                    )}
+                    {selectedColumns.totalProfit && (
+                      <th
+                        className="global_th"
+                        onClick={() => handleSort("totalProfit")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Total Profit
+                      </th>
+                    )}
+                    {selectedColumns.createdDate && (
+                      <th
+                        className="global_th"
+                        onClick={() => handleSort("CreatedDate")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Created Date
+                      </th>
+                    )}
+                    <th className="global_th">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredData.length > 0 ? (
+                    filteredData.map((customer, index) => (
+                      <tr key={customer.contactID || index}>
+                        <td className="global_td ">{index + 1}</td>
+                        <td className="global_td ">
+                          {customer.contactDetails?.name || "N/A"}
+                        </td>
+                        <td className="global_td ">
+                          {customer.contactDetails?.address || "N/A"}
+                        </td>
+                        <td className="global_td ">
+                          {customer.contactDetails?.mobile || "N/A"}
+                        </td>
+
                         {selectedColumns.totalInvoice && (
-                          <th
-                            className="global_th"
-                            onClick={() => handleSort("totalSalesCount")}
-                            style={{ cursor: "pointer" }}
-                          >
-                            Total Invoice
-                          </th>
+                          <td className="global_td ">
+                            {customer.totalSalesCount || "N/A"}
+                          </td>
                         )}
                         {selectedColumns.balance && (
-                          <th
-                            className="global_th"
-                            onClick={() => handleSort("balance")}
-                            style={{ cursor: "pointer" }}
-                          >
-                            Balance
-                          </th>
+                          <td className="global_td ">
+                            {customer.contactDetails?.balance?.toFixed(2) ||
+                              "N/A"}
+                          </td>
                         )}
                         {selectedColumns.totalSales && (
-                          <th
-                            className="global_th"
-                            onClick={() => handleSort("totalSalesAmount")}
-                            style={{ cursor: "pointer" }}
-                          >
-                            Total Sales
-                          </th>
-                        )}
-                        {selectedColumns.totalProfit && (
-                          <th
-                            className="global_th"
-                            onClick={() => handleSort("totalProfit")}
-                            style={{ cursor: "pointer" }}
-                          >
-                            Total Profit
-                          </th>
-                        )}
-                        {selectedColumns.createdDate && (
-                          <th
-                            className="global_th"
-                            onClick={() => handleSort("CreatedDate")}
-                            style={{ cursor: "pointer" }}
-                          >
-                            Created Date
-                          </th>
-                        )}
-                        <th className="global_th">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredData.map((customer, index) => (
-                        <tr key={customer.contactID || index}>
-                          <td>{index + 1}</td>
-                          <td>{customer.contactDetails?.name || "N/A"}</td>
-                          <td>{customer.contactDetails?.address || "N/A"}</td>
-                          <td>{customer.contactDetails?.mobile || "N/A"}</td>
-
-                          {selectedColumns.totalInvoice && (
-                            <td>{customer.totalSalesCount || "N/A"}</td>
-                          )}
-                          {selectedColumns.balance && (
-                            <td>
-                              {customer.contactDetails?.balance?.toFixed(2) ||
-                                "N/A"}
-                            </td>
-                          )}
-                          {selectedColumns.totalSales && (
-                            <td>
-                              {new Intl.NumberFormat("en-IN").format(
-                                customer.totalSalesAmount?.toFixed(2)
-                              )}
-                            </td>
-                          )}
-                          {selectedColumns.totalProfit && (
-                            <td>
-                              {new Intl.NumberFormat("en-IN").format(
-                                customer.totalProfit?.toFixed(2)
-                              )}
-                            </td>
-                          )}
-                          {selectedColumns.createdDate && (
-                            <td>
-                              {formatDate(customer.contactDetails?.CreatedDate)}
-                            </td>
-                          )}
-                          <td className="d-print-none">
-                            {customer.contactID ? (
-                              <AiOutlineEye
-                                onClick={() =>
-                                  navigate(`/Transaction/${customer.contactID}`)
-                                }
-                                style={{ cursor: "pointer" }}
-                              />
-                            ) : (
-                              <span className="text-muted">No ID</span>
+                          <td className="global_td ">
+                            {new Intl.NumberFormat("en-IN").format(
+                              customer.totalSalesAmount?.toFixed(2)
                             )}
                           </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+                        )}
+                        {selectedColumns.totalProfit && (
+                          <td className="global_td ">
+                            {new Intl.NumberFormat("en-IN").format(
+                              customer.totalProfit?.toFixed(2)
+                            )}
+                          </td>
+                        )}
+                        {selectedColumns.createdDate && (
+                          <td className="global_td ">
+                            {formatDate(customer.contactDetails?.CreatedDate)}
+                          </td>
+                        )}
+                        <td className="d-print-none">
+                          {customer.contactID ? (
+                            <AiOutlineEye
+                              onClick={() =>
+                                navigate(`/Transaction/${customer.contactID}`)
+                              }
+                              style={{ cursor: "pointer" }}
+                            />
+                          ) : (
+                            <span className="text-muted">No ID</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={12} className="text-center text-muted py-3">
+                        No Customer Found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
