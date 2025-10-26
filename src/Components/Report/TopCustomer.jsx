@@ -164,7 +164,7 @@ const TopCustomer = () => {
 
       {/* Table Section */}
       <div className="global_sub_container mt-5">
-        <h1 className="text-lg font-semibold mb-3">Top Customer Report</h1>
+        <h1 className="text-lg font-semibold mb-3">Top Customer List</h1>
         <div className="overflow-x-auto">
           <table className="global_table">
             <thead className="global_thead">
