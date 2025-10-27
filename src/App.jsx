@@ -59,6 +59,7 @@ import TopCustomerPage from "./Pages/Report/TopCustomerPage";
 import CoustomerReportPage from "./Pages/Report/CoustomerReportPage";
 import ReceivableReportPage from "./Pages/Report/ReceivableReportPage";
 import TransactionPage from "./Pages/Transaction/TransactionPage";
+import TransactionDetailsPage from "./Pages/Transaction/TransactionDetailsPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -114,6 +115,10 @@ function App() {
               element={<ReceivableReportPage />}
             />
             <Route path="Transaction/:id" element={<TransactionPage />} />
+            <Route
+              path="TransactionDetails/:id"
+              element={<TransactionDetailsPage />}
+            />
 
             <Route path="/NewSale" element={<NewSalePage />} />
             <Route path="/SaleList" element={<SaleListPage />} />
