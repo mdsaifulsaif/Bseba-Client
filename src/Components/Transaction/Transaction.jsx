@@ -65,10 +65,16 @@ function Transaction() {
       case "last30days":
         return { start: subDays(today, 30), end: today };
       case "thisWeek":
-        return { start: startOfWeek(today), end: endOfWeek(today) };
+        return {
+          start: startOfWeek(today, { weekStartsOn: 1 }),
+          end: endOfWeek(today, { weekStartsOn: 1 }),
+        };
       case "lastWeek": {
         const lastWeek = subWeeks(today, 1);
-        return { start: startOfWeek(lastWeek), end: endOfWeek(lastWeek) };
+        return {
+          start: startOfWeek(lastWeek, { weekStartsOn: 1 }),
+          end: endOfWeek(lastWeek, { weekStartsOn: 1 }),
+        };
       }
       case "thisMonth":
         return { start: startOfMonth(today), end: endOfMonth(today) };
@@ -118,40 +124,8 @@ function Transaction() {
     fetchTransactions();
   }, [startDate, endDate, contactID]);
 
-  //   const handleAddTransaction = async (e) => {
-  //     e.preventDefault();
-  //     setGlobalLoader(true);
-  //     try {
-  //       const payload = {
-  //         contactsID: contactID,
-  //         Credit: Number(credit),
-  //         Debit: Number(debit),
-  //         note,
-  //         CreatedDate: createdDate.toISOString(),
-  //       };
-  //       const res = await axios.post(`${BaseURL}/CreateTransaction`, payload, {
-  //         headers: { token: getToken() },
-  //       });
-  //       if (res.data.status === "Success") {
-  //         toast.success("Transaction added successfully!");
-  //         setCredit(0);
-  //         setDebit(0);
-  //         setNote("");
-  //         setCreatedDate(new Date());
-  //         fetchTransactions();
-  //       }
-  //     } catch (error) {
-  //       console.error("Failed to create transaction", error);
-  //       toast.error("Failed to create transaction!");
-  //     } finally {
-  //       setGlobalLoader(false);
-  //     }
-  //   };
-
   const handleAddTransaction = async (e) => {
     e.preventDefault();
-
-    // Simple validation
     if ((credit <= 0 && debit <= 0) || !createdDate) {
       toast.error("Please enter a valid Credit or Debit and select a date!");
       return;
@@ -187,40 +161,8 @@ function Transaction() {
     }
   };
 
-  //   const handleAddDiscount = async (e) => {
-  //     e.preventDefault();
-  //     setGlobalLoader(true);
-  //     try {
-  //       const payload = {
-  //         contactsID: contactID,
-  //         Credit: Number(discountCredit),
-  //         Debit: Number(discountDebit),
-  //         note: discountNote,
-  //         CreatedDate: discountDate.toISOString(),
-  //       };
-  //       const res = await axios.post(`${BaseURL}/CreateDiscount`, payload, {
-  //         headers: { token: getToken() },
-  //       });
-  //       if (res.data.status === "Success") {
-  //         toast.success("Discount added successfully!");
-  //         setDiscountCredit(0);
-  //         setDiscountDebit(0);
-  //         setDiscountNote("");
-  //         setDiscountDate(new Date());
-  //         fetchTransactions();
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //       toast.error("Failed to add discount!");
-  //     } finally {
-  //       setGlobalLoader(false);
-  //     }
-  //   };
-
   const handleAddDiscount = async (e) => {
     e.preventDefault();
-
-    // Simple validation
     if ((discountCredit <= 0 && discountDebit <= 0) || !discountDate) {
       toast.error("Please enter a valid Credit or Debit and select a date!");
       return;
@@ -255,6 +197,64 @@ function Transaction() {
       setGlobalLoader(false);
     }
   };
+  // Totals calculation
+  //   const totals = transactions.reduce(
+  //     (acc, t) => {
+  //       // Payment/Sale + Direct Txn (exclude Discount)
+  //       if (
+  //         (t.Credit > 0 && t.Debit === 0 && t.Discount !== "1") ||
+  //         (!t.saleID && !t.purchaseID && t.Discount !== "1")
+  //       ) {
+  //         acc.paymentSale += t.Credit || 0;
+  //       }
+
+  //       acc.purchaseReceived +=
+  //         t.Debit && t.Credit === 0 && t.Discount !== "1" ? t.Debit : 0;
+  //       acc.discountReceived += t.Discount === "1" ? t.Credit || 0 : 0;
+  //       acc.discount += t.Discount === "1" ? t.Debit || 0 : 0;
+  //       acc.closingBalance += (t.TotalCredit || 0) - (t.TotalDebit || 0);
+
+  //       return acc;
+  //     },
+  //     {
+  //       paymentSale: 0,
+  //       purchaseReceived: 0,
+  //       discountReceived: 0,
+  //       discount: 0,
+  //       closingBalance: 0,
+  //     }
+  //   );
+
+  const totals = transactions.reduce(
+    (acc, t) => {
+      // Payment/Sale = normal Credit transactions + Direct Txn (no discount)
+      acc.paymentSale +=
+        (t.Credit > 0 && t.Discount !== "1") ||
+        (!t.saleID && !t.purchaseID && t.Discount !== "1")
+          ? t.Credit || 0
+          : 0;
+
+      // Purchase/Received = normal Debit transactions (no discount)
+      acc.purchaseReceived += t.Debit > 0 && t.Discount !== "1" ? t.Debit : 0;
+
+      // Discount columns
+      acc.discountReceived += t.Discount === "1" ? t.Credit || 0 : 0;
+      acc.discount += t.Discount === "1" ? t.Debit || 0 : 0;
+
+      // Closing balance
+      acc.closingBalance += (t.TotalCredit || 0) - (t.TotalDebit || 0);
+
+      return acc;
+    },
+    {
+      paymentSale: 0,
+      purchaseReceived: 0,
+      discountReceived: 0,
+      discount: 0,
+      closingBalance: 0,
+    }
+  );
+
   return (
     <div className="global_container">
       <ToastContainer position="top-right" autoClose={3000} />
@@ -305,14 +305,13 @@ function Transaction() {
             <DatePicker
               selected={createdDate}
               onChange={(date) => setCreatedDate(date)}
-              dateFormat="dd/MM/yyyy "
+              dateFormat="dd/MM/yyyy"
               className="global_input"
               popperContainer={(props) =>
                 createPortal(<div {...props} />, document.body)
               }
             />
           </div>
-
           <div className="md:col-span-4 mt-2">
             <button type="submit" className="global_button">
               Add Transaction
@@ -322,7 +321,6 @@ function Transaction() {
       </div>
 
       {/* Add Discount Form */}
-
       <div className="global_sub_container mb-6">
         <h1 className="text-lg font-semibold mb-3">
           Add Discount ({contactDetails.name})
@@ -343,7 +341,6 @@ function Transaction() {
               placeholder="Enter Credit"
             />
           </div>
-
           <div className="flex flex-col">
             <label className="font-medium mb-1">Discount (Debit)</label>
             <input
@@ -354,7 +351,6 @@ function Transaction() {
               placeholder="Enter Debit"
             />
           </div>
-
           <div className="flex flex-col">
             <label className="font-medium mb-1">Note</label>
             <input
@@ -365,8 +361,6 @@ function Transaction() {
               placeholder="Enter note"
             />
           </div>
-
-          {/* Discount Date */}
           <div className="flex flex-col w-full">
             <label className="font-medium mb-1">Date</label>
             <DatePicker
@@ -379,7 +373,6 @@ function Transaction() {
               }
             />
           </div>
-
           <div className="md:col-span-4 mt-2">
             <button type="submit" className="global_button">
               Add Discount
@@ -406,11 +399,10 @@ function Transaction() {
             </p>
           </div>
           <h2 className="text-xl font-bold text-green-600">
-            Receivable Closing Balance:{" "}
+            {contactDetails.ClosingBalance < 0 ? "Payable" : "Receivable"}{" "}
+            Closing Balance:{" "}
             <span className="text-2xl font-extrabold dark:text-gray-100 text-gray-900">
-              {contactDetails.ClosingBalance !== undefined
-                ? Math.abs(contactDetails.ClosingBalance).toLocaleString()
-                : "0.00"}
+              {Math.abs(contactDetails.ClosingBalance || 0).toLocaleString()}
             </span>
           </h2>
         </div>
@@ -418,12 +410,12 @@ function Transaction() {
 
       {/* Transactions Table */}
       <div className="global_sub_container">
-        {/* filter  */}
+        {/* Filter */}
         <div className="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="flex flex-col w-full">
             <label className="font-medium mb-1">Select Period:</label>
             <select
-              className="global_input w-full"
+              className="global_dropdown w-full"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
             >
@@ -434,7 +426,6 @@ function Transaction() {
               ))}
             </select>
           </div>
-
           <div className="flex flex-col w-full">
             <label className="font-medium mb-1">Start Date:</label>
             <DatePicker
@@ -444,7 +435,6 @@ function Transaction() {
               className="global_input w-full"
             />
           </div>
-
           <div className="flex flex-col w-full">
             <label className="font-medium mb-1">End Date:</label>
             <DatePicker
@@ -455,90 +445,155 @@ function Transaction() {
             />
           </div>
         </div>
-        {/* table  */}
-        <table className="global_table">
-          <thead className="global_thead">
-            <tr>
-              <th className="global_th">#</th>
-              <th className="global_th">Date</th>
-              <th className="global_th">Type</th>
-              <th className="global_th">Payment/Sale</th>
-              <th className="global_th">Purchase/Received</th>
-              <th className="global_th">Discount Received</th>
-              <th className="global_th">Discount</th>
-              <th className="global_th">Closing Balance</th>
-              <th className="global_th">Note</th>
-              <th className="global_th">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions.length > 0 ? (
-              transactions.map((t, i) => (
-                <tr key={t._id}>
-                  <td className="global_td">{i + 1}</td>
-                  <td className="global_td">
-                    {new Date(t.CreatedDate).toLocaleDateString("en-GB")}
-                  </td>
-                  <td className="global_td">
-                    {t.Credit > 0 && t.Debit === 0
-                      ? "Payment/Sale"
-                      : t.Debit > 0 && t.Credit === 0
-                      ? "Purchase/Received"
-                      : t.Discount === "1"
-                      ? "Discount Received"
-                      : "Direct Txn"}
-                  </td>
-                  <td className="global_td">
-                    {t.Credit?.toFixed(2) || "0.00"}
-                  </td>
-                  <td className="global_td">{t.Debit?.toFixed(2) || "0.00"}</td>
-                  <td className="global_td">
-                    {t.Discount === "1" ? (t.Credit || 0).toFixed(2) : "0.00"}
-                  </td>
-                  <td className="global_td">
-                    {t.Discount === "1" ? (t.Debit || 0).toFixed(2) : "0.00"}
-                  </td>
-                  <td className="global_td">
-                    {(t.TotalCredit - t.TotalDebit).toFixed(2)}
-                  </td>
-                  <td className="global_td">{t.note || "-"}</td>
-                  <td className="global_td text-center">
-                    {t.saleID && (
-                      <Link
-                        to={`/SaleDetails/${t.saleID}`}
-                        className="btn btn-sm btn-success"
+
+        <div className="overflow-auto">
+          <table className="global_table">
+            <thead className="global_thead">
+              <tr>
+                <th className="global_th">#</th>
+                <th className="global_th">Date</th>
+                <th className="global_th">Type</th>
+                <th className="global_th">Payment /Sale</th>
+                <th className="global_th">Purchase /Received</th>
+                <th className="global_th">Discount Received</th>
+                <th className="global_th">Discount</th>
+                <th className="global_th">Closing Balance</th>
+                <th className="global_th">Note</th>
+                <th className="global_th">Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {transactions.length > 0 ? (
+                transactions.map((t, i) => {
+                  // Determine transaction type
+                  let type = "Direct Txn";
+                  if (t.Credit > 0 && t.Discount !== "1") type = "Payment/Sale";
+                  else if (t.Debit > 0 && t.Discount !== "1")
+                    type = "Purchase/Received";
+                  else if (t.Discount === "1") type = "Discount Received";
+
+                  // Calculate columns
+                  const paymentSale =
+                    t.Credit > 0 && t.Discount !== "1"
+                      ? (t.Credit || 0).toFixed(2)
+                      : "0.00";
+
+                  const purchaseReceived =
+                    t.Debit > 0 && t.Discount !== "1"
+                      ? (t.Debit || 0).toFixed(2)
+                      : "0.00";
+
+                  const discountReceived =
+                    t.Discount === "1" && t.Credit > 0
+                      ? (t.Credit || 0).toFixed(2)
+                      : "0.00";
+
+                  const discount =
+                    t.Discount === "1" && t.Debit > 0
+                      ? (t.Debit || 0).toFixed(2)
+                      : "0.00";
+
+                  // Closing Balance logic
+                  const balance = (t.TotalCredit || 0) - (t.TotalDebit || 0);
+                  const closingBalanceLabel =
+                    balance > 0
+                      ? `Receivable: ${balance.toFixed(2)}`
+                      : balance < 0
+                      ? `Payable: ${Math.abs(balance).toFixed(2)}`
+                      : "0.00";
+
+                  return (
+                    <tr key={t._id}>
+                      <td className="global_td">{i + 1}</td>
+                      <td className="global_td">
+                        {new Date(t.CreatedDate).toLocaleDateString("en-GB")}
+                      </td>
+                      <td className="global_td">{type}</td>
+                      <td className="global_td">{paymentSale}</td>
+                      <td className="global_td">{purchaseReceived}</td>
+                      <td className="global_td">{discountReceived}</td>
+                      <td className="global_td">{discount}</td>
+                      <td
+                        className={`global_td ${
+                          balance > 0
+                            ? "text-green-600"
+                            : balance < 0
+                            ? "text-red-600"
+                            : ""
+                        }`}
                       >
-                        Sale
-                      </Link>
-                    )}
-                    {t.purchaseID && (
-                      <Link
-                        to={`/PurchaseDetails/${t.purchaseID}`}
-                        className="btn btn-sm btn-primary"
-                      >
-                        Purchase
-                      </Link>
-                    )}
-                    {!t.saleID && !t.purchaseID && (
-                      <Link
-                        to={`/TransactionDetails/${t._id}`}
-                        className="global_button"
-                      >
-                        Details
-                      </Link>
-                    )}
+                        {closingBalanceLabel}
+                      </td>
+                      <td className="global_td">{t.note || "-"}</td>
+                      <td className="global_td text-center">
+                        {t.saleID && (
+                          <Link
+                            to={`/SaleDetails/${t.saleID}`}
+                            className="btn btn-sm btn-success"
+                          >
+                            Sale
+                          </Link>
+                        )}
+                        {t.purchaseID && (
+                          <Link
+                            to={`/PurchaseDetails/${t.purchaseID}`}
+                            className="btn btn-sm btn-primary"
+                          >
+                            Purchase
+                          </Link>
+                        )}
+                        {!t.saleID && !t.purchaseID && (
+                          <Link
+                            to={`/TransactionDetails/${t._id}`}
+                            className="global_button"
+                          >
+                            Details
+                          </Link>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan="10" className="text-center py-4">
+                    No Transactions Found
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="10" className="text-center py-4">
-                  No Transactions Found
+              )}
+
+              {/* Totals Row */}
+              <tr className="font-bold bg-gray-100 dark:bg-gray-800">
+                <td colSpan="3" className="text-right px-2">
+                  Total
                 </td>
+                <td className="global_td">{totals.paymentSale.toFixed(2)}</td>
+                <td className="global_td">
+                  {totals.purchaseReceived.toFixed(2)}
+                </td>
+                <td className="global_td">
+                  {totals.discountReceived.toFixed(2)}
+                </td>
+                <td className="global_td">{totals.discount.toFixed(2)}</td>
+                <td className="global_td">
+                  {/* {totals.closingBalance.toFixed(2)} */}
+                  <h2 className="">
+                    {contactDetails.ClosingBalance > 0
+                      ? "Payable"
+                      : "Receivable"}{" "}
+                    <span className="">
+                      {Math.abs(
+                        contactDetails.ClosingBalance || 0
+                      ).toLocaleString()}
+                    </span>
+                  </h2>
+                </td>
+                <td className="global_td" colSpan="2"></td>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
