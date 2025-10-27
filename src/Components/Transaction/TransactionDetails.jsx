@@ -113,9 +113,15 @@ function TransactionDetails() {
       <div className="w-9/11 mx-auto">
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Tech BD</h1>
-          <p className="text-sm text-gray-600">01727841588</p>
-          <p className="text-sm text-gray-600">Address: Dhaka</p>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100  ">
+            Tech BD
+          </h1>
+          <p className="text-sm text-gray-600 dark:text-gray-100">
+            01727841588
+          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-100">
+            Address: Dhaka
+          </p>
 
           <h2 className="text-lg font-bold text-green-600 mt-3">
             Money Receipt
@@ -166,15 +172,15 @@ function TransactionDetails() {
                       Balance After Transaction
                     </td>
                     <td className="p-2 text-green-600 font-medium">
-                      Receivable: {TDdata.closingBalance || 0}
+                      Receivable: {Math.abs(TDdata.closingBalance) || 0}
                     </td>
                   </tr>
-                  <tr className="border-b border-gray-300">
+                  {/* <tr className="border-b border-gray-300">
                     <td className="font-semibold p-2">Current Balance</td>
                     <td className="p-2 text-green-600 font-medium">
                       Receivable: {TDdata.currentBalance || 0}
                     </td>
-                  </tr>
+                  </tr> */}
                   <tr className="border-b border-gray-300">
                     <td className="font-semibold p-2">Note</td>
                     <td className="p-2">{TDdata.note || "-"}</td>
@@ -214,10 +220,10 @@ function TransactionDetails() {
                   Edit Transaction
                 </Link> */}
                 <button
-                  className="global_edit"
+                  className="global_edit w-full md:w-auto"
                   onClick={() => handleEditClick(TDdata)}
                 >
-                  Edit
+                  Edit Transaction
                 </button>
                 {/* <button
                   onClick={() => setEditTransactionModal(true)}

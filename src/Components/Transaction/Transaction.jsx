@@ -259,37 +259,11 @@ function Transaction() {
     <div className="global_container">
       <ToastContainer position="top-right" autoClose={3000} />
 
-      {/* Contact Details */}
-      <div className="global_sub_container mb-4">
-        <h1 className="text-xl font-semibold mb-2">Transaction Report</h1>
-        <div className="flex flex-col gap-3 md:flex-row justify-between">
-          <div>
-            <h2>
-              <span className="font-semibold">Name:</span> {contactDetails.name}
-            </h2>
-            <h2>
-              <span className="font-semibold">Phone:</span>{" "}
-              {contactDetails.mobile}
-            </h2>
-            <p>
-              <span className="font-semibold">Location:</span>{" "}
-              {contactDetails.address}
-            </p>
-          </div>
-          <h2 className="text-xl font-bold text-green-600">
-            Receivable Closing Balance:{" "}
-            <span className="text-2xl font-extrabold dark:text-gray-100 text-gray-900">
-              {contactDetails.ClosingBalance !== undefined
-                ? Math.abs(contactDetails.ClosingBalance).toLocaleString()
-                : "0.00"}
-            </span>
-          </h2>
-        </div>
-      </div>
-
       {/* Add Transaction Form */}
       <div className="global_sub_container mb-6">
-        <h1 className="text-lg font-semibold mb-3">Add Transaction</h1>
+        <h1 className="text-lg font-semibold mb-3">
+          Add Transaction ({contactDetails.name})
+        </h1>
         <form
           onSubmit={handleAddTransaction}
           className="grid md:grid-cols-4 gap-4"
@@ -350,7 +324,9 @@ function Transaction() {
       {/* Add Discount Form */}
 
       <div className="global_sub_container mb-6">
-        <h1 className="text-lg font-semibold mb-3">Add Discount</h1>
+        <h1 className="text-lg font-semibold mb-3">
+          Add Discount ({contactDetails.name})
+        </h1>
         <form
           onSubmit={handleAddDiscount}
           className="grid md:grid-cols-4 gap-4"
@@ -410,6 +386,34 @@ function Transaction() {
             </button>
           </div>
         </form>
+      </div>
+
+      {/* Contact Details */}
+      <div className="global_sub_container mb-4">
+        <h1 className="text-xl font-semibold mb-2">Transaction Report</h1>
+        <div className="flex flex-col gap-3 md:flex-row justify-between">
+          <div>
+            <h2>
+              <span className="font-semibold">Name:</span> {contactDetails.name}
+            </h2>
+            <h2>
+              <span className="font-semibold">Phone:</span>{" "}
+              {contactDetails.mobile}
+            </h2>
+            <p>
+              <span className="font-semibold">Location:</span>{" "}
+              {contactDetails.address}
+            </p>
+          </div>
+          <h2 className="text-xl font-bold text-green-600">
+            Receivable Closing Balance:{" "}
+            <span className="text-2xl font-extrabold dark:text-gray-100 text-gray-900">
+              {contactDetails.ClosingBalance !== undefined
+                ? Math.abs(contactDetails.ClosingBalance).toLocaleString()
+                : "0.00"}
+            </span>
+          </h2>
+        </div>
       </div>
 
       {/* Transactions Table */}
