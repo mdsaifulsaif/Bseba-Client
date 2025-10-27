@@ -7,6 +7,8 @@ import loadingStore from "../../Zustand/LoadingStore";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
+import openCloseStore from "../../Zustand/OpenCloseStore";
+import EditTransactionModal from "../Modals/EditTransactionModal";
 
 function TransactionDetails() {
   const { id } = useParams();
@@ -14,6 +16,25 @@ function TransactionDetails() {
   const { setGlobalLoader } = loadingStore();
   const [TDdata, setTData] = useState({});
   const [deleted, setDeleted] = useState(false);
+  const { setEditTransactionModal } = openCloseStore();
+  //   for modal
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
+
+  const handleEditClick = (transaction) => {
+    setSelectedTransaction(transaction); // pass data to modal
+    setEditTransactionModal(true);
+  };
+  //   const transactions = [
+  //     {
+  //       _id: "671c96f479770376df65fa82",
+  //       contactsID: "66af5f941b35cdbf478bbc8c",
+  //       Credit: 712000,
+  //       Debit: 0,
+  //       note: "Transaction for sale order 12345",
+  //       CreatedDate: "2024-08-29T12:34:56Z",
+  //     },
+
+  //   ];
 
   const fetchTransactionDetails = async () => {
     setGlobalLoader(true);
@@ -186,12 +207,24 @@ function TransactionDetails() {
               </button>
 
               <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-                <Link
+                {/* <Link
                   to={`/Transaction/${TDdata.contactsID || ""}`}
                   className="global_edit w-full md:w-auto text-center"
                 >
                   Edit Transaction
-                </Link>
+                </Link> */}
+                <button
+                  className="global_edit"
+                  onClick={() => handleEditClick(TDdata)}
+                >
+                  Edit
+                </button>
+                {/* <button
+                  onClick={() => setEditTransactionModal(true)}
+                  className="global_edit"
+                >
+                  Edit Transaction
+                </button> */}
 
                 <button
                   onClick={() => window.print()}
@@ -204,6 +237,11 @@ function TransactionDetails() {
           </>
         )}
       </div>
+      {/* <EditTransactionModal /> */}
+      <EditTransactionModal
+        transactionData={selectedTransaction}
+        refreshParent={fetchTransactionDetails}
+      />
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );

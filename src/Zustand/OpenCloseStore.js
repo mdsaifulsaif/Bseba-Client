@@ -23,6 +23,10 @@ const openCloseStore = create((set) => ({
   // Add this for expense type modal
   expenseTypeModal: false,
   setExpenseTypeModal: (val) => set({ expenseTypeModal: val }),
+
+  // Add this for expense type modal
+  editTransactionModal: false,
+  setEditTransactionModal: (val) => set({ editTransactionModal: val }),
 }));
 
 export default openCloseStore;
