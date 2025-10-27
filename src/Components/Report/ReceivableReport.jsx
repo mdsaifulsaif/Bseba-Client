@@ -1,13 +1,16 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BaseURL } from "../../Helper/Config";
 import { getToken } from "../../Helper/SessionHelper";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
+import { printElement } from "../../Helper/Printer";
+import { Link } from "react-router-dom";
 
 function ReceivableReport() {
   const [dueAmount, setDueAmount] = useState(0);
   const [receivables, setReceivables] = useState([]);
   const [searchkey, setSearchKey] = useState("");
+  const componentRef = useRef();
 
   // Fetch data from API
   const fetchedReceivableData = async () => {
@@ -47,7 +50,7 @@ function ReceivableReport() {
   });
 
   return (
-    <div className="global_container">
+    <div className="global_container " ref={componentRef}>
       <div className="global_sub_container">
         <h1 className="text-xl font-semibold mb-3">Receivable Report</h1>
         <div className="mb-4">
@@ -95,7 +98,12 @@ function ReceivableReport() {
                     </button>
                   </td>
                   <td className="global_td text-center">
-                    <button className="global_button">View</button>
+                    <Link
+                      to={`/Transaction/${item._id}`}
+                      className="global_button"
+                    >
+                      View
+                    </Link>
                   </td>
                 </tr>
               ))
@@ -111,6 +119,14 @@ function ReceivableReport() {
             )}
           </tbody>
         </table>
+      </div>
+      <div className="text-center mt-5">
+        <button
+          onClick={() => printElement(componentRef, "Expense Report")}
+          className="global_button w-60"
+        >
+          Print
+        </button>
       </div>
     </div>
   );
