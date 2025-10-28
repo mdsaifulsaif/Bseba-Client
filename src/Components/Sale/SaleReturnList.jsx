@@ -4,6 +4,8 @@ import { BaseURL } from "../../Helper/Config";
 import { getToken } from "../../Helper/SessionHelper";
 import { ErrorToast } from "../../Helper/FormHelper";
 import { printElement } from "../../Helper/Printer";
+import { IoMdEye } from "react-icons/io";
+import { MdDeleteOutline } from "react-icons/md";
 
 const SaleReturnList = () => {
   const [returns, setReturns] = useState([]);
@@ -112,23 +114,34 @@ const SaleReturnList = () => {
                 <tr className="global_tr">
                   <th className="global_th">#</th>
                   <th className="global_th">Reference</th>
+                  <th className="global_th">Customer </th>
+                  <th className="global_th">Mobile</th>
+                  <th className="global_th">Address </th>
                   <th className="global_th">Total</th>
-                  <th className="global_th">Profit/Loss</th>
                   <th className="global_th">Note</th>
                   <th className="global_th">Date</th>
+                  <th className="global_th">Details</th>
+                  <th className="global_th">Delete</th>
                 </tr>
               </thead>
               <tbody className="global_tbody">
                 {returns.map((ret, idx) => (
                   <tr className="global_tr" key={ret._id}>
+                    {console.log(ret)}
                     <td className="global_td">
                       {(page - 1) * limit + idx + 1}
                     </td>
                     <td className="global_td">{ret.referenceNo}</td>
-                    <td className="global_td">{ret.total}</td>
-                    <td className="global_td">{ret.profitLoss}</td>
-                    <td className="global_td">{ret.note || "-"}</td>
-                    <td className="global_td min-w-[100px]">
+                    <td className="global_td">{ret?.contact?.name || "N/A"}</td>
+                    <td className="global_td">
+                      {ret?.contact?.mobile || "N/A"}
+                    </td>
+                    <td className="global_td">
+                      {ret?.contact?.address || "N/A"}
+                    </td>
+                    <td className="global_td min-w-[100px]">55</td>
+                    <td className="global_td">{ret?.note}</td>
+                    <td className="global_td">
                       {(() => {
                         const d = new Date(ret.CreatedDate);
                         const day = String(d.getDate()).padStart(2, "0");
@@ -136,6 +149,18 @@ const SaleReturnList = () => {
                         const year = d.getFullYear();
                         return `${day}-${month}-${year}`;
                       })()}
+                    </td>
+
+                    <td className="global_td">
+                      <div className="flex items-center justify-center">
+                        <IoMdEye className="text-green-600 text-xl cursor-pointer transform transition-transform duration-200 hover:scale-110" />
+                      </div>
+                      {/* <IoMdEye /> */}
+                    </td>
+                    <td className="global_td">
+                      <div className="flex items-center justify-center">
+                        <MdDeleteOutline className="text-red-600 text-xl cursor-pointer transform transition-transform duration-200 hover:scale-110" />
+                      </div>
                     </td>
                   </tr>
                 ))}
