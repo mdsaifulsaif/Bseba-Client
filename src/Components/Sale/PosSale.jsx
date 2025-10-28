@@ -213,7 +213,9 @@ const CreatePurchase = () => {
         CreatedDate: purchaseDate,
         note: note,
         date: purchaseDate.toISOString(),
-        ...(otherCostName ? { outher: otherCostName, outherAmount: cost } : {}),
+        ...(otherCostName && cost > 0
+          ? { outher: otherCostName, outherAmount: cost }
+          : {}),
       },
       SaleProduct: selectedProducts.map((p) => ({
         productID: p._id,
@@ -248,11 +250,11 @@ const CreatePurchase = () => {
   return (
     <div className="">
       {/* Contact & Product Selection */}
-      <div className="global_sub_container grid grid-cols-8 gap-4">
+      <div className="global_sub_container grid grid-cols-4 gap-4">
         {/* Contact*/}
-        <div className="col-span-8 lg:col-span-4">
+        <div className="col-span-4 lg:col-span-2">
           <label className="block text-sm font-medium mb-1">
-            Customer Name <span className="text-red-500"> *</span>
+            Customer Name
           </label>
           <Select
             options={customers}
@@ -267,39 +269,41 @@ const CreatePurchase = () => {
           />
         </div>
         {/* Add Contact*/}
-        <div className="flex items-end col-span-8 lg:col-span-1">
-          <button
-            onClick={() => setCustomerModal(true)}
-            className="global_button w-full text-sm py-1 px-1"
-          >
-            Add Customer
-          </button>
-        </div>
-
-        <div className="col-span-8 lg:col-span-3 flex flex-col">
-          <label className="block text-sm font-medium mt-1 mb-1">
-            Select Date
-          </label>
-          <div className="relative w-full">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FaCalendarAlt />
+        <div className="col-span-4 lg:col-span-2 flex gap-2">
+          <div className="flex items-end">
+            <button
+              onClick={() => setCustomerModal(true)}
+              className="flex items-center justify-center gap-2 global_button"
+            >
+              Add Customer
+            </button>
+          </div>
+          {/* Date*/}
+          <div>
+            <label className="block text-sm font-medium mt-1 mb-1">
+              Select Date
+            </label>
+            <div className="relative w-full">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FaCalendarAlt />
+              </div>
+              <DatePicker
+                selected={purchaseDate}
+                onChange={(date) => setPurchaseDate(date)}
+                dateFormat="dd-MM-yyyy"
+                className="global_input pl-10 w-full"
+                popperPlacement="bottom-start"
+                popperClassName="z-[9999]"
+                calendarClassName="react-datepicker-custom"
+                popperContainer={(props) =>
+                  createPortal(<div {...props} />, document.body)
+                }
+              />
             </div>
-            <DatePicker
-              selected={purchaseDate}
-              onChange={(date) => setPurchaseDate(date)}
-              dateFormat="dd-MM-yyyy"
-              className="global_input pl-10 w-full"
-              popperPlacement="bottom-start"
-              popperClassName="z-[9999]"
-              calendarClassName="react-datepicker-custom"
-              popperContainer={(props) =>
-                createPortal(<div {...props} />, document.body)
-              }
-            />
           </div>
         </div>
         {/* Product*/}
-        <div className="col-span-8 lg:col-span-4">
+        <div className="col-span-4 lg:col-span-2">
           <label className="block text-sm font-medium mb-1">
             Product Name <span className="text-red-500"> *</span>
           </label>
@@ -314,28 +318,30 @@ const CreatePurchase = () => {
             styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
           />
         </div>
-
-        {/* Barcode*/}
-        <div className="flex items-end col-span-8 lg:col-span-4">
-          <input
-            value={barcode}
-            onChange={(e) => {
-              setBarcode(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault(); // form submit block
-                fetchProductWithPosMachine(e.target.value); // call API
-              }
-            }}
-            className="w-full global_input text-black dark:text-white h-fit"
-            placeholder="Search Product With Barcode"
-          />
+        {/* Add Product*/}
+        <div className="col-span-4 lg:col-span-2 flex gap-2">
+          {/* Barcode*/}
+          <div className="flex items-end">
+            <input
+              value={barcode}
+              onChange={(e) => {
+                setBarcode(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault(); // form submit block
+                  fetchProductWithPosMachine(e.target.value); // call API
+                }
+              }}
+              className="w-full global_input text-black dark:text-white h-fit"
+              placeholder="Search Product With Barcode"
+            />
+          </div>
         </div>
       </div>
 
       {/* Selected Products Table */}
-      <div className="global_sub_container mt-4">
+      <div className="global_sub_container mt-4 overflow-auto">
         <div className="flex justify-end items-center gap-2">
           <label htmlFor="disableSuggestion" className="text-sm font-medium">
             View Purchase Price{" "}
@@ -347,10 +353,10 @@ const CreatePurchase = () => {
             type="checkbox"
             checked={viewTotalPurchasePrice}
             onChange={(e) => setViewTotalPurchasePrice(e.target.checked)}
-            className="toggle toggle-success"
+            className="toggle toggle-lg bg-gray-200 border-gray-300 checked:bg-green-500 checked:border-green-500 focus:ring-4 focus:ring-green-200 focus:ring-opacity-50 focus:outline-none transition-all duration-300 ease-in-out cursor-pointer"
           />
         </div>
-        <div className=" overflow-auto">
+        {selectedProducts.length > 0 ? (
           <table className="global_table">
             <thead className="global_thead">
               <tr className="global_tr">
@@ -375,9 +381,7 @@ const CreatePurchase = () => {
                 <tr key={p._id + "-" + idx} className="global_tr">
                   <td className="global_td w-2 text-center">{idx + 1}</td>
                   {/* Name*/}
-                  <td className="global_td ">
-                    <h1 className="min-w-[150px]">{p.label}</h1>
-                  </td>
+                  <td className="global_td w-[200px]">{p.label}</td>
 
                   {/* QTy*/}
                   <td className="global_td w-24">
@@ -432,7 +436,11 @@ const CreatePurchase = () => {
               ))}
             </tbody>
           </table>
-        </div>
+        ) : (
+          <div className="text-center py-4 text-gray-500">
+            No products selected
+          </div>
+        )}
       </div>
 
       {/* Summary + Note */}

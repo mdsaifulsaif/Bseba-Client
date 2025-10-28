@@ -32,6 +32,7 @@ import { TbPackageImport, TbBrandStocktwits } from "react-icons/tb";
 
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { GiMoneyStack } from "react-icons/gi";
+import { AiOutlineStock } from "react-icons/ai";
 import { CiSettings } from "react-icons/ci";
 import { PiBankBold, PiListStarFill } from "react-icons/pi";
 import { BsSun, BsMoon } from "react-icons/bs";
@@ -60,6 +61,12 @@ const MasterLayout = ({ children }) => {
                 title: "Create Sale",
                 icon: <MdCreateNewFolder />,
                 path: "/NewSale",
+              },
+              {
+                id: "possale",
+                title: "Pos Sale",
+                icon: <MdCreateNewFolder />,
+                path: "/PosSale",
               },
               {
                 id: "salelist",
@@ -261,6 +268,12 @@ const MasterLayout = ({ children }) => {
                 title: "Payable Report",
                 icon: <GiMoneyStack />,
                 path: "/PayableReport",
+              },
+              {
+                id: "LowProductList",
+                title: "Low Stock Product",
+                icon: <AiOutlineStock />,
+                path: "/LowProductList",
               },
             ],
           },

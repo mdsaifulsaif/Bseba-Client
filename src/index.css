@@ -109,7 +109,6 @@ body {
 .global_print_th {
   @apply bg-[#006D2B] text-white px-1 py-2 text-xs font-medium uppercase tracking-wider;
 }
-
 /* Dark mode css for date picker */
 /* Dark mode overrides */
 .dark .react-datepicker {
@@ -117,6 +116,17 @@ body {
   border-color: #374151; /* border-gray-700 */
   color: #f9fafb;
   /* text-gray-100 */
+}
+.react-datepicker-wrapper {
+  width: 100% !important;
+}
+
+.react-datepicker__input-container {
+  width: 100% !important;
+}
+
+.react-datepicker__input-container input {
+  width: 100% !important;
 }
 
 .dark .react-datepicker__day {
@@ -141,7 +151,7 @@ body {
 
 .dark .react-datepicker__current-month,
 .dark .react-datepicker__day-name {
-  color: #f3f4f6; /* text-gray-100 */
+  color: #f3f4f6; /* text-gray-100 */
 }
 
 /* ===== Scrollbar Styles ===== */

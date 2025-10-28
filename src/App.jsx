@@ -61,6 +61,8 @@ import ReceivableReportPage from "./Pages/Report/ReceivableReportPage";
 import TransactionPage from "./Pages/Transaction/TransactionPage";
 import TransactionDetailsPage from "./Pages/Transaction/TransactionDetailsPage";
 import PayableReportPage from "./Pages/Report/PayableReportPage";
+import LowProductListPage from "./Pages/Report/LowProductListPage";
+import PosSalePage from "./Pages/Sale/PosSalePage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -121,6 +123,7 @@ function App() {
               element={<TransactionDetailsPage />}
             />
             <Route path="/PayableReport" element={<PayableReportPage />} />
+            <Route path="/LowProductList" element={<LowProductListPage />} />
 
             <Route path="/NewSale" element={<NewSalePage />} />
             <Route path="/SaleList" element={<SaleListPage />} />
@@ -141,6 +144,7 @@ function App() {
               element={<PurchaseReturnPage />}
             />
             <Route path="/DealerList/:id" element={<DealerListPage />} />
+            <Route path="/PosSale" element={<PosSalePage />} />
             <Route path="/MyDealer" element={<MyDealerPage />} />
             <Route path="/SellList" element={<SellListPage />} />
             <Route path="/PostTransiction" element={<PostTransictionPage />} />

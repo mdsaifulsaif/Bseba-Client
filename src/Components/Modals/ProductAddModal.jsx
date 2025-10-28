@@ -8,7 +8,7 @@ import axios from "axios";
 import Select from "react-select";
 import { SuccessToast, ErrorToast } from "../../Helper/FormHelper";
 
-const ProductAddModal = ({ onSuccess }) => {
+const ProductAddModal = ({ onSuccess, handleAddProduct }) => {
   const { modalOpen, modalType, closeModal } = openCloseStore();
   const { setGlobalLoader } = loadingStore();
 
@@ -139,9 +139,22 @@ const ProductAddModal = ({ onSuccess }) => {
         headers: { token: getToken() },
       });
       if (res.data.status === "Success") {
-        SuccessToast("Product created successfully!");
         if (onSuccess) onSuccess();
-        closeModal();
+        const product = res.data.data;
+        handleAddProduct({
+          _id: product._id,
+          label: `${product.name} (${selectedBrand.label}) (${selectedBrand.label}})`,
+          name: product.name,
+          qty: 1,
+          unitCost: product.unitCost || 0,
+          dp: product.price || 0,
+          mrp: product.mrp || product.price || 0,
+          warranty: product.warranty || 0,
+          total: product.unitCost || 0,
+          serialNos: [],
+          salePrice: product.unitCost || 0,
+          qtyDisable: false,
+        });
 
         setProductName("");
         setQty("");
@@ -152,6 +165,7 @@ const ProductAddModal = ({ onSuccess }) => {
         setSelectedBrand(null);
         setSelectedUnit(null);
         setError(false);
+        closeModal();
       } else {
         ErrorToast(res.data.message || "Failed to create product");
       }
@@ -170,7 +184,7 @@ const ProductAddModal = ({ onSuccess }) => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white dark:bg-[#1E2939] p-6 rounded-lg w-full sm:w-[90%] max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg"
+        className="bg-white text-black dark:text-white dark:bg-[#1E2939] p-6 rounded-lg w-full sm:w-[90%] max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-bold dark:text-white text-lg">Add Product</h2>
@@ -259,13 +273,16 @@ const ProductAddModal = ({ onSuccess }) => {
               />
             </div>
             <div>
-              <label className="block mb-1 font-medium">Unit Cost</label>
+              <label className="block mb-1 font-medium">
+                Unit Cost {qty > 0 && <span className="text-red-500">*</span>}
+              </label>
               <input
                 type="number"
                 value={unitCost}
                 onChange={(e) => setUnitCost(e.target.value)}
                 className="global_input w-full"
                 placeholder="Unit Cost"
+                required={qty > 0}
               />
             </div>
             <div>
