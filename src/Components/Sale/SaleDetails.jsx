@@ -29,7 +29,7 @@ const SaleDetails = () => {
   const getSaleDetailsByID = async (id) => {
     setGlobalLoader(true);
     try {
-      const res = await axios.get(`${BaseURL}/SalesDetails/${id}`, {
+      const res = await axios.get(`${BaseURL}/SalesDetailsByID/${id}`, {
         headers: { token: getToken() },
       });
 

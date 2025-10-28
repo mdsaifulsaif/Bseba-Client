@@ -172,9 +172,11 @@ const SaleList = () => {
                       </Link>
                     </td> */}
                       <td className="global_td">
-                        <div className="flex items-center justify-center">
-                          <TbTruckReturn className="text-red-600 text-xl cursor-pointer transform transition-transform duration-200 hover:scale-110" />
-                        </div>
+                        <Link to={`/SaleReturn/${sale._id}`}>
+                          <div className="flex items-center justify-center">
+                            <TbTruckReturn className="text-red-600 text-xl cursor-pointer transform transition-transform duration-200 hover:scale-110" />
+                          </div>
+                        </Link>
                       </td>
                       <td className="global_td">
                         <div className="flex items-center justify-center">
