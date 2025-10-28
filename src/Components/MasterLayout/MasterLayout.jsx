@@ -31,6 +31,7 @@ import { LiaSortAmountUpSolid } from "react-icons/lia";
 import { TbPackageImport, TbBrandStocktwits } from "react-icons/tb";
 
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
+import { GiMoneyStack } from "react-icons/gi";
 import { CiSettings } from "react-icons/ci";
 import { PiBankBold, PiListStarFill } from "react-icons/pi";
 import { BsSun, BsMoon } from "react-icons/bs";
@@ -254,6 +255,12 @@ const MasterLayout = ({ children }) => {
                 title: "Receivable Report",
                 icon: <GiTakeMyMoney />,
                 path: "/ReceivableReport",
+              },
+              {
+                id: "PayableReport",
+                title: "Payable Report",
+                icon: <GiMoneyStack />,
+                path: "/PayableReport",
               },
             ],
           },
