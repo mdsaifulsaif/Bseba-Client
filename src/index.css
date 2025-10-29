@@ -37,6 +37,10 @@ body {
     @apply bg-white/20 dark:bg-gray-900/20 shadow-md backdrop-blur-sm rounded-2xl p-2 lg:p-6 mb-8 transition-all duration-300 ring-2 ring-blue-500;
   }
 
+  /* added by Saiful  */
+  .global_heading {
+    @apply text-xl font-semibold mb-3;
+  }
   .global_dropdown {
     @apply px-3 py-2 w-full border border-gray-300 dark:border-gray-600 rounded-2xl 
     focus:outline-none focus:ring-2 focus:ring-blue-500 

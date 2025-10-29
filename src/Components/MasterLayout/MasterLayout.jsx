@@ -275,6 +275,12 @@ const MasterLayout = ({ children }) => {
                 icon: <AiOutlineStock />,
                 path: "/LowProductList",
               },
+              {
+                id: "ExpenseReport",
+                title: "Expense Report",
+                icon: <AiOutlineStock />,
+                path: "/ExpenseReport",
+              },
             ],
           },
           // ====accounts===================================

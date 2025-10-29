@@ -70,6 +70,7 @@ import Print80Page from "./Pages/Sale/Print80Page";
 import ChallanPage from "./Pages/Sale/ChallanPage";
 import ChallanA5Page from "./Pages/Sale/ChallanA5Page";
 import Print58Page from "./Pages/Sale/Print58Page";
+import ExpenseReportPage from "./Pages/Report/ExpenseReportPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -116,6 +117,7 @@ function App() {
             <Route path="/ExpenseByType" element={<ExpenseByIDPage />} />
             <Route path="/AddDamage" element={<AddDamagePage />}></Route>
 
+            {/* Report Routes  */}
             <Route path="/BusinessReport" element={<BusinessReportPage />} />
             <Route path="/SalsReport" element={<SalsReportPage />} />
             <Route path="/TopCoustomer" element={<TopCustomerPage />} />
@@ -131,7 +133,9 @@ function App() {
             />
             <Route path="/PayableReport" element={<PayableReportPage />} />
             <Route path="/LowProductList" element={<LowProductListPage />} />
+            <Route path="/ExpenseReport" element={<ExpenseReportPage />} />
 
+            {/* Sale Reports  */}
             <Route path="/NewSale" element={<NewSalePage />} />
             <Route path="/SaleList" element={<SaleListPage />} />
             <Route path="/SaleDetails/:id" element={<SaleDetailsPage />} />
