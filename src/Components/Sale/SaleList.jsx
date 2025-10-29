@@ -192,9 +192,11 @@ const SaleList = () => {
                         </Link>
                       </td>
                       <td className="global_td">
-                        <div className="flex items-center justify-center">
-                          <IoPrintSharp className="text-green-600 text-xl cursor-pointer transform transition-transform duration-200 hover:scale-110" />
-                        </div>
+                        <Link to={`/Challan/${sale._id}`}>
+                          <div className="flex items-center justify-center">
+                            <IoPrintSharp className="text-green-600 text-xl cursor-pointer transform transition-transform duration-200 hover:scale-110" />
+                          </div>
+                        </Link>
                       </td>
                       {/* <td className="global_td"></td> */}
                       <td className="global_td">

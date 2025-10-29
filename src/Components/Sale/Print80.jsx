@@ -249,7 +249,7 @@ const Print80 = () => {
       <button
         onClick={handlePrint}
         id="no-print"
-        className="bg-green-600 dark:bg-green-700 text-white px-4 py-2 rounded mt-4 hover:bg-green-700 dark:hover:bg-green-600"
+        className="global_button mt-5"
       >
         Print 80mm Invoice
       </button>

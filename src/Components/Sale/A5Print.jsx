@@ -61,15 +61,16 @@ const A5Print = () => {
         </div>
 
         {/* Customer and Invoice Info */}
+        <div className="text-center text-2xl text-green-600 dark:text-green-400 font-semibold">
+          <h4>Invoice</h4>
+        </div>
         <div className="flex justify-between mb-2">
           <div className="text-gray-700 dark:text-gray-300 text-sm">
             <p>{data?.Customer?.name || "N/A"}</p>
             <p>{data?.Customer?.mobile}</p>
             <p>{data?.Customer?.address}</p>
           </div>
-          <div className="text-center text-green-600 dark:text-green-400 font-semibold">
-            <h4>Invoice</h4>
-          </div>
+
           <div className="text-right text-gray-700 dark:text-gray-300 text-sm">
             <p>{data?.SaleSummary?.Reference}</p>
             <p>
@@ -206,7 +207,7 @@ const A5Print = () => {
       <button
         onClick={handlePrint}
         id="no-print"
-        className="bg-green-600 dark:bg-green-700 text-white px-4 py-2 rounded mt-4 hover:bg-green-700 dark:hover:bg-green-600"
+        className="global_button mt-5"
       >
         Print Invoice
       </button>
