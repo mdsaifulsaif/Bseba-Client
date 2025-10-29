@@ -16,6 +16,7 @@ import { GiBuyCard, GiTeamIdea, GiTakeMyMoney } from "react-icons/gi";
 import { TbBusinessplan } from "react-icons/tb";
 import { useState, useEffect } from "react";
 import { FaUsers } from "react-icons/fa";
+import { TbTransactionBitcoin } from "react-icons/tb";
 import { FaUsersGear } from "react-icons/fa6";
 import {
   FaChevronDown,
@@ -280,6 +281,12 @@ const MasterLayout = ({ children }) => {
                 title: "Expense Report",
                 icon: <AiOutlineStock />,
                 path: "/ExpenseReport",
+              },
+              {
+                id: "transactionreport",
+                title: "Transaction Report",
+                icon: <TbTransactionBitcoin />,
+                path: "/TransactionReport",
               },
             ],
           },
