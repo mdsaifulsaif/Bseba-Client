@@ -66,6 +66,7 @@ import PosSalePage from "./Pages/Sale/PosSalePage";
 import SaleReturnPage from "./Pages/Sale/SaleReturnPage";
 import SaleReturnDetailsPage from "./Pages/Sale/SaleReturnDetailsPage";
 import A5PrintPage from "./Pages/Sale/A5PrintPage";
+import Print80Page from "./Pages/Sale/Print80Page";
 
 function App() {
   const isLoggedIn = getToken();
@@ -138,6 +139,7 @@ function App() {
               element={<SaleReturnDetailsPage />}
             />
             <Route path="/A5Print/:id" element={<A5PrintPage />} />
+            <Route path="/Print/:id" element={<Print80Page />} />
 
             <Route path="/PurchaseList" element={<PurchaseListPage />} />
             <Route
