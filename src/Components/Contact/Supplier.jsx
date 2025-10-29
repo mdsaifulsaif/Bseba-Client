@@ -366,8 +366,15 @@ const Supplier = () => {
                       </Link>
                     </td>
                     <td className="global_td">
-                      <Link
+                      {/* <Link
                         to={`/ViewSupplierLaser/${s._id}`}
+                        className="global_button"
+                      >
+                        View Laser
+                      </Link> */}
+
+                      <Link
+                        to={`/Transaction/${s._id}`}
                         className="global_button"
                       >
                         View Laser
