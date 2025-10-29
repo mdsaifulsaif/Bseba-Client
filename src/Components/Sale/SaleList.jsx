@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { BaseURL } from "../../Helper/Config";
 import { getToken } from "../../Helper/SessionHelper";
-import { ErrorToast } from "../../Helper/FormHelper";
+import { ErrorToast, SuccessToast } from "../../Helper/FormHelper";
 import { printElement } from "../../Helper/Printer";
 import { Link } from "react-router-dom";
 import loadingStore from "../../Zustand/LoadingStore";
@@ -11,6 +11,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { TbTruckReturn } from "react-icons/tb";
 import { IoPrintSharp } from "react-icons/io5";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Open / Close icons
+import Swal from "sweetalert2";
 
 const SaleList = () => {
   const [sales, setSales] = useState([]);
@@ -50,6 +51,71 @@ const SaleList = () => {
   useEffect(() => {
     fetchSales();
   }, [page, search, limit]);
+
+  // handle Delete sale function
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title:
+        '<span class="global-font-color">এই বিক্রয় রিটার্ন ডিলিট করবেন??</span>',
+      html: '<p class="form-custom-label">ডিলিট করলে এই তথ্য আর ফেরত পাবেন না।</p>',
+      icon: "warning",
+      showCancelButton: true,
+      background: "rgba(255, 255, 255, 0.2)",
+      backdrop: `
+      rgba(0,0,0,0.4)
+      url("/images/nyan-cat.gif")
+      left top
+      no-repeat
+    `,
+      customClass: {
+        popup:
+          "rounded-lg border border-white/20 dark:border-gray-700/50 shadow-xl backdrop-blur-lg bg-white/80 dark:bg-gray-800/80 global-border",
+        confirmButton:
+          "px-4 py-2 bg-red-600/90 hover:bg-red-700/90 text-white rounded-md font-medium transition-colors backdrop-blur-sm ml-3 btn btn-sm global-gradient-color",
+        cancelButton:
+          "px-4 py-2 bg-white/90 dark:bg-gray-700/90 hover:bg-gray-100/90 dark:hover:bg-gray-600/90 text-gray-800 dark:text-gray-200 border border-white/20 dark:border-gray-600/50 rounded-md font-medium transition-colors ml-2 backdrop-blur-sm btn btn-sm global-border-btn",
+        title: "text-lg font-semibold global-swal2-title-custom",
+        htmlContainer: "mt-2 global-swal2-html-custom",
+      },
+      buttonsStyling: false,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      // Updated API endpoint
+      const response = await axios.get(`${BaseURL}/DeleteSales/${id}`, {
+        headers: { token: getToken() },
+      });
+
+      if (
+        response.data.status?.toLowerCase() === "success" ||
+        response.data.statusCode === 200
+      ) {
+        SuccessToast(
+          response.data.message || "Sale return deleted successfully."
+        );
+
+        // UI থেকে item remove
+        setSales((prev) => prev.filter((item) => item._id !== id));
+
+        // total সংখ্যা কমাও
+        setTotal((prevTotal) => Math.max(prevTotal - 1, 0));
+      } else {
+        ErrorToast(response.data.message || "Failed to delete sale return.");
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+      ErrorToast("Failed to delete sale return.");
+    }
+  };
+
+  // const handleDelete = (id) => {
+  //   console.log("deleted id", id);
+  // };
 
   const handlePrint = () => {
     printElement(printRef, "testing");
@@ -98,7 +164,7 @@ const SaleList = () => {
         </div>
 
         {sales.length === 0 ? (
-          <div>No sales found</div>
+          <div className="text-center">No sales found</div>
         ) : (
           <div>
             <div className=" overflow-auto">
@@ -157,7 +223,10 @@ const SaleList = () => {
                       </td>
                       <td className="global_td text-center" id="no-print">
                         <div className="flex items-center justify-center">
-                          <MdDeleteOutline className="text-red-600 text-xl cursor-pointer transform transition-transform duration-200 hover:scale-110" />
+                          <MdDeleteOutline
+                            onClick={() => handleDelete(sale._id)}
+                            className="text-red-600 text-xl cursor-pointer transform transition-transform duration-200 hover:scale-110"
+                          />
                         </div>
                       </td>
 

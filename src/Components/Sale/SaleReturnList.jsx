@@ -64,8 +64,6 @@ const SaleReturnList = () => {
 
   // handle delete function
   const handleDelete = async (id) => {
-    console.log("Deleting ID:", id);
-
     const result = await Swal.fire({
       title:
         '<span class="global-font-color">এই বিক্রয় রিটার্ন ডিলিট করবেন??</span>',
@@ -124,120 +122,6 @@ const SaleReturnList = () => {
       ErrorToast("Failed to delete sale return.");
     }
   };
-
-  // const handleDelete = async (id) => {
-  //   console.log("Deleting ID:", id);
-
-  //   const result = await Swal.fire({
-  //     title:
-  //       '<span class="global-font-color">এই বিক্রয় রিটার্ন ডিলিট করবেন??</span>',
-  //     html: '<p class="form-custom-label">ডিলিট করলে এই তথ্য আর ফেরত পাবেন না।</p>',
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     background: "rgba(255, 255, 255, 0.2)",
-  //     backdrop: `
-  //       rgba(0,0,0,0.4)
-  //       url("/images/nyan-cat.gif")
-  //       left top
-  //       no-repeat
-  //     `,
-  //     customClass: {
-  //       popup:
-  //         "rounded-lg border border-white/20 dark:border-gray-700/50 shadow-xl backdrop-blur-lg bg-white/80 dark:bg-gray-800/80 global-border",
-  //       confirmButton:
-  //         "px-4 py-2 bg-red-600/90 hover:bg-red-700/90 text-white rounded-md font-medium transition-colors backdrop-blur-sm ml-3 btn btn-sm global-gradient-color",
-  //       cancelButton:
-  //         "px-4 py-2 bg-white/90 dark:bg-gray-700/90 hover:bg-gray-100/90 dark:hover:bg-gray-600/90 text-gray-800 dark:text-gray-200 border border-white/20 dark:border-gray-600/50 rounded-md font-medium transition-colors ml-2 backdrop-blur-sm btn btn-sm global-border-btn",
-  //       title: "text-lg font-semibold global-swal2-title-custom",
-  //       htmlContainer: "mt-2 global-swal2-html-custom",
-  //     },
-  //     buttonsStyling: false,
-  //     confirmButtonText: "Yes, delete it!",
-  //     cancelButtonText: "Cancel",
-  //     reverseButtons: true,
-  //   });
-
-  //   if (!result.isConfirmed) return;
-
-  //   try {
-  //     // 🔗 তোমার GET delete API কল
-  //     const response = await axios.get(`${BaseURL}/DeleteSaleReturn/${id}`, {
-  //       headers: { token: getToken() },
-  //     });
-
-  //     if (response.data.status === "Success") {
-  //       SuccessToast(
-  //         response.data.message || "Sale return deleted successfully."
-  //       );
-
-  //       // ✅ ডিলিট হওয়া আইটেম লিস্ট থেকে সরাও (setSaleReturns & setTotal তোমার state)
-  //       setReturns((prev) => prev.filter((item) => item._id !== id));
-  //       setTotal((prevTotal) => prevTotal - 1);
-  //     } else {
-  //       ErrorToast(response.data.message || "Failed to delete sale return.");
-  //     }
-  //   } catch (err) {
-  //     console.error("Delete error:", err);
-  //     ErrorToast("Failed to delete sale return.");
-  //   }
-  // };
-
-  // const handleDelete = async (id) => {
-  //   const result = await Swal.fire({
-  //     title:
-  //       '<span class="global-font-color">এই বিক্রয় রিটার্ন ডিলিট করবেন??</span>',
-  //     html: '<p class="form-custom-label">ডিলিট করলে এই তথ্য আর ফেরত পাবেন না।</p>',
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     background: "rgba(255, 255, 255, 0.2)",
-  //     backdrop: `
-  //       rgba(0,0,0,0.4)
-  //       url("/images/nyan-cat.gif")
-  //       left top
-  //       no-repeat
-  //     `,
-  //     customClass: {
-  //       popup:
-  //         "rounded-lg border border-white/20 dark:border-gray-700/50 shadow-xl backdrop-blur-lg bg-white/80 dark:bg-gray-800/80 global-border",
-  //       confirmButton:
-  //         "px-4 py-2 bg-red-600/90 hover:bg-red-700/90 text-white rounded-md font-medium transition-colors backdrop-blur-sm ml-3 btn btn-sm global-gradient-color",
-  //       cancelButton:
-  //         "px-4 py-2 bg-white/90 dark:bg-gray-700/90 hover:bg-gray-100/90 dark:hover:bg-gray-600/90 text-gray-800 dark:text-gray-200 border border-white/20 dark:border-gray-600/50 rounded-md font-medium transition-colors ml-2 backdrop-blur-sm btn btn-sm global-border-btn",
-  //       title: "text-lg font-semibold global-swal2-title-custom",
-  //       htmlContainer: "mt-2 global-swal2-html-custom",
-  //     },
-  //     buttonsStyling: false,
-  //     confirmButtonText: "Yes, delete it!",
-  //     cancelButtonText: "Cancel",
-  //     reverseButtons: true,
-  //   });
-
-  //   if (!result.isConfirmed) return;
-
-  //   dispatch(ShowLoader());
-  //   try {
-  //     const response = await axios.get(`${BaseURL}/DeleteSaleReturn/${id}`, {
-  //       headers: { token: getToken() },
-  //     });
-
-  //     if (response.data.status === "Success") {
-  //       SuccessToast(
-  //         response.data.message || "Sale return deleted successfully."
-  //       );
-  //       // Remove the deleted item from the list
-  //       fetchReturns();
-  //       // Adjust the total count
-  //       setTotal((prevTotal) => prevTotal - 1);
-  //     } else {
-  //       ErrorToast(response.data.message || "Failed to delete sale return.");
-  //     }
-  //   } catch (err) {
-  //     console.error("Delete error:", err);
-  //     ErrorToast("Failed to delete sale return.");
-  //   } finally {
-  //     dispatch(HideLoader());
-  //   }
-  // };
 
   const handlePrint = () => {
     printElement(printRef, "testing");
