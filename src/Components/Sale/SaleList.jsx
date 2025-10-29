@@ -216,7 +216,7 @@ const SaleList = () => {
                           {/* Profit Content */}
                           {isOpen && (
                             <div className="mt-1 text-sm font-medium text-green-600">
-                              100
+                              {sale.profit}
                             </div>
                           )}
                         </div>
