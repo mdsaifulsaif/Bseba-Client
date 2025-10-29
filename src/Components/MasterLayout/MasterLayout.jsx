@@ -288,6 +288,12 @@ const MasterLayout = ({ children }) => {
                 icon: <TbTransactionBitcoin />,
                 path: "/TransactionReport",
               },
+              {
+                id: "dalyreport",
+                title: "Daly Report",
+                icon: <AiOutlineStock />,
+                path: "/DalyReport",
+              },
             ],
           },
           // ====accounts===================================
