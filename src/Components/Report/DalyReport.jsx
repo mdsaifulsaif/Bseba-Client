@@ -157,19 +157,7 @@ const DalyReport = () => {
 
           <div className="w-full md:w-1/3">
             <label className="block text-sm mb-1">Period</label>
-            {/* <Select
-              value={periodOptions.find((p) => p.value === selectedPeriod)}
-              onChange={(opt) => {
-                setSelectedPeriod(opt?.value || "");
-                setStartDate(new Date());
-                setEndDate(new Date());
-              }}
-              className="w-full"
-              options={periodOptions}
-              isClearable
-              menuPortalTarget={document.body}
-              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-            /> */}
+
             <Select
               value={periodOptions.find((p) => p.value === selectedPeriod)}
               onChange={(opt) => {
