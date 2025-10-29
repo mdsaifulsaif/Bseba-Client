@@ -33,7 +33,7 @@ const SaleList = () => {
       );
       if (res.data.status === "Success") {
         let data = res.data.data;
-        console.log(data);
+
         setSales(data);
         setTotal(res.data.total || data.length);
       } else {
@@ -132,7 +132,6 @@ const SaleList = () => {
                       <td className="global_td">
                         {/* {sale.Dealers?.[0]?.name || ""} */}
                         {sale.Customer?.[0]?.name || ""}
-                        {console.log(sale)}
                       </td>
                       <td className="global_td">{sale.grandTotal}</td>
                       <td className="global_td">{sale.paid}</td>
@@ -179,9 +178,11 @@ const SaleList = () => {
                         </Link>
                       </td>
                       <td className="global_td">
-                        <div className="flex items-center justify-center">
-                          <IoPrintSharp className="text-green-600 text-xl cursor-pointer transform transition-transform duration-200 hover:scale-110" />
-                        </div>
+                        <Link to={`/A5Print/${sale._id}`}>
+                          <div className="flex items-center justify-center">
+                            <IoPrintSharp className="text-green-600 text-xl cursor-pointer transform transition-transform duration-200 hover:scale-110" />
+                          </div>
+                        </Link>
                       </td>
                       <td className="global_td">
                         <div className="flex items-center justify-center">

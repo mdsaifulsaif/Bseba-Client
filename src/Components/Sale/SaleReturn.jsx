@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BaseURL } from "../../Helper/Config";
 import { getToken } from "../../Helper/SessionHelper";
 import { toast } from "react-hot-toast";
+import loadingStore from "../../Zustand/LoadingStore";
 
 const SaleReturn = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const SaleReturn = () => {
   const [saleDetails, setSaleDetails] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { setGlobalLoader } = loadingStore();
   const [returnData, setReturnData] = useState({
     total: 0,
     note: "",
@@ -19,7 +21,8 @@ const SaleReturn = () => {
   // Fetch Sale Details
   useEffect(() => {
     const fetchSaleDetails = async () => {
-      setLoading(true);
+      // setLoading(true);
+      setGlobalLoader(true);
       try {
         const response = await axios.get(`${BaseURL}/SalesDetailsByID/${id}`, {
           headers: { token: getToken() },
@@ -28,7 +31,8 @@ const SaleReturn = () => {
       } catch (err) {
         toast.error("Failed to load Sale details. Please try again later.");
       } finally {
-        setLoading(false);
+        // setLoading(false);
+        setGlobalLoader(false);
       }
     };
     fetchSaleDetails();
@@ -162,7 +166,7 @@ const SaleReturn = () => {
     }
   };
 
-  if (loading) return <div className="container mt-5">Loading...</div>;
+  // if (loading) return <div className="container mt-5">Loading...</div>;
   if (!saleDetails) return <div className="container mt-5">No data found.</div>;
 
   return (
