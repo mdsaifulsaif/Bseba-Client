@@ -143,6 +143,7 @@ function App() {
             />
             <Route path="/DalyReport" element={<DalyReportPage />} />
             <Route path="/StockReport" element={<StockReportPage />} />
+            {/* <Route path="/SaleReport" element={<SalsReportPage />} /> */}
 
             {/* Sale Reports  */}
             <Route path="/NewSale" element={<NewSalePage />} />

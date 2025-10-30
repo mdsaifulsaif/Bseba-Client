@@ -329,7 +329,7 @@ const PurchaseReturn = () => {
             />
           </div>
           <div className="text-end">
-            <button type="submit" className="btn btn-success">
+            <button type="submit" className="global_button">
               Submit Return
             </button>
           </div>

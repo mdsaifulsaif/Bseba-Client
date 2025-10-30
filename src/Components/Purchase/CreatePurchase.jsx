@@ -323,7 +323,7 @@ const CreatePurchase = () => {
 
     try {
       setGlobalLoader(true);
-      const res = await axios.post(`${BaseURL}/CreatePurchases2`, payload, {
+      const res = await axios.post(`${BaseURL}/CreatePurchases`, payload, {
         headers: { token: getToken() },
       });
 

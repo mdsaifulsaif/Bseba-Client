@@ -300,10 +300,14 @@ const StockReport = () => {
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan="10" style={{ textAlign: "right" }}>
+                <td
+                  className="global_td"
+                  colSpan="10"
+                  style={{ textAlign: "right" }}
+                >
                   Total Stock & Value:
                 </td>
-                <td>
+                <td className="global_td">
                   {sortedProducts.reduce((total, p) => {
                     const qty = p.qty || 0;
                     const qtySold = p.qtySold || 0;
@@ -316,7 +320,7 @@ const StockReport = () => {
                     );
                   }, 0)}
                 </td>
-                <td>
+                <td className="global_td">
                   {sortedProducts
                     .reduce((total, p) => {
                       const qty = p.qty || 0;

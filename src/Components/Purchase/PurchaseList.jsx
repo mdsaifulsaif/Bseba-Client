@@ -208,7 +208,7 @@ const PurchaseList = () => {
                   <td className="global_td text-center ">
                     <Link
                       to={`/PurchaseReturn/${p._id}`}
-                      className="px-2 py-1 bg-yellow-400 cursor-pointer text-white rounded"
+                      className=" global_edit cursor-pointer"
                     >
                       {" "}
                       Return
@@ -218,7 +218,7 @@ const PurchaseList = () => {
                   <td className="global_td flex text-center items-center justify-center gap-3">
                     <span
                       onClick={() => handleDelete(p._id)}
-                      className="px-2 py-1 bg-red-500 cursor-pointer text-white rounded"
+                      className="global_button_red cursor-pointer  "
                     >
                       {" "}
                       Delete

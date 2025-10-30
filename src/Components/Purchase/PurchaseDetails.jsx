@@ -46,8 +46,6 @@ const PurchaseDetails = () => {
     });
   };
 
-  // if (!details) return <div className="p-4">Loading...</div>;
-
   const totalQty = details?.Products?.reduce(
     (sum, p) => sum + Number(p.quantity || 0),
     0
@@ -58,57 +56,63 @@ const PurchaseDetails = () => {
   );
 
   return (
-    <div className="global_container">
+    <div className="global_container dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
       <div
         ref={printRef}
-        className="max-w-5xl mx-auto bg-white rounded-md shadow border border-gray-200 p-6"
+        className="max-w-5xl mx-auto bg-white dark:bg-gray-800 rounded-md shadow border border-gray-200 dark:border-gray-700 p-6"
       >
         {/* Header Section */}
         <div className="flex justify-between items-center mb-2">
           <div>
-            <h2 className="text-2xl font-semibold text-[#0a47a9]">
+            <h2 className="text-2xl font-semibold text-[#0a47a9] dark:text-blue-400">
               {businessDetails?.name || "Chuadanga Computer"}
             </h2>
-            <p className="text-gray-600">{businessDetails?.address}</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              {businessDetails?.address}
+            </p>
           </div>
           <div className="text-right">
-            <h3 className="text-sm font-semibold text-gray-600">
+            <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-300">
               Purchase Invoice
             </h3>
-            <p className="text-blue-500 font-medium text-sm">
+            <p className="text-blue-500 dark:text-blue-400 font-medium text-sm">
               #{details?.PurchaseSummary?.Reference}
             </p>
           </div>
         </div>
 
         {/* Supplier & Purchase Info */}
-        <div className="bg-gray-50 border rounded-md mb-4">
-          <div className="border-b px-4 py-2 font-semibold text-sm text-gray-700">
+        <div className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md mb-4">
+          <div className="border-b text-green-600 text-lg border-gray-200 dark:border-gray-600 px-4 py-2 font-semibold  dark:text-gray-200">
             Supplier & Purchase Information
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 p-4 text-sm">
-            <div>
+            <div className="grid gap-1 text-[16px]">
               <p>
-                <strong>Name:</strong> {details?.Supplier?.name}
+                <strong className="text-gray-700 ">Name:</strong>{" "}
+                {details?.Supplier?.name}
               </p>
               <p>
-                <strong>Mobile:</strong> {details?.Supplier?.mobile}
+                <strong className="text-gray-700 ">Mobile:</strong>{" "}
+                {details?.Supplier?.mobile}
               </p>
               <p>
-                <strong>Address:</strong> {details?.Supplier?.address}
+                <strong className="text-gray-700 ">Address:</strong>{" "}
+                {details?.Supplier?.address}
               </p>
             </div>
-            <div>
+            <div className="grid gap-1 text-[16px]">
               <p>
-                <strong>Date:</strong>{" "}
+                <strong className="text-gray-700 ">Date:</strong>{" "}
                 {formatDate(details?.PurchaseSummary?.Date)}
               </p>
               <p>
-                <strong>Reference:</strong>{" "}
+                <strong className="text-gray-700 ">Reference:</strong>{" "}
                 {details?.PurchaseSummary?.Reference}
               </p>
               <p>
-                <strong>Created:</strong> {details?.Users?.name || "N/A"}
+                <strong className="text-gray-700 ">Created:</strong>{" "}
+                {details?.Users?.name || "N/A"}
               </p>
             </div>
           </div>
@@ -116,52 +120,77 @@ const PurchaseDetails = () => {
 
         {/* Products Table */}
         <div className="overflow-x-auto mb-4">
-          <table className="w-full text-sm border border-gray-300">
-            <thead className="bg-gray-100 font-semibold">
+          <table className="global_table">
+            <thead className="global_thead">
               <tr>
-                <th className="border p-2 text-center w-10">#</th>
-                <th className="border p-2 text-left">Product</th>
-                <th className="border p-2 text-center w-16">Qty</th>
-                <th className="border p-2 text-center w-28">Unit Price</th>
-                <th className="border p-2 text-center w-28">Total</th>
+                <th className="global_th dark:border-gray-600 p-2 text-center w-10">
+                  #
+                </th>
+                <th className="global_th dark:border-gray-600 p-2 text-left">
+                  Product
+                </th>
+                <th className="global_th dark:border-gray-600 p-2 text-center w-16">
+                  Qty
+                </th>
+                <th className="global_th dark:border-gray-600 p-2 text-center w-28">
+                  Unit Price
+                </th>
+                <th className="global_th dark:border-gray-600 p-2 text-center w-28">
+                  Total
+                </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="global_tbody">
               {details?.Products?.map((p, i) => (
-                <tr key={i}>
-                  <td className="border p-2 text-center">{i + 1}</td>
-                  <td className="border p-2">
+                <tr key={i} className="hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td className="global_td dark:border-gray-600 p-2 text-center">
+                    {i + 1}
+                  </td>
+                  <td className="global_td dark:border-gray-600 p-2">
                     <span className="font-medium">{p.name}</span>
                     {p.serialNos && p.serialNos.length > 0 && (
-                      <div className="text-xs text-gray-600 mt-1">
+                      <div className="text-xs text-gray-600 dark:text-gray-300 mt-1">
                         <strong>Serial Numbers:</strong>{" "}
                         {p.serialNos.join(", ")}
                       </div>
                     )}
                   </td>
-                  <td className="border p-2 text-center">{p.quantity}</td>
-                  <td className="border p-2 text-center">{p.unitCost}</td>
-                  <td className="border p-2 text-center">{p.total}</td>
+                  <td className="global_td dark:border-gray-600 p-2 text-center">
+                    {p.quantity}
+                  </td>
+                  <td className="global_td dark:border-gray-600 p-2 text-center">
+                    {p.unitCost}
+                  </td>
+                  <td className="global_td dark:border-gray-600 p-2 text-center">
+                    {p.total}
+                  </td>
                 </tr>
               ))}
             </tbody>
             <tfoot>
-              <tr className="font-semibold bg-gray-50">
-                <td className="border p-2 text-center" colSpan="2">
+              <tr className="font-semibold bg-gray-50 dark:bg-gray-700">
+                <td
+                  className="global_td dark:border-gray-600 p-2 text-center"
+                  colSpan="2"
+                >
                   Total
                 </td>
-                <td className="border p-2 text-center">{totalQty}</td>
-                <td className="border p-2"></td>
-                <td className="border p-2 text-center">{totalAmount}</td>
+                <td className="global_td dark:border-gray-600 p-2 text-center">
+                  {totalQty}
+                </td>
+                <td className="global_td dark:border-gray-600 p-2"></td>
+                <td className="global_td dark:border-gray-600 p-2 text-center">
+                  {totalAmount}
+                </td>
               </tr>
             </tfoot>
           </table>
         </div>
 
         {/* Payment Summary */}
-        <div className="flex flex-col md:flex-row justify-end">
-          <div className="bg-gray-50 border rounded-md p-4 w-full md:w-80 text-sm">
-            <h4 className="font-semibold mb-2 border-b pb-1 text-gray-700">
+        <div className="flex flex-col md:flex-row justify-end ">
+          <div className="bg-gray-50 dark:bg-gray-700 border text-[16px] border-gray-200 dark:border-gray-600 rounded-md p-4 w-full md:w-80 text-sm">
+            <h4 className="font-semibold mb-2 border-b dark:border-gray-600 pb-1 text-gray-700 dark:text-gray-200">
               Payment Summary
             </h4>
             <div className="flex justify-between">
@@ -170,11 +199,11 @@ const PurchaseDetails = () => {
             </div>
             <div className="flex justify-between">
               <span>Paid Amount:</span>
-              <span className="text-green-600">
+              <span className="text-green-600 dark:text-green-400">
                 {details?.PurchaseSummary?.paid?.toFixed(2)}
               </span>
             </div>
-            <div className="flex justify-between font-semibold text-red-600 mt-1">
+            <div className="flex justify-between font-semibold text-red-600 dark:text-red-400 mt-1">
               <span>Due Amount:</span>
               <span>{details?.PurchaseSummary?.dueAmount?.toFixed(2)}</span>
             </div>
@@ -182,9 +211,9 @@ const PurchaseDetails = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-4 text-xs text-center text-gray-600 border-t pt-2">
+        <div className="mt-4 text-xs text-center text-gray-600 dark:text-gray-300 border-t dark:border-gray-600 pt-2">
           Generated on {formatDate(new Date())} | Thank you for your business
-          <div className="mt-1 font-medium text-gray-700">
+          <div className="mt-1 font-medium text-gray-700 dark:text-gray-200">
             {businessDetails?.name || "Bseba"}
           </div>
         </div>
@@ -192,10 +221,7 @@ const PurchaseDetails = () => {
 
       {/* Print Button */}
       <div className="flex justify-end mt-4">
-        <button
-          onClick={handlePrint}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all"
-        >
+        <button onClick={handlePrint} className="global_button">
           Print Receipt
         </button>
       </div>

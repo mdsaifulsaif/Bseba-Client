@@ -309,7 +309,6 @@ const MasterLayout = ({ children }) => {
             ],
           },
           // ====accounts===================================
-
           {
             id: "accounts",
             title: "Bank Accounts",
@@ -541,7 +540,7 @@ const MasterLayout = ({ children }) => {
                 {/* Submenu */}
                 {data.children && (
                   <div
-                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    className={`overflow-y-scroll transition-all duration-300 ease-in-out ${
                       expandedItems[data.id] ? "max-h-96" : "max-h-0"
                     }`}
                   >

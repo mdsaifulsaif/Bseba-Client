@@ -26,7 +26,7 @@ const PurchaseReturnList = () => {
       );
       if (res.data.status === "Success") {
         const reversedData = (res.data.data || []).slice().reverse();
-        console.log(reversedData);
+
         setReturns(reversedData);
         setTotal(res.data.total || 0);
       }
@@ -145,18 +145,55 @@ const PurchaseReturnList = () => {
             <div className="overflow-x-auto">
               <table className="global_table">
                 <thead className="global_thead">
-                  <tr>
-                    <th className="global_th">No</th>
-                    <th className="global_th">Supplier</th>
-                    <th className="global_th">Date</th>
-                    <th className="global_th">Invoice No</th>
-                    <th className="global_th">Total Amount</th>
+                  <tr className="">
+                    <th className="global_th">#</th>
+                    <th className="global_th">Reference No</th>
+                    <th className="global_th">Customer</th>
+                    <th className="global_th">Mobile</th>
+                    <th className="global_th">Address</th>
+                    <th className="global_th">Total</th>
                     <th className="global_th">Note</th>
-                    <th className="global_th">Action</th>
+                    <th className="global_th">Date</th>
+                    <th className="global_th">Details</th>
                   </tr>
                 </thead>
-                <tbody className="global_tbody">
-                  {/* ekhane data pore boshabe */}
+                <tbody>
+                  {returns.map((returnProduct, i) => (
+                    <tr key={returnProduct._id}>
+                      <td className="global_td">{i + 1}</td>
+                      <td className="global_td">{returnProduct.referenceNo}</td>
+                      <td className="global_td">
+                        {returnProduct.contact?.name || "N/A"}
+                      </td>
+                      <td className="global_td">
+                        {returnProduct.contact?.mobile || "N/A"}
+                      </td>
+                      <td className="global_td">
+                        {returnProduct.contact?.address || "N/A"}
+                      </td>
+                      <td className="global_td">
+                        {returnProduct.total.toFixed(2)}
+                      </td>
+                      <td className="global_td">{returnProduct.note || "-"}</td>
+                      <td className="global_td">
+                        {new Date(
+                          returnProduct.CreatedDate
+                        ).toLocaleDateString()}
+                      </td>
+                      <td className="global_td">
+                        <button
+                          onClick={() =>
+                            navigate(
+                              `/PurchaseReturnDetails/${returnProduct._id}`
+                            )
+                          }
+                          className="global_button"
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
