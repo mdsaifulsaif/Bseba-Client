@@ -74,6 +74,7 @@ import ExpenseReportPage from "./Pages/Report/ExpenseReportPage";
 import TransactionReportPage from "./Pages/Report/TransactionReportPage";
 import DalyReportPage from "./Pages/Report/DalyReportPage";
 import StockReportPage from "./Pages/Report/StockReportPage";
+import PurchaseReturnDetailsPage from "./Pages/Purchase/PurchaseReturnDetailsPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -162,6 +163,7 @@ function App() {
             <Route path="/ChallanA5/:id" element={<ChallanA5Page />} />
             <Route path="/Print58/:id" element={<Print58Page />} />
 
+            {/* Purchases Routes */}
             <Route path="/PurchaseList" element={<PurchaseListPage />} />
             <Route
               path="/PurchaseDetails/:id"
@@ -176,6 +178,11 @@ function App() {
               path="/PurchaseReturn/:id"
               element={<PurchaseReturnPage />}
             />
+            <Route
+              path="/PurchaseReturnDetails/:id"
+              element={<PurchaseReturnDetailsPage />}
+            />
+
             <Route path="/DealerList/:id" element={<DealerListPage />} />
             <Route path="/PosSale" element={<PosSalePage />} />
             <Route path="/MyDealer" element={<MyDealerPage />} />
