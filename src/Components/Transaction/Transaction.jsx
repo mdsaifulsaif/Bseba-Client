@@ -530,7 +530,7 @@ function Transaction() {
                         {t.saleID && (
                           <Link
                             to={`/SaleDetails/${t.saleID}`}
-                            className="btn btn-sm btn-success"
+                            className="global_button"
                           >
                             Sale
                           </Link>
@@ -538,7 +538,7 @@ function Transaction() {
                         {t.purchaseID && (
                           <Link
                             to={`/PurchaseDetails/${t.purchaseID}`}
-                            className="btn btn-sm btn-primary"
+                            className="global_button"
                           >
                             Purchase
                           </Link>

@@ -11,7 +11,8 @@ import { CiBank } from "react-icons/ci";
 import { RiRedPacketLine, RiContactsBook3Line } from "react-icons/ri";
 import { FcSalesPerformance } from "react-icons/fc";
 import { GrContactInfo } from "react-icons/gr";
-import { MdCreateNewFolder } from "react-icons/md";
+import { MdCreateNewFolder, MdPointOfSale } from "react-icons/md";
+
 import {
   GiBuyCard,
   GiTeamIdea,
@@ -53,7 +54,7 @@ const MasterLayout = ({ children }) => {
       id: "dashboard",
       title: "Dashboard",
       icon: <LuLayoutDashboard />,
-      path: "/",
+      path: "/Dashboard",
     },
     ...(isAdmin
       ? [
@@ -274,6 +275,12 @@ const MasterLayout = ({ children }) => {
                 title: "Payable Report",
                 icon: <GiMoneyStack />,
                 path: "/PayableReport",
+              },
+              {
+                id: "productsalereport",
+                title: "Product Sale Report",
+                icon: <MdPointOfSale />,
+                path: "/ProductSaleReport",
               },
               {
                 id: "LowProductList",

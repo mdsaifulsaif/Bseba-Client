@@ -75,6 +75,7 @@ import TransactionReportPage from "./Pages/Report/TransactionReportPage";
 import DalyReportPage from "./Pages/Report/DalyReportPage";
 import StockReportPage from "./Pages/Report/StockReportPage";
 import PurchaseReturnDetailsPage from "./Pages/Purchase/PurchaseReturnDetailsPage";
+import ProductSaleReportPage from "./Pages/Report/ProductSaleReportPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -136,6 +137,10 @@ function App() {
               element={<TransactionDetailsPage />}
             />
             <Route path="/PayableReport" element={<PayableReportPage />} />
+            <Route
+              path="/ProductSaleReport"
+              element={<ProductSaleReportPage />}
+            />
             <Route path="/LowProductList" element={<LowProductListPage />} />
             <Route path="/ExpenseReport" element={<ExpenseReportPage />} />
             <Route
