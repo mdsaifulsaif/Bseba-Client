@@ -231,8 +231,8 @@ const ExpenseByID = () => {
       </div>
 
       {/* Table */}
-      <div className="global_sub_container mt-5" ref={componentRef}>
-        <table className="global_table">
+      <div className="global_sub_container mt-5">
+        <table ref={componentRef} className="global_table">
           <thead className="global_thead">
             <tr>
               <th className="global_th">Expense Type</th>

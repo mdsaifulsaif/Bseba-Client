@@ -12,7 +12,12 @@ import { RiRedPacketLine, RiContactsBook3Line } from "react-icons/ri";
 import { FcSalesPerformance } from "react-icons/fc";
 import { GrContactInfo } from "react-icons/gr";
 import { MdCreateNewFolder } from "react-icons/md";
-import { GiBuyCard, GiTeamIdea, GiTakeMyMoney } from "react-icons/gi";
+import {
+  GiBuyCard,
+  GiTeamIdea,
+  GiTakeMyMoney,
+  GiStockpiles,
+} from "react-icons/gi";
 import { TbBusinessplan } from "react-icons/tb";
 import { useState, useEffect } from "react";
 import { FaUsers } from "react-icons/fa";
@@ -293,6 +298,13 @@ const MasterLayout = ({ children }) => {
                 title: "Daly Report",
                 icon: <AiOutlineStock />,
                 path: "/DalyReport",
+              },
+
+              {
+                id: "stockreport",
+                title: "Stock Report",
+                icon: <GiStockpiles />,
+                path: "/StockReport",
               },
             ],
           },

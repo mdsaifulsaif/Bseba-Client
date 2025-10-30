@@ -73,6 +73,7 @@ import Print58Page from "./Pages/Sale/Print58Page";
 import ExpenseReportPage from "./Pages/Report/ExpenseReportPage";
 import TransactionReportPage from "./Pages/Report/TransactionReportPage";
 import DalyReportPage from "./Pages/Report/DalyReportPage";
+import StockReportPage from "./Pages/Report/StockReportPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -141,6 +142,7 @@ function App() {
               element={<TransactionReportPage />}
             />
             <Route path="/DalyReport" element={<DalyReportPage />} />
+            <Route path="/StockReport" element={<StockReportPage />} />
 
             {/* Sale Reports  */}
             <Route path="/NewSale" element={<NewSalePage />} />
