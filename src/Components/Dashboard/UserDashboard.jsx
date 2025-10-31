@@ -11,12 +11,14 @@ import {
 } from "../../Helper/SessionHelper";
 import loadingStore from "../../Zustand/LoadingStore";
 import { Link } from "react-router-dom";
+import { fetchBusinessDetails } from "../../BusinessApi/businessService";
 
 const UserDashboard = () => {
   const [totalInvoice, setTotalInvoice] = useState();
   const { setGlobalLoader } = loadingStore();
   const [ownBusinessData, setOwnBusinessData] = useState([]);
   const [userBusinessData, setUserBusinessData] = useState([]);
+  const [business, setBusiness] = useState(null);
 
   const fetchOwnBusiness = async () => {
     setGlobalLoader(true);
@@ -38,6 +40,20 @@ const UserDashboard = () => {
       setGlobalLoader(false);
     }
   };
+
+  // bissiness details
+  useEffect(() => {
+    const loadBusiness = async () => {
+      const businessID = localStorage.getItem("businessID"); // ✅ previously saved
+      if (!businessID) return;
+
+      const details = await fetchBusinessDetails(businessID);
+      setBusiness(details); // reactive state
+    };
+
+    loadBusiness();
+  }, []);
+  // bissiness details
 
   const redirectToDashboardWithBusinessID = async (id) => {
     setGlobalLoader(true);

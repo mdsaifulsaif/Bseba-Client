@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { ErrorToast, SuccessToast, IsEmpty } from "../../Helper/FormHelper";
+import { fetchOwnBusiness } from "../../BusinessApi/businessService";
 import { BaseURL } from "../../Helper/Config";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -46,6 +47,9 @@ const UserLogin = () => {
         setName(data.data.fullName);
         SuccessToast(data.message || "Login Successful.");
         window.location.href = "/";
+        // ✅ fetch business ID after login
+        const businessID = await fetchOwnBusiness();
+        console.log("Business ID:", businessID); // check
       } else {
         ErrorToast(data.message || "Login Failed.");
       }
