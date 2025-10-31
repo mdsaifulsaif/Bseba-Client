@@ -85,6 +85,7 @@ const Dashboard = () => {
       );
 
       if (res.data.status === "Success") {
+        console.log("porduct list", res.data.data || []);
         setProducts(res.data.data || []);
         setTotal(res.data.total || 0);
       }
@@ -104,7 +105,7 @@ const Dashboard = () => {
       });
 
       if (res.data.status === "Success") {
-        setLastSaleData(formattedData);
+        setLastSaleData(res.data.data);
       }
     } catch (error) {
       ErrorToast(error.message);
@@ -353,7 +354,7 @@ const Dashboard = () => {
 
         {/* 🛒 Last Purchase */}
         <div className="p-4 rounded-xl shadow text-sm">
-          <h2 className="text-lg font-semibold text-green-600 mb-3">
+          <h2 className="text-lg  font-semibold text-green-600 mb-3">
             🛒 Last Purchase
           </h2>
           {lastSaleData?.lastPurchase ? (
@@ -465,21 +466,22 @@ const Dashboard = () => {
                   <tr className="">
                     <th className="global_th">No</th>
                     <th className="global_th">Name</th>
-                    <th className="global_th">Category</th>
+                    <th className="global_th">Brand Name</th>
+                    <th className="global_th">Category Name</th>
+                    <th className="global_th">Total Purchase</th>
+                    <th className="global_th">Total Sold</th>
+                    <th className="global_th">Total Return</th>
                     <th className="global_th">Stock</th>
-
-                    <th className="global_th">Sell Price</th>
-                    <th className="global_th">Special Price</th>
-
-                    <th className="global_th">Barcode</th>
+                    <th className="global_th">Alert Quantity</th>
                   </tr>
                 </thead>
                 <tbody className="global_tbody">
                   {products.map((product, index) => (
                     <tr className="global_tr" key={product._id}>
+                      {console.log(product)}
                       <td className="global_td">{index + 1}</td>
                       <td className="global_td">
-                        {product.name}{" "}
+                        {product.productName}{" "}
                         {product.weight && (
                           <span className="text-xs text-green-400">
                             (
@@ -491,20 +493,24 @@ const Dashboard = () => {
                         )}
                       </td>
                       <td className="global_td">
-                        {product.Categorys?.name || "N/A"}
+                        {product?.brandName || "N/A"}
+                      </td>
+                      <td className="global_td">{product?.categoryName}</td>
+
+                      <td className="global_td">
+                        {parseFloat(product?.totalQtySold || 0).toFixed(2)}
                       </td>
                       <td className="global_td">
-                        {parseInt(product.stock || 0)}
+                        {parseFloat(product.totalQtySold || 0).toFixed(2)}
                       </td>
 
                       <td className="global_td">
-                        {parseFloat(product.price || 0).toFixed(2)}
+                        {product?.totalQtyReturn || "N/A"}
                       </td>
+                      <td className="global_td">{product?.stock || "N/A"}</td>
                       <td className="global_td">
-                        {parseFloat(product.sp || 0).toFixed(2)}
+                        {product?.alertQuantity || "N/A"}
                       </td>
-
-                      <td className="global_td">{product.barcode || "N/A"}</td>
                     </tr>
                   ))}
                 </tbody>

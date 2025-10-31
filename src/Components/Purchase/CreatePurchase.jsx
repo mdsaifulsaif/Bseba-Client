@@ -368,7 +368,7 @@ const CreatePurchase = () => {
         <div className="flex items-end col-span-8 lg:col-span-1">
           <button
             onClick={() => setSupplierModal(true)}
-            className="global_button text-sm py-1 w-full"
+            className="global_button text-sm py-1 px-2 w-full"
           >
             New Supplier
           </button>
@@ -415,7 +415,7 @@ const CreatePurchase = () => {
         {/* Add Product*/}
         <div className="flex items-end col-span-8 lg:col-span-1">
           <button
-            className="global_button text-sm py-1 w-full"
+            className="global_button text-sm py-1 px-2  w-full"
             onClick={() => openModal("product")}
           >
             New Product

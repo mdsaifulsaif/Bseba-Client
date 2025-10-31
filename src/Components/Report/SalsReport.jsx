@@ -19,6 +19,7 @@ import { BaseURL } from "../../Helper/Config";
 import Select from "react-select";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { createPortal } from "react-dom";
 
 const periodOptions = [
   { value: "", label: "Select Period" },
@@ -143,8 +144,13 @@ const SalesReport = () => {
               selected={startDate}
               onChange={(date) => setStartDate(date)}
               dateFormat="dd/MM/yyyy"
-              className="global_input w-full"
+              className="global_input w-full "
+              popperPlacement="bottom-start"
+              popperClassName="z-[9999]"
               calendarClassName="react-datepicker-custom"
+              popperContainer={(props) =>
+                createPortal(<div {...props} />, document.body)
+              }
             />
           </div>
 
@@ -155,8 +161,13 @@ const SalesReport = () => {
               selected={endDate}
               onChange={(date) => setEndDate(date)}
               dateFormat="dd/MM/yyyy"
-              className="global_input w-full"
+              className="global_input w-full "
+              popperPlacement="bottom-start"
+              popperClassName="z-[9999]"
               calendarClassName="react-datepicker-custom"
+              popperContainer={(props) =>
+                createPortal(<div {...props} />, document.body)
+              }
             />
           </div>
 

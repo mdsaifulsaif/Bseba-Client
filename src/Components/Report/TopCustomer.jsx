@@ -20,6 +20,7 @@ import { BaseURL } from "../../Helper/Config";
 import Select from "react-select";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { createPortal } from "react-dom";
 
 const periodOptions = [
   { value: "", label: "Select Period" },
@@ -115,9 +116,7 @@ const TopCustomer = () => {
         <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center gap-5">
           {/* Period Filter */}
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
-              Period
-            </label>
+            <label className="block text-sm font-medium mb-1">Period</label>
             <Select
               classNamePrefix="react-select"
               options={periodOptions}
@@ -134,29 +133,35 @@ const TopCustomer = () => {
 
           {/* Start Date */}
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
-              Start Date
-            </label>
+            <label className="block text-sm font-medium mb-1">Start Date</label>
             <DatePicker
               selected={startDate}
               onChange={(date) => setStartDate(date)}
               dateFormat="dd/MM/yyyy"
-              className="global_input w-full"
+              className="global_input w-full "
+              popperPlacement="bottom-start"
+              popperClassName="z-[9999]"
               calendarClassName="react-datepicker-custom"
+              popperContainer={(props) =>
+                createPortal(<div {...props} />, document.body)
+              }
             />
           </div>
 
           {/* End Date */}
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
-              End Date
-            </label>
+            <label className="block text-sm font-medium mb-1">End Date</label>
             <DatePicker
               selected={endDate}
               onChange={(date) => setEndDate(date)}
               dateFormat="dd/MM/yyyy"
-              className="global_input w-full"
+              className="global_input w-full "
+              popperPlacement="bottom-start"
+              popperClassName="z-[9999]"
               calendarClassName="react-datepicker-custom"
+              popperContainer={(props) =>
+                createPortal(<div {...props} />, document.body)
+              }
             />
           </div>
         </div>

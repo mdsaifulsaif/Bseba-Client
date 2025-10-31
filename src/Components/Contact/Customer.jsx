@@ -5,6 +5,7 @@ import axios from "axios";
 import { getToken } from "../../Helper/SessionHelper";
 import { ErrorToast, SuccessToast } from "../../Helper/FormHelper";
 import { Link } from "react-router-dom";
+import Select from "react-select";
 
 const Customer = () => {
   const [editId, setEditId] = useState(null);
@@ -59,6 +60,11 @@ const Customer = () => {
   useEffect(() => {
     fetchCustomers();
   }, [page, limit]);
+
+  const transactionOptions = [
+    { value: "পাবে", label: "পাবে" },
+    { value: "দেবে", label: "দেবে" },
+  ];
 
   // const handleEdit = (customer) => {
   //   setEditId(customer._id);
@@ -247,6 +253,24 @@ const Customer = () => {
               পূর্বের লেনদেন যদি থাকে
             </label>
             <div className="flex gap-2">
+              <Select
+                value={transactionOptions.find(
+                  (opt) => opt.value === transactionType
+                )}
+                onChange={(selectedOption) => {
+                  setTransactionType(selectedOption.value);
+                  setTransactionAmount(""); // reset amount on type change
+                }}
+                options={transactionOptions}
+                classNamePrefix="react-select"
+                className="w-full"
+                menuPortalTarget={document.body}
+                styles={{
+                  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                }}
+              />
+            </div>
+            {/* <div className="flex gap-2">
               <select
                 value={transactionType}
                 onChange={(e) => {
@@ -258,7 +282,7 @@ const Customer = () => {
                 <option value="পাবে">পাবে</option>
                 <option value="দেবে">দেবে</option>
               </select>
-            </div>
+            </div> */}
           </div>
 
           {/* Amount */}

@@ -135,10 +135,10 @@ const StockReport = () => {
       <div className=" global_sub_container">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Total Stock Value */}
-          <div className="p-4 border border-gray-300 rounded-lg shadow-sm flex flex-col items-start">
+          <div className="p-4 border border-gray-300  dark:border-gray-700 rounded-lg shadow-sm flex flex-col items-start">
             <div className="flex items-center gap-2 text-gray-700 font-medium">
               <FaChartLine className="text-green-600 text-lg" />
-              <span>Total Stock Value</span>
+              <span className="dark:text-gray-100">Total Stock Value</span>
             </div>
             <p className="mt-1 text-xl font-semibold">
               {summaryData.totalStockValue.toFixed(2)}
@@ -146,10 +146,10 @@ const StockReport = () => {
           </div>
 
           {/* Total Products */}
-          <div className="p-4 border border-gray-300 rounded-lg shadow-sm flex flex-col items-start">
+          <div className="p-4 border dark:border-gray-700 border-gray-300 rounded-lg shadow-sm flex flex-col items-start">
             <div className="flex items-center gap-2 text-gray-700 font-medium">
               <FaChartLine className="text-blue-600 text-lg" />
-              <span>Total Products</span>
+              <span className="dark:text-gray-100">Total Products</span>
             </div>
             <p className="mt-1 text-xl font-semibold">
               {summaryData.totalProducts}
@@ -157,10 +157,10 @@ const StockReport = () => {
           </div>
 
           {/* Total Brands */}
-          <div className="p-4 border border-gray-300 rounded-lg shadow-sm flex flex-col items-start">
-            <div className="flex items-center gap-2 text-gray-700 font-medium">
+          <div className="p-4 border dark:border-gray-700 border-gray-300 rounded-lg shadow-sm flex flex-col items-start">
+            <div className="flex items-center gap-2  text-gray-700 font-medium">
               <FaChartLine className="text-purple-600 text-lg" />
-              <span>Total Brands</span>
+              <span className="dark:text-gray-100">Total Brands</span>
             </div>
             <p className="mt-1 text-xl font-semibold">
               {summaryData.totalBrands}
@@ -168,10 +168,10 @@ const StockReport = () => {
           </div>
 
           {/* Total Categories */}
-          <div className="p-4 border border-gray-300 rounded-lg shadow-sm flex flex-col items-start">
+          <div className="p-4 border dark:border-gray-700 border-gray-300 rounded-lg shadow-sm flex flex-col items-start">
             <div className="flex items-center gap-2 text-gray-700 font-medium">
               <FaChartLine className="text-orange-600 text-lg" />
-              <span>Total Categories</span>
+              <span className="dark:text-gray-100">Total Categories</span>
             </div>
             <p className="mt-1 text-xl font-semibold">
               {summaryData.totalCategories}

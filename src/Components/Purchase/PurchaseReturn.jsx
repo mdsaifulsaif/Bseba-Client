@@ -208,7 +208,7 @@ const PurchaseReturn = () => {
                     type="text"
                     readOnly
                     value={purchaseDetails.PurchaseSummary.total}
-                    className="bg-gray-100 border border-gray-300 rounded-md px-3 py-1 text-right w-32"
+                    className="bg-gray-100 dark:bg-gray-800 border dark:border-gray-500 border-gray-300 rounded-md px-3 py-1 text-right w-32"
                   />
                 </div>
 
@@ -218,7 +218,7 @@ const PurchaseReturn = () => {
                     type="text"
                     readOnly
                     value={purchaseDetails.PurchaseSummary.paid}
-                    className="bg-gray-100 border border-gray-300 rounded-md px-3 py-1 text-right w-32"
+                    className="bg-gray-100 border border-gray-300  dark:border-gray-500 dark:bg-gray-800   rounded-md px-3 py-1 text-right w-32"
                   />
                 </div>
 
@@ -228,7 +228,7 @@ const PurchaseReturn = () => {
                     type="text"
                     readOnly
                     value={purchaseDetails.PurchaseSummary.dueAmount}
-                    className="bg-gray-100 border border-gray-300 rounded-md px-3 py-1 text-right w-32"
+                    className="bg-gray-100 border border-gray-300 dark:bg-gray-800  dark:border-gray-500 rounded-md px-3 py-1 text-right w-32"
                   />
                 </div>
               </div>

@@ -189,6 +189,7 @@ const ExpenseReport = () => {
               {expenses.length ? (
                 expenses.map((item, i) => (
                   <tr key={i}>
+                    {console.log(item)}
                     <td className="global_td">{item.typeName}</td>
                     <td className="global_td">
                       {new Intl.NumberFormat("en-IN").format(item.amount)}
@@ -233,6 +234,7 @@ const ExpenseReport = () => {
             <tbody className="global_tbody">
               {Object.entries(totalAmountByType).map(([type, amount]) => (
                 <tr key={type}>
+                  {console.log("exp type", totalAmountByType)}
                   <td className="global_td">{type}</td>
                   <td className="global_td">
                     {new Intl.NumberFormat("en-IN").format(amount.toFixed(2))}

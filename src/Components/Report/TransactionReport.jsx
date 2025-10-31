@@ -251,7 +251,7 @@ const TransactionReport = () => {
                     {t.Credit?.toFixed(2) || "0.00"}
                   </td>
                   <td className="global_td">{t.note || "No Notes"}</td>
-                  <td className="global_td flex justify-center gap-1">
+                  {/* <td className="global_td flex justify-center gap-1">
                     {t.saleID && (
                       <button
                         onClick={() => handleInvoicePopUp(t)}
@@ -284,6 +284,42 @@ const TransactionReport = () => {
                         <AiOutlineEye /> View
                       </button>
                     )}
+                  </td> */}
+                  <td className="global_td border px-2 py-1">
+                    <div className="flex flex-wrap justify-center gap-1">
+                      {t.saleID && (
+                        <button
+                          onClick={() => handleInvoicePopUp(t)}
+                          className="flex items-center gap-1 text-blue-600 px-2 py-1 rounded hover:bg-blue-50 text-sm"
+                        >
+                          <AiOutlineEye /> <span>Sale</span>
+                        </button>
+                      )}
+                      {t.purchaseID && (
+                        <button
+                          onClick={() => handlePurchasePopUp(t)}
+                          className="flex items-center gap-1 text-green-600 px-2 py-1 rounded hover:bg-green-50 text-sm"
+                        >
+                          <AiOutlineEye /> <span>Purchase</span>
+                        </button>
+                      )}
+                      {t.salereturnID && (
+                        <button
+                          onClick={() => handleSaleReturnPopUp(t)}
+                          className="flex items-center gap-1 text-orange-600 px-2 py-1 rounded hover:bg-orange-50 text-sm"
+                        >
+                          <AiOutlineEye /> <span>Return</span>
+                        </button>
+                      )}
+                      {!t.saleID && !t.purchaseID && !t.salereturnID && (
+                        <button
+                          onClick={() => handleTransactionDetails(t)}
+                          className="flex items-center gap-1 text-gray-600 px-2 py-1 rounded hover:bg-gray-100 text-sm"
+                        >
+                          <AiOutlineEye /> <span>View</span>
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))

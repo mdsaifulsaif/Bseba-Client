@@ -129,7 +129,7 @@ const DalyReport = () => {
               selected={startDate}
               onChange={setStartDate}
               dateFormat="dd-MM-yyyy"
-              className="global_input w-full pl-10"
+              className="global_input w-full "
               popperPlacement="bottom-start"
               popperClassName="z-[9999]"
               calendarClassName="react-datepicker-custom"
@@ -145,7 +145,7 @@ const DalyReport = () => {
               selected={endDate}
               onChange={setEndDate}
               dateFormat="dd-MM-yyyy"
-              className="global_input w-full pl-10"
+              className="global_input w-full "
               popperPlacement="bottom-start"
               popperClassName="z-[9999]"
               calendarClassName="react-datepicker-custom"
