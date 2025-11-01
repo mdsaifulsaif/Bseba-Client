@@ -211,7 +211,7 @@ const MasterLayout = ({ children }) => {
                 id: "accountreport",
                 title: "Account Report",
                 icon: <IoIosTrendingUp />,
-                path: "AccountReport",
+                path: "/AccountReport",
               },
             ],
           },

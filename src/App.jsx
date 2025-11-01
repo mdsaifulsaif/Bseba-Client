@@ -77,6 +77,7 @@ import StockReportPage from "./Pages/Report/StockReportPage";
 import PurchaseReturnDetailsPage from "./Pages/Purchase/PurchaseReturnDetailsPage";
 import ProductSaleReportPage from "./Pages/Report/ProductSaleReportPage";
 import AccountsPage from "./Pages/Account/AccountsPage";
+import AccountReportPage from "./Pages/Account/AccountReportPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -108,6 +109,7 @@ function App() {
             <Route path="/Permission/:id" element={<PermissionPage />} /> */}
             <Route path="/BankAccount" element={<AccountPage />} />
             <Route path="/Accounts" element={<AccountsPage />} />
+            <Route path="/AccountReport" element={<AccountReportPage />} />
 
             <Route path="/Dealer" element={<DealerPage />} />
             <Route path="/Customer" element={<CustomerPage />} />
