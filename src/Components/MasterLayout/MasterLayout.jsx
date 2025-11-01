@@ -11,7 +11,12 @@ import { CiBank } from "react-icons/ci";
 import { RiRedPacketLine, RiContactsBook3Line } from "react-icons/ri";
 import { FcSalesPerformance } from "react-icons/fc";
 import { GrContactInfo } from "react-icons/gr";
-import { MdCreateNewFolder, MdPointOfSale } from "react-icons/md";
+import {
+  MdCreateNewFolder,
+  MdPointOfSale,
+  MdOutlineSwitchAccount,
+} from "react-icons/md";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 import {
   GiBuyCard,
@@ -46,6 +51,9 @@ import { BsSun, BsMoon } from "react-icons/bs";
 import { BiCategoryAlt } from "react-icons/bi";
 import { getAdmin, removeSessions } from "../../Helper/SessionHelper";
 import { NavLink, useLocation } from "react-router-dom";
+import openCloseStore from "../../Zustand/OpenCloseStore";
+import AddNewNavbar from "../Modals/AddNewNavbar";
+import { IoIosTrendingUp } from "react-icons/io";
 
 const MasterLayout = ({ children }) => {
   let isAdmin = getAdmin() == 1;
@@ -184,6 +192,26 @@ const MasterLayout = ({ children }) => {
                 title: "Purchase Return List",
                 icon: <FaList />,
                 path: "/PurchaseReturnList",
+              },
+            ],
+          },
+
+          {
+            id: "accounts",
+            title: "Accounts",
+            icon: <MdOutlineSwitchAccount />,
+            children: [
+              {
+                id: "accounts",
+                title: "Accounts",
+                icon: <MdOutlineSwitchAccount />,
+                path: "/Accounts",
+              },
+              {
+                id: "accountreport",
+                title: "Account Report",
+                icon: <IoIosTrendingUp />,
+                path: "AccountReport",
               },
             ],
           },
@@ -386,6 +414,8 @@ const MasterLayout = ({ children }) => {
         ]
       : []),
   ];
+
+  const { openModal } = openCloseStore();
 
   const [expandedItems, setExpandedItems] = useState({});
   const [darkMode, setDarkMode] = useState(() => {
@@ -659,14 +689,23 @@ const MasterLayout = ({ children }) => {
               </span>
             </button>
           </div>
-          <button
-            onClick={() => {
-              removeSessions();
-            }}
-            className="global_button"
-          >
-            Logout
-          </button>
+          <div className="flex items-center justify-center gap-5 ">
+            <button
+              onClick={() => openModal("addNew")}
+              className="global_button flex items-center gap-1"
+            >
+              <IoMdAddCircleOutline />
+              Add New
+            </button>
+            <button
+              onClick={() => {
+                removeSessions();
+              }}
+              className="global_button"
+            >
+              Logout
+            </button>
+          </div>
         </nav>
 
         {/* Content */}
@@ -674,6 +713,7 @@ const MasterLayout = ({ children }) => {
           {children}
         </div>
       </div>
+      <AddNewNavbar />
     </div>
   );
 };

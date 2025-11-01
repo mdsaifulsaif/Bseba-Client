@@ -76,6 +76,7 @@ import DalyReportPage from "./Pages/Report/DalyReportPage";
 import StockReportPage from "./Pages/Report/StockReportPage";
 import PurchaseReturnDetailsPage from "./Pages/Purchase/PurchaseReturnDetailsPage";
 import ProductSaleReportPage from "./Pages/Report/ProductSaleReportPage";
+import AccountsPage from "./Pages/Account/AccountsPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -88,6 +89,7 @@ function App() {
             <Route path="/" element={<UserDashboardPage />} />
             <Route path="/Dashboard" element={<DashboardPage />} />
             <Route path="/BusinessSetting" element={<BusinessSettingPage />} />
+
             <Route path="/CreateBusiness" element={<CreateBusiness />} />
             <Route path="/NewProduct" element={<NewProductPage />} />
             <Route path="/ProductList" element={<ProductListPage />} />
@@ -105,6 +107,8 @@ function App() {
             <Route path="/Role" element={<RolePage />} />
             <Route path="/Permission/:id" element={<PermissionPage />} /> */}
             <Route path="/BankAccount" element={<AccountPage />} />
+            <Route path="/Accounts" element={<AccountsPage />} />
+
             <Route path="/Dealer" element={<DealerPage />} />
             <Route path="/Customer" element={<CustomerPage />} />
             <Route path="/Supplier" element={<SupplierPage />} />
