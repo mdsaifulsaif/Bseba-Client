@@ -18,6 +18,7 @@ import {
 import { BaseURL } from "../../Helper/Config";
 import { getToken } from "../../Helper/SessionHelper";
 import { createPortal } from "react-dom";
+import loadingStore from "../../Zustand/LoadingStore";
 
 const AccountReport = () => {
   const [accounts, setAccounts] = useState([]);
@@ -27,10 +28,12 @@ const AccountReport = () => {
   const [startDate, setStartDate] = useState(startOfMonth(new Date()));
   const [endDate, setEndDate] = useState(endOfMonth(new Date()));
   const [selectedPeriod, setSelectedPeriod] = useState(null);
+  const { setGlobalLoader } = loadingStore();
 
   // Fetch all accounts
   useEffect(() => {
     const fetchAccounts = async () => {
+      setGlobalLoader(true);
       try {
         const response = await axios.get(`${BaseURL}/FindAllAccount`, {
           headers: { token: getToken() },
@@ -38,6 +41,8 @@ const AccountReport = () => {
         setAccounts(response.data?.data || []);
       } catch (error) {
         console.error("Failed to fetch accounts:", error);
+      } finally {
+        setGlobalLoader(false);
       }
     };
     fetchAccounts();
@@ -46,6 +51,7 @@ const AccountReport = () => {
   // Fetch balance transfers
   const fetchBalanceTransfers = async (start, end, accountID) => {
     if (!accountID) return;
+    setGlobalLoader(true);
     try {
       const response = await axios.get(
         `${BaseURL}/FindBalanceTransfersByID/${format(
@@ -64,6 +70,8 @@ const AccountReport = () => {
       console.error("Failed to fetch balance transfers:", error);
       setFromAccounts([]);
       setToAccounts([]);
+    } finally {
+      setGlobalLoader(false);
     }
   };
 

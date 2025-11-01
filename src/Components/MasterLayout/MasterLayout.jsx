@@ -2,6 +2,7 @@ import {
   MdOutlinePerson4,
   MdReportGmailerrorred,
   MdOutlineAddShoppingCart,
+  MdEditNote,
 } from "react-icons/md";
 import { FaListCheck, FaBangladeshiTakaSign } from "react-icons/fa6";
 import { CiCircleList } from "react-icons/ci";
@@ -15,6 +16,8 @@ import {
   MdCreateNewFolder,
   MdPointOfSale,
   MdOutlineSwitchAccount,
+  MdEditDocument,
+  MdOutlineEditCalendar,
 } from "react-icons/md";
 import { IoMdAddCircleOutline } from "react-icons/io";
 
@@ -36,6 +39,7 @@ import {
   FaUsersCog,
   FaList,
   FaSortAmountUp,
+  FaRegEdit,
 } from "react-icons/fa";
 import { AiOutlineProduct } from "react-icons/ai";
 
@@ -98,6 +102,25 @@ const MasterLayout = ({ children }) => {
             ],
           },
 
+          {
+            id: "quotation",
+            title: "Quotation",
+            icon: <MdEditDocument />,
+            children: [
+              {
+                id: "createquotation",
+                title: "Create Quotation",
+                path: "/CreateQuotation",
+                icon: <FaRegEdit />,
+              },
+              {
+                id: "quotationlist",
+                title: "Quotation List",
+                path: "/QuotationList",
+                icon: <MdOutlineEditCalendar />,
+              },
+            ],
+          },
           {
             id: "product",
             title: "Product",

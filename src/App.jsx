@@ -78,6 +78,7 @@ import PurchaseReturnDetailsPage from "./Pages/Purchase/PurchaseReturnDetailsPag
 import ProductSaleReportPage from "./Pages/Report/ProductSaleReportPage";
 import AccountsPage from "./Pages/Account/AccountsPage";
 import AccountReportPage from "./Pages/Account/AccountReportPage";
+import CreateQuotationPage from "./Pages/Quotation/CreateQuotationPage";
 
 function App() {
   const isLoggedIn = getToken();
@@ -110,6 +111,9 @@ function App() {
             <Route path="/BankAccount" element={<AccountPage />} />
             <Route path="/Accounts" element={<AccountsPage />} />
             <Route path="/AccountReport" element={<AccountReportPage />} />
+
+            {/* Quotation */}
+            <Route path="CreateQuotation" element={<CreateQuotationPage />} />
 
             <Route path="/Dealer" element={<DealerPage />} />
             <Route path="/Customer" element={<CustomerPage />} />
